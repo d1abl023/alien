@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+    <link href="css/main.css" type="text/css" rel="stylesheet">
+    <link href="css/header.css" type="text/css" rel="stylesheet">
+    <link href="css/search_page.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div id="header">
+        <div id="header_blocks">
+            <button id="user_profile_button" type="button" onclick="goToProfile();">My profile</button>
+            <button id="messages_button" type="button" onclick="goToMessages();">Messages</button>
+            <button id="search_button" type="button" onclick="goToSearch();">Search</button>
+            <button id="logout_button" type="button" onclick="logout();">Log out</button>
+        </div>
+    </div>
+    <div id="body">
+        <form id="search_form">
+            <label id="search_label" for="search_field">Search: </label>
+            <input id="search_field" name="search_field" type="text" />
+            <button id="search_data_button" type="button" onclick="search();">Search</button>
+        </form>
+
+        <div id="search_results">
+            <div class="line">
+                <div class="user">
+                    <div class="login">User 1</div>
+                    <div class="location">Moldova, Chisinau</div>
+                    <button class="open_profile_button" onclick="openProfile(1234567890);">Open</button>
+                    <button class="send_message_button" onclick="sendMessage(1234567890);">Message</button>
+                </div>
+                <div class="user">
+                    <div class="login">User 2</div>
+                    <div class="location">Russia, Moskow</div>
+                    <button class="open_profile_button" onclick="openProfile(1234567890);">Open</button>
+                    <button class="send_message_button" onclick="sendMessage(1234567890);">Message</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/main.js" type="text/javascript"></script>
+    <script src="js/search.js" type="text/javascript"></script>
+    <script src="js/utils/message_management.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</body></html>

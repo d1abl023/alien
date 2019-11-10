@@ -1,0 +1,71 @@
+#reg_auth_info {
+    display: block;
+    min-height: 300px;
+    max-height: 600px;
+    min-width: 300px;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    
+}
+
+#reg_auth_info_text {
+    color: silver;
+    font-size: 2.6em;
+    display: block;
+    min-height: 100px;
+    max-height: 100px;
+    min-width: 300px;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: 10px;
+    margin-bottom: 0;
+    margin-top: 0;
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 0;
+}
+
+#auth_form {
+    font-size: 1.8em;
+    display: block;
+    vertical-align: middle;
+    min-height: 40px;
+    max-height: 900px;
+    min-width: 300px;
+    max-width: 440px;
+    margin-left: 10px;
+    margin-right: 3px;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.reg_form_button {
+    border-style: inherit;
+    color: silver;
+    background-color: #313233;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 120px;
+    height: 25px;
+}
+
+.reg_form_labels {
+    display: block;
+    color: #E29826;
+    margin-top: 3px;
+    margin-bottom: 2px;
+    width:auto;
+}
+
+.reg_form_fields {
+    display: block;
+    min-width: 30px;
+    max-width: 400px;
+    margin-top: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}

@@ -1,0 +1,63 @@
+fieldset{
+    border: 0px;
+}
+#reg_form {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 0;
+    width: 350px
+}
+
+#reg_form_info {
+    display: block;
+    color: silver;
+    padding: 20px;
+    font-size: 2.6em;
+}
+
+#registration {
+    display: block;
+    color: #E29826;
+    width: 350px;
+}
+
+#m_sex_label {
+    display: inline-block;
+    width: 150px;
+    text-align: right;
+}
+
+#f_sex_label {
+    
+}
+
+#reg_button {
+    border-style: inherit;
+    color: silver;
+    background-color: #313233;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 180px;
+    height: 25px;
+}
+
+.reg_form_label {
+    display: inline-block;
+    width: 130px;
+}
+
+.reg_form_input {
+    display: inline-block;
+}
+.reg_form_line {
+    display: block;
+    width: 430px
+}
+
+legend {
+    display: block;
+    width: 350px;
+    text-align: center;
+}
