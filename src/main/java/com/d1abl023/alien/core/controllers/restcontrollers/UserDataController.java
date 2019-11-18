@@ -77,7 +77,7 @@ public class UserDataController {
     /**
      * Method getUserLogin() requests user login from DB
      *
-     * @param id  contains id of user whose username should be requested from DB
+     * @param id contains id of user whose username should be requested from DB
      * @return string that contains user login
      */
     @RequestMapping("/get_username_by_id")
@@ -93,7 +93,7 @@ public class UserDataController {
     }
 
     @RequestMapping("/get_id")
-    public String getMyId(Principal principal){
+    public String getMyId(Principal principal) {
         return principal.getName();
     }
 }

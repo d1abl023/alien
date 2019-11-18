@@ -4,14 +4,14 @@ function logout() {
     window.location.href = "index.html";
 }
 
-function goToMessages(){
+function goToMessages() {
     window.location.href = "messages_page.html";
 }
 
-function goToProfile(){
+function goToProfile() {
     window.location.href = "page_of_user.html?my";
 }
 
-function goToSearch(){
+function goToSearch() {
     window.location.href = "search_page.html";
 }

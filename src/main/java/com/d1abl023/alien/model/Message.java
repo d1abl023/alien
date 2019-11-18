@@ -12,21 +12,36 @@ public class Message implements Serializable {
 
     private long dialogId;
 
-    private String sender;
+    private String senderId;
 
-    private String receiver;
+    private String receiverId;
 
     private String text;
+
+    private String senderLogin;
+
+    private String receiverLogin;
 
     public Message() {
     }
 
-    public Message(String timestamp, long dialogId, String sender, String receiver, String text) {
+    public Message(String timestamp, long dialogId, String senderId, String receiver, String text) {
         this.timestamp = timestamp;
         this.dialogId = dialogId;
-        this.sender = sender;
-        this.receiver = receiver;
+        this.senderId = senderId;
+        this.receiverId = receiver;
         this.text = text;
+    }
+
+    public Message(String timestamp, long dialogId, String senderId, String receiverId,
+                   String text, String senderLogin, String receiverLogin) {
+        this.timestamp = timestamp;
+        this.dialogId = dialogId;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.text = text;
+        this.senderLogin = senderLogin;
+        this.receiverLogin = receiverLogin;
     }
 
     public String getTimestamp() {
@@ -45,20 +60,20 @@ public class Message implements Serializable {
         this.dialogId = dialogId;
     }
 
-    public String getSender() {
-        return sender;
+    public String getSenderId() {
+        return senderId;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public String getReceiverId() {
+        return receiverId;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
     }
 
     public String getText() {
@@ -69,13 +84,29 @@ public class Message implements Serializable {
         this.text = text;
     }
 
+    public String getSenderLogin() {
+        return senderLogin;
+    }
+
+    public void setSenderLogin(String senderLogin) {
+        this.senderLogin = senderLogin;
+    }
+
+    public String getReceiverLogin() {
+        return receiverLogin;
+    }
+
+    public void setReceiverLogin(String receiverLogin) {
+        this.receiverLogin = receiverLogin;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
                 "id=" + timestamp +
                 ", dialogId=" + dialogId +
-                ", sender='" + sender + '\'' +
-                ", receiver='" + receiver + '\'' +
+                ", sender='" + senderId + '\'' +
+                ", receiver='" + receiverId + '\'' +
                 ", text='" + text + '\'' +
                 '}';
     }

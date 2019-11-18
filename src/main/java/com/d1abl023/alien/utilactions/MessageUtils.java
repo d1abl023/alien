@@ -19,22 +19,17 @@ public class MessageUtils {
 
         // If dialog id is not defined, fetch id from database
         if (msg.getDialogId() == 0) {
-
-//            System.out.println("!!!!    Trying to fetch dialogID    !!!!");
-
             Session dialogsTableSession = HibernateUtils.getSessionFactory().openSession();
             Transaction dialogsTableTransaction = dialogsTableSession.beginTransaction();
             // TODO: To write query that will fetch data faster
             Query fetchDialogFromDB = dialogsTableSession.createQuery("from Dialogs dialog " +
                     "where (dialog.user1=:sender and dialog.user2=:receiver)" +
                     "or (dialog.user1=:receiver and dialog.user2=:sender)");
-            fetchDialogFromDB.setParameter("sender", new Long(msg.getSender()));
-            fetchDialogFromDB.setParameter("receiver", new Long(msg.getReceiver()));
+            fetchDialogFromDB.setParameter("sender", new Long(msg.getSenderId()));
+            fetchDialogFromDB.setParameter("receiver", new Long(msg.getReceiverId()));
             List fetchedDialogs = fetchDialogFromDB.getResultList();
             dialogsTableTransaction.commit();
             dialogsTableSession.close();
-
-//            System.out.println("!!!!    Finished fetching. Fetching size " + fetchedDialogs.size());
 
             // Should be fetched only one value from DB
             if (fetchedDialogs.size() == 1) {
@@ -44,11 +39,11 @@ public class MessageUtils {
             } else {
                 // Creates new dialog in table Dialogs
 
-//                System.out.println("!!!!    Creating new dialog    !!!!");
-
                 Session createNewDialogSession = HibernateUtils.getSessionFactory().openSession();
                 Transaction createNewDialogTransaction = createNewDialogSession.beginTransaction();
-                dialogId = (Long) createNewDialogSession.save(new Dialogs(new Long(msg.getSender()), new Long(msg.getReceiver())));
+                dialogId = (Long) createNewDialogSession.save(
+                        new Dialogs(new Long(msg.getSenderId()), new Long(msg.getReceiverId()),
+                                msg.getSenderLogin(), msg.getReceiverLogin()));
                 createNewDialogTransaction.commit();
                 createNewDialogSession.close();
             }
@@ -56,18 +51,14 @@ public class MessageUtils {
             dialogId = msg.getDialogId();
         }
 
-//        System.out.println("!!!!    Dialog id: " + dialogId + "    !!!!");
-
         if (dialogId != null && dialogId != 0) {
             UserMessage message = new UserMessage(
                     dialogId,
-                    msg.getSender(),
-                    msg.getReceiver(),
+                    msg.getSenderId(),
+                    msg.getReceiverId(),
                     msg.getText(),
                     new Long(msg.getTimestamp())
             );
-
-//            System.out.println("!!!!    Inserting message   !!!!");
 
             // Insertion message into table "messages"
             Session insertMessageSession = HibernateUtils.getSessionFactory().openSession();
@@ -75,8 +66,6 @@ public class MessageUtils {
             Long messageId = (Long) insertMessageSession.save(message);
             insertMessageTransaction.commit();
             insertMessageSession.close();
-
-//            System.out.println("!!!!    Message id: " + messageId + "   !!!!");
 
             return messageId != null && messageId != 0;
         }

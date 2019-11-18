@@ -113,15 +113,19 @@ public class UserRegForm implements Form {
                 '}';
     }
 
-    /**Method {@code createUserTableDataObject()} creates object
-     * for mapping data into table {@code users}*/
-    public User createUserTableObject(){
-        return new User(login,email,dateOfBirth,sex,phoneNumber,country,city,"null", "null");
+    /**
+     * Method {@code createUserTableDataObject()} creates object
+     * for mapping data into table {@code users}
+     */
+    public User createUserTableObject() {
+        return new User(login, email, dateOfBirth, sex, phoneNumber, country, city, "null", "null");
     }
 
-    /**Method {@code createUserAuthTableObject()} creates object
-     * for mapping data into table {@code auth_data}*/
-    public AuthUserData createUserAuthTableObject(){
-        return new AuthUserData(login,password,phoneNumber,email);
+    /**
+     * Method {@code createUserAuthTableObject()} creates object
+     * for mapping data into table {@code auth_data}
+     */
+    public AuthUserData createUserAuthTableObject() {
+        return new AuthUserData(login, password, phoneNumber, email);
     }
 }

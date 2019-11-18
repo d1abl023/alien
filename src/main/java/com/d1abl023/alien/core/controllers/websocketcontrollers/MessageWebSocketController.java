@@ -31,20 +31,20 @@ public class MessageWebSocketController {
             if (MessageUtils.insertMsgIntoDB(msg)) {
                 System.out.println(">>>>>>>>>>>>-------  Message inserted into DB!");
 
-                if (!msg.getReceiver().equals(msg.getSender())) {
+                if (!msg.getReceiverId().equals(msg.getSenderId())) {
                     this.simpMessagingTemplate
-                            .convertAndSendToUser(msg.getSender(), "/queue/privateMessages", msg);
+                            .convertAndSendToUser(msg.getSenderId(), "/queue/privateMessages", msg);
                 }
                 this.simpMessagingTemplate
-                        .convertAndSendToUser(msg.getReceiver(), "/queue/privateMessages", msg);
+                        .convertAndSendToUser(msg.getReceiverId(), "/queue/privateMessages", msg);
             } else {
                 this.simpMessagingTemplate
-                        .convertAndSendToUser(msg.getSender(), "/queue/privateMessagesErrors", msg);
+                        .convertAndSendToUser(msg.getSenderId(), "/queue/privateMessagesErrors", msg);
             }
         } catch (ExcessNumberOfTableValuesException e) {
 
             this.simpMessagingTemplate
-                    .convertAndSendToUser(msg.getSender(), "/queue/privateMessagesErrors", msg);
+                    .convertAndSendToUser(msg.getSenderId(), "/queue/privateMessagesErrors", msg);
 
             // TODO: To write in log files this exceptions
             e.printStackTrace();

@@ -36,7 +36,7 @@ public class FormController {
         selectUsers.setParameter("userLogin", requestBody);
         List dbUsers = selectUsers.getResultList();
         List<JSUser> users = new LinkedList<>();
-        for(Object tmpUser : dbUsers){
+        for (Object tmpUser : dbUsers) {
             users.add(new JSUser((User) tmpUser));
         }
         searchResult.put("users", users);

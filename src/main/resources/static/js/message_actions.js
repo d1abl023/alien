@@ -1,17 +1,12 @@
 'use strict';
 
-const usernamePage = document.querySelector('#username-page');
-const chatPage = document.querySelector('#chat-page');
-const usernameForm = document.querySelector('#usernameForm');
-const messageForm = document.querySelector('#messageForm');
-const messageInput = document.querySelector('#send_message_field');
-const messageArea = document.querySelector('#messageArea');
-const sendMessageButton = document.querySelector("#send_message_button");
+const conversationsList = document.getElementById("conversations_list");
+const sendMessageButton = document.getElementById("send_message_button");
 
 let dialogs = null;
 
 let stompClient = null;
-let userId = null;
+let myId = null;
 
 let isOpenedDialogId = null;
 let isOpenedInterlocutorUsername = null;
@@ -27,29 +22,53 @@ window.onload = (function () {
         url: "/get_id",
         type: "GET",
         complete: (function (data) {
-
-            console.log(data);
-
             if (data.responseText) {
-                userId = data.responseText;
+                myId = data.responseText;
                 $.ajax({
                     url: "/get_dialog_list",
                     type: "GET",
                     complete: (function (data) {
-                        if (data.responseText) {
-                            // dialogs = data.body;
-                            console.log(data.responseText);
-                            let dialogs = data.body;
-                            for (let dialog in dialogs) {
-                                let dialogEl = document.createElement("div");
-                                if (dialogs.hasOwnProperty(dialog)) {
-                                    if (dialogs[dialog].sender === userId) {
-                                        dialogEl.id = dialogs[dialog].receiver;
-                                    } else {
-                                        dialogEl.id = dialogs[dialog].sender;
-                                    }
-                                }
 
+                        if (data.hasOwnProperty("responseJSON")) {
+                            console.log(data.responseJSON);
+                            dialogs = data.responseJSON;
+                            for (let dialog in dialogs) {
+
+                                let dialogEl = document.createElement("div");
+                                let login = document.createElement("div");
+                                let lastMessage = document.createElement("div");
+
+                                if (dialogs.hasOwnProperty(dialog)) {
+
+                                    console.log(dialog);
+
+                                    dialog = dialogs[dialog];
+                                    if (dialog.hasOwnProperty("senderId") ? dialog.senderId === myId : false) {
+                                        dialogEl.id = dialog.hasOwnProperty("dialogId") ?
+                                            dialog.dialogId : console.error("Missing field \"dialogId\"");
+                                        login.innerText = dialog.hasOwnProperty("receiverLogin") ?
+                                            dialog.receiverLogin : console.error("Missing field \"receiverLogin\"");
+                                    } else {
+                                        dialogEl.id = dialog.hasOwnProperty("dialogId") ?
+                                            dialog.dialogId : console.error("Missing field \"dialogId\"");
+                                        login.innerText = dialog.hasOwnProperty("senderLogin") ?
+                                            dialog.senderLogin : console.error("Missing field \"senderLogin\"");
+                                    }
+
+                                    dialogEl.className = "person";
+                                    dialogEl.onclick = function () {
+                                        openMessageHistory(dialogEl.id);
+                                    }
+
+                                    login.className = "login";
+                                    lastMessage.className = "last_message";
+                                    lastMessage.innerText = dialog.text;
+
+                                    dialogEl.appendChild(login);
+                                    dialogEl.appendChild(lastMessage);
+
+                                    conversationsList.appendChild(dialogEl);
+                                }
                             }
                         }
                     })
@@ -60,7 +79,7 @@ window.onload = (function () {
                 window.alert("Error to load your id!\nTry one more time...");
             }
         }),
-        error: (function(data){
+        error: (function (data) {
             console.log("Error");
             console.log(data);
         })
@@ -71,58 +90,72 @@ window.onload = (function () {
  * Function openMessageHistory() request from the server message history and
  * show messages on front-end
  */
-const openMessageHistory = function (dialogId) {
-    isOpenedInterlocutorUsername = null;
-    let messageList = document.getElementById("messages_list");
-    messageList.innerText = "";
+function openMessageHistory(dialogId) {
+    if (dialogs[dialogId]) {
 
-    // Requesting message history for dialog that was clicked on
-    $.ajax({
-        url: "/get_message_history",
-        type: "POST",
-        data: dialogId,
-        contentType: "text/plain; charset=utf-8",
-        complete: (function (data) {
-            console.log(data.body);
+        let currentDialog = dialogs[dialogId];
 
-            // Iterating over array of received messages
-            for (let msg in data.body) {
-                if (data.body.hasOwnProperty(msg)) {
-                    let sender = document.createElement("div");
-                    sender.classList.add("sender_username");
-                    sender.innerText = msg.sender;
+        isOpenedInterlocutorUsername = currentDialog["senderId"] === myId.toString() ?
+            currentDialog["receiverLogin"] : currentDialog["senderLogin"];
 
-                    let timestamp = document.createElement("div");
-                    timestamp.classList.add("timestamp");
-                    const date = new Date(msg.id);
-                    timestamp.innerText = date.getHours() + ":" + date.getMinutes();
-
-                    let messageText = document.createElement("div");
-                    messageText.classList.add("message_text");
-                    messageText.innerText = msg.text;
+        let messageList = document.getElementById("messages_list");
+        messageList.innerText = "";
 
 
-                    let message = document.createElement("div");
-                    message.appendChild(sender);
-                    message.appendChild(messageText);
-                    message.appendChild(timestamp);
+        // Requesting message history for dialog that was clicked on
+        $.ajax({
+            url: "/get_message_history",
+            type: "POST",
+            data: dialogId.toString(),
+            contentType: "text/plain; charset=utf-8",
+            complete: (function (data) {
+                console.log(data);
 
-                    if (msg.sender === userId) {
-                        message.className = "outgoing_message";
-                    } else {
-                        message.className = "incoming_message";
-                        if (!isOpenedInterlocutorUsername) {
-                            isOpenedInterlocutorUsername = msg.sender;
+                let response = data.responseJSON;
+
+                // Iterating over array of received messages
+                for (let msg in response) {
+                    if (response.hasOwnProperty(msg)) {
+                        let sender = document.createElement("div");
+                        sender.classList.add("sender_username");
+                        sender.innerText = msg.hasOwnProperty("senderLogin") ?
+                            msg.senderLogin : console.error("Missing property \"senderLogin\"");
+
+                        let timestamp = document.createElement("div");
+                        timestamp.classList.add("timestamp");
+                        const date = msg.hasOwnProperty("timestamp") ?
+                            new Date(msg.timestamp) : console.error("Missing property \"timestamp\"");
+                        timestamp.innerText = date.getHours() + ":" + date.getMinutes();
+
+                        let messageText = document.createElement("div");
+                        messageText.classList.add("message_text");
+                        messageText.innerText = msg.hasOwnProperty("text") ?
+                            msg.text : console.error("Missing property \"text\"");
+
+
+                        let message = document.createElement("div");
+                        message.appendChild(sender);
+                        message.appendChild(messageText);
+                        message.appendChild(timestamp);
+
+                        if (msg.senderId === myId) {
+                            message.className = "outgoing_message";
+                        } else {
+                            message.className = "incoming_message";
+                            if (!isOpenedInterlocutorUsername) {
+                                isOpenedInterlocutorUsername = msg.hasOwnProperty("senderId") ?
+                                    msg.senderId : console.error("Missing property \"senderId\"");
+                            }
                         }
+
+                        messageList.appendChild(message);
                     }
-
-                    messageList.appendChild(message);
                 }
-            }
-        })
-    });
-
-};
+            })
+        });
+    } else {
+        console.error("Missing dialog with id: " + dialogId);
+    }
+}
 
 sendMessageButton.addEventListener('click', sendMessage, true);
-window.addEventListener("onload", connect, true);

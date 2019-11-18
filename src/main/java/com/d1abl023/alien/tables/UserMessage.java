@@ -97,4 +97,16 @@ public class UserMessage implements DBTable {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
+
+    @Override
+    public String toString() {
+        return "UserMessage{" +
+                "id=" + id +
+                ", dialogId=" + dialogId +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", text='" + text + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }

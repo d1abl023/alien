@@ -29,11 +29,11 @@ public class MessageController {
      *
      * @param principal principal of the current user that makes request
      * @return map with pairs ( dialogId = lastMessage )
-     * */
+     */
     @RequestMapping(value = "/get_dialog_list")
-    public Map<Long, UserMessage> getDialogList(Principal principal) {
+    public Map<Long, Message> getDialogList(Principal principal) {
 
-        Map<Long, UserMessage> response = new LinkedHashMap<>();
+        Map<Long, Message> response = new LinkedHashMap<>();
 
         //Get list of dialog id which refer to user
         Session dialogsTableSession = HibernateUtils.getSessionFactory().openSession();
@@ -54,10 +54,32 @@ public class MessageController {
             Query messageTableQuery = messagesTableSession.createQuery("from UserMessage msg1 where msg1.timestamp = " +
                     "(select max(msg2.timestamp) from UserMessage msg2 where msg2.dialogId = :id) and msg1.dialogId = :id");
             messageTableQuery.setParameter("id", dialog.getId());
-            List listWithMessages =  messageTableQuery.getResultList();
-            if(listWithMessages.size() > 0) {
+            List listWithMessages = messageTableQuery.getResultList();
+            if (listWithMessages.size() > 0) {
                 UserMessage userMessage = (UserMessage) listWithMessages.get(0);
-                response.put(dialog.getId(), userMessage);
+                String senderLogin;
+                String receiverLogin;
+
+                // Defines sender login and receiver login
+                if (new Long(userMessage.getSender()).equals(dialog.getUser1()) &&
+                        new Long(userMessage.getReceiver()).equals(dialog.getUser2())) {
+                    senderLogin = dialog.getUser1Login();
+                    receiverLogin = dialog.getUser2Login();
+                } else if (new Long(userMessage.getSender()).equals(dialog.getUser2()) &&
+                        new Long(userMessage.getReceiver()).equals(dialog.getUser1())) {
+                    senderLogin = dialog.getUser2Login();
+                    receiverLogin = dialog.getUser1Login();
+                } else {
+                    throw new InternalError("Error while checking sender and receiver login. " +
+                            "Probably this message is not applicable to that dialog." +
+                            "Dialog: " + dialog.toString() + "\t" +
+                            "Message: " + userMessage.toString());
+                }
+
+                Message message = new Message(Long.toString(userMessage.getTimestamp()),
+                        userMessage.getDialogId(), userMessage.getSender(), userMessage.getReceiver(),
+                        userMessage.getText(), senderLogin, receiverLogin);
+                response.put(dialog.getId(), message);
             }
             messagesTableTransaction.commit();
         }
@@ -66,14 +88,14 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/get_message_history")
-    public List getMessageHistory(Long dialogId){
+    public List<Message> getMessageHistory(@RequestBody String dialogId) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-
         Query query = session.createQuery("from UserMessage messages where messages.dialogId = :dialogId");
-        query.setParameter("dialogId", dialogId);
+        query.setParameter("dialogId", new Long(dialogId));
         List messageList = query.getResultList();
         transaction.commit();
+        System.out.println(messageList.size());
         return messageList;
     }
 

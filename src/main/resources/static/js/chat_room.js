@@ -11,9 +11,6 @@ var stompClient = null;
 var username = null;
 
 
-
-
-
 function getUserLogin() {
     $.ajax({
         async: false,
