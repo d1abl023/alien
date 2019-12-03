@@ -1,20 +1,19 @@
 package com.d1abl023.alien.core.controllers.restcontrollers;
 
+import com.d1abl023.alien.core.exceptions.InappropriateMessageForDialogException;
 import com.d1abl023.alien.model.Message;
 import com.d1abl023.alien.tables.Dialogs;
 import com.d1abl023.alien.tables.UserMessage;
 import com.d1abl023.alien.utilactions.HibernateUtils;
-import org.hibernate.Hibernate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.Query;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
 import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -23,6 +22,9 @@ import java.util.Map;
 
 @RestController
 public class MessageController {
+
+    private static final Logger logger = LogManager.getLogger();
+
 
     /**
      * Method getDialogList fetch from DB all dialogs of current user using it's principal as id.
@@ -61,12 +63,12 @@ public class MessageController {
                 String receiverLogin;
 
                 // Defines sender login and receiver login
-                if (new Long(userMessage.getSender()).equals(dialog.getUser1()) &&
-                        new Long(userMessage.getReceiver()).equals(dialog.getUser2())) {
+                if (new Long(userMessage.getSenderId()).equals(dialog.getUser1()) &&
+                        new Long(userMessage.getReceiverId()).equals(dialog.getUser2())) {
                     senderLogin = dialog.getUser1Login();
                     receiverLogin = dialog.getUser2Login();
-                } else if (new Long(userMessage.getSender()).equals(dialog.getUser2()) &&
-                        new Long(userMessage.getReceiver()).equals(dialog.getUser1())) {
+                } else if (new Long(userMessage.getSenderId()).equals(dialog.getUser2()) &&
+                        new Long(userMessage.getReceiverId()).equals(dialog.getUser1())) {
                     senderLogin = dialog.getUser2Login();
                     receiverLogin = dialog.getUser1Login();
                 } else {
@@ -76,9 +78,15 @@ public class MessageController {
                             "Message: " + userMessage.toString());
                 }
 
-                Message message = new Message(Long.toString(userMessage.getTimestamp()),
-                        userMessage.getDialogId(), userMessage.getSender(), userMessage.getReceiver(),
-                        userMessage.getText(), senderLogin, receiverLogin);
+                Message message = new Message(
+                        Long.toString(userMessage.getId()),
+                        Long.toString(userMessage.getTimestamp()),
+                        Long.toString(userMessage.getDialogId()),
+                        Long.toString(userMessage.getSenderId()),
+                        Long.toString(userMessage.getReceiverId()),
+                        userMessage.getText(),
+                        senderLogin,
+                        receiverLogin);
                 response.put(dialog.getId(), message);
             }
             messagesTableTransaction.commit();
@@ -94,9 +102,45 @@ public class MessageController {
         Query query = session.createQuery("from UserMessage messages where messages.dialogId = :dialogId");
         query.setParameter("dialogId", new Long(dialogId));
         List messageList = query.getResultList();
+        Dialogs dialog = session.get(Dialogs.class, new Long(dialogId));
         transaction.commit();
-        System.out.println(messageList.size());
-        return messageList;
+        session.close();
+
+        List<Message> responseList = new LinkedList<>();
+        for (Object dbMessage : messageList) {
+            UserMessage message = (UserMessage) dbMessage;
+            try {
+                if (message.getSenderId() == dialog.getUser1() && message.getReceiverId() == dialog.getUser2()) {
+                    responseList.add(new Message(
+                            Long.toString(message.getId()),
+                            Long.toString(message.getTimestamp()),
+                            Long.toString(message.getDialogId()),
+                            Long.toString(message.getSenderId()),
+                            Long.toString(message.getReceiverId()),
+                            message.getText(),
+                            dialog.getUser1Login(),
+                            dialog.getUser2Login()
+                    ));
+                } else if (message.getSenderId() == dialog.getUser2() && message.getReceiverId() == dialog.getUser1()) {
+                    responseList.add(new Message(
+                            Long.toString(message.getId()),
+                            Long.toString(message.getTimestamp()),
+                            Long.toString(message.getDialogId()),
+                            Long.toString(message.getSenderId()),
+                            Long.toString(message.getReceiverId()),
+                            message.getText(),
+                            dialog.getUser2Login(),
+                            dialog.getUser1Login()
+                    ));
+                } else {
+                    throw new InappropriateMessageForDialogException(message, dialog);
+                }
+
+            } catch (InappropriateMessageForDialogException e) {
+                e.printStackTrace();
+            }
+        }
+        return responseList;
     }
 
 }

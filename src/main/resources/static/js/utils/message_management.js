@@ -1,4 +1,4 @@
-let username;
+let myUsername;
 let myId;
 
 /**
@@ -22,7 +22,7 @@ const connect = function () {
         url: "get_username",
         type: "GET",
         complete: (function (data) {
-            username = data.responseText;
+            myUsername = data.responseText;
         })
     });
 
@@ -67,30 +67,24 @@ function showPopUpWithSendingError(message) {
 }
 
 function showPopUp(message) {
-    console.log(message);
+    if (message["senderId"] === myId) {
+        document.getElementById("sender_username").innerText = "Message has been send.";
+    } else {
+        document.getElementById("sender_username").innerText = "New message from " + message["senderLogin"];
+    }
+    document.getElementById("part_of_message_text").innerText = message.text;
+    document.getElementById("newMessagePopUp").style.visibility = "visible";
 
-    $.ajax({
-        url: "get_username_by_id",
-        type: "POST",
-        data: message.senderId,
-        contentType: "text/plain; charset=utf-8",
-        complete: (function (data) {
-            if (message.sender === myId) {
-                document.getElementById("sender_username").innerText = "Message has been send.";
-            } else {
-                document.getElementById("sender_username").innerText = "New message from " + data.responseText;
-            }
-            document.getElementById("part_of_message_text").innerText = message.text;
-            document.getElementById("newMessagePopUp").style.visibility = "visible";
-
-            setTimeout(function () {
-                document.getElementById("newMessagePopUp").style.visibility = "hidden";
-            }, 5000);
-        })
-    })
+    setTimeout(function () {
+        document.getElementById("newMessagePopUp").style.visibility = "hidden";
+    }, 5000);
 }
 
 function manageMessageInDialogs(message) {
-    console.log("<<<<<<< manageMessageInDialogs");
-    showPopUp(message);
+    addMessageToMessageList(message);
+    if (message["dialogId"] !== isOpenedDialogId) {
+        if (message["receiverId"] !== myId) {
+            showPopUp(message);
+        }
+    }
 }

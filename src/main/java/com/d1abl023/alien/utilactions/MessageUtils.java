@@ -4,6 +4,8 @@ import com.d1abl023.alien.core.exceptions.ExcessNumberOfTableValuesException;
 import com.d1abl023.alien.model.Message;
 import com.d1abl023.alien.tables.Dialogs;
 import com.d1abl023.alien.tables.UserMessage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -13,12 +15,13 @@ import java.util.List;
 
 public class MessageUtils {
 
-    public static boolean insertMsgIntoDB(Message msg) throws ExcessNumberOfTableValuesException {
+    private static Logger logger = LogManager.getLogger();
 
+    public static boolean insertMsgIntoDB(Message msg) throws ExcessNumberOfTableValuesException {
         Long dialogId;
 
         // If dialog id is not defined, fetch id from database
-        if (msg.getDialogId() == 0) {
+        if (new Long(msg.getDialogId()).equals(0L)) {
             Session dialogsTableSession = HibernateUtils.getSessionFactory().openSession();
             Transaction dialogsTableTransaction = dialogsTableSession.beginTransaction();
             // TODO: To write query that will fetch data faster
@@ -48,14 +51,16 @@ public class MessageUtils {
                 createNewDialogSession.close();
             }
         } else {
-            dialogId = msg.getDialogId();
+            dialogId = new Long(msg.getDialogId());
         }
+
+//        logger.debug("Dialog id = " + dialogId);
 
         if (dialogId != null && dialogId != 0) {
             UserMessage message = new UserMessage(
                     dialogId,
-                    msg.getSenderId(),
-                    msg.getReceiverId(),
+                    new Long(msg.getSenderId()),
+                    new Long(msg.getReceiverId()),
                     msg.getText(),
                     new Long(msg.getTimestamp())
             );
@@ -67,7 +72,9 @@ public class MessageUtils {
             insertMessageTransaction.commit();
             insertMessageSession.close();
 
-            return messageId != null && messageId != 0;
+             msg.setId(Long.toString(messageId));
+
+            return messageId != 0;
         }
         return false;
     }

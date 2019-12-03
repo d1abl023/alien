@@ -8,9 +8,11 @@ import java.io.Serializable;
  */
 public class Message implements Serializable {
 
+    private String id;
+
     private String timestamp;
 
-    private long dialogId;
+    private String dialogId;
 
     private String senderId;
 
@@ -25,15 +27,7 @@ public class Message implements Serializable {
     public Message() {
     }
 
-    public Message(String timestamp, long dialogId, String senderId, String receiver, String text) {
-        this.timestamp = timestamp;
-        this.dialogId = dialogId;
-        this.senderId = senderId;
-        this.receiverId = receiver;
-        this.text = text;
-    }
-
-    public Message(String timestamp, long dialogId, String senderId, String receiverId,
+    public Message(String timestamp, String dialogId, String senderId, String receiverId,
                    String text, String senderLogin, String receiverLogin) {
         this.timestamp = timestamp;
         this.dialogId = dialogId;
@@ -44,6 +38,26 @@ public class Message implements Serializable {
         this.receiverLogin = receiverLogin;
     }
 
+    public Message(String id, String timestamp, String dialogId, String senderId,
+                   String receiverId, String text, String senderLogin, String receiverLogin) {
+        this.id = id;
+        this.timestamp = timestamp;
+        this.dialogId = dialogId;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.text = text;
+        this.senderLogin = senderLogin;
+        this.receiverLogin = receiverLogin;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getTimestamp() {
         return timestamp;
     }
@@ -52,11 +66,11 @@ public class Message implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public long getDialogId() {
+    public String getDialogId() {
         return dialogId;
     }
 
-    public void setDialogId(long dialogId) {
+    public void setDialogId(String dialogId) {
         this.dialogId = dialogId;
     }
 
@@ -100,14 +114,18 @@ public class Message implements Serializable {
         this.receiverLogin = receiverLogin;
     }
 
+
     @Override
     public String toString() {
         return "Message{" +
-                "id=" + timestamp +
-                ", dialogId=" + dialogId +
-                ", sender='" + senderId + '\'' +
-                ", receiver='" + receiverId + '\'' +
+                "id='" + id + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                ", dialogId='" + dialogId + '\'' +
+                ", senderId='" + senderId + '\'' +
+                ", receiverId='" + receiverId + '\'' +
                 ", text='" + text + '\'' +
+                ", senderLogin='" + senderLogin + '\'' +
+                ", receiverLogin='" + receiverLogin + '\'' +
                 '}';
     }
 }

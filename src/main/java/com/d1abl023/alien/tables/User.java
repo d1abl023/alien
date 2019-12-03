@@ -193,4 +193,22 @@ public class User implements DBTable {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", email='" + email + '\'' +
+                ", date=" + date +
+                ", sex='" + sex + '\'' +
+                ", number=" + number +
+                ", country='" + country + '\'' +
+                ", city='" + city + '\'' +
+                ", placeOfWork='" + placeOfWork + '\'' +
+                ", education='" + education + '\'' +
+                ", status='" + status + '\'' +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }

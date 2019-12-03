@@ -1,6 +1,8 @@
 package com.d1abl023.alien.core.components;
 
 import com.d1abl023.alien.model.ChatMessage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -17,18 +19,20 @@ import java.util.Objects;
 @Component
 public class WebSocketEventListener {
 
+    private final static Logger logger = LogManager.getLogger();
+
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-        System.out.println("Received a new web socked connection: " + event.getUser().getName());
+        logger.debug("Received a new web socked connection: " + event.getUser().getName());
     }
 
     @EventListener
     public void handleWebSocketSubscribeListener(SessionSubscribeEvent event) {
 
-        System.out.println("Received a new web socked subscription: " + event.getUser().getName() +
+        logger.debug("Received a new web socked subscription: " + event.getUser().getName() +
                 "\nHeaders: " + event.getMessage().getHeaders() +
                 "\nPayload: " + event.getMessage().getPayload().length);
     }
@@ -37,7 +41,7 @@ public class WebSocketEventListener {
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         String username = event.getUser().getName();
 
-        System.out.println("User disconnected: " + username);
+        logger.debug("User disconnected: " + username);
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setType(ChatMessage.MessageType.LEAVE);

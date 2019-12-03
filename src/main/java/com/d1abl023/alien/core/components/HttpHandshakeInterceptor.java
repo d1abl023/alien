@@ -1,5 +1,7 @@
 package com.d1abl023.alien.core.components;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -13,12 +15,13 @@ import java.util.Map;
 @Component
 public class HttpHandshakeInterceptor implements HandshakeInterceptor {
 
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse,
                                    WebSocketHandler webSocketHandler, Map<String, Object> map) {
 
-        System.out.println("Call beforeHandshake()");
+        logger.debug("Call beforeHandshake()");
 
         if (serverHttpRequest instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest request = (ServletServerHttpRequest) serverHttpRequest;
@@ -31,6 +34,6 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
     @Override
     public void afterHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse,
                                WebSocketHandler webSocketHandler, Exception e) {
-        System.out.println("Call afterHandshake()");
+        logger.debug("Call afterHandshake()");
     }
 }

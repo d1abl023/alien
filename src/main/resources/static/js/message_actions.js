@@ -6,10 +6,10 @@ const sendMessageButton = document.getElementById("send_message_button");
 let dialogs = null;
 
 let stompClient = null;
-let myId = null;
 
 let isOpenedDialogId = null;
 let isOpenedInterlocutorUsername = null;
+let isOpenedInterlocutorId = null;
 
 
 /**
@@ -58,7 +58,7 @@ window.onload = (function () {
                                     dialogEl.className = "person";
                                     dialogEl.onclick = function () {
                                         openMessageHistory(dialogEl.id);
-                                    }
+                                    };
 
                                     login.className = "login";
                                     lastMessage.className = "last_message";
@@ -93,14 +93,20 @@ window.onload = (function () {
 function openMessageHistory(dialogId) {
     if (dialogs[dialogId]) {
 
-        let currentDialog = dialogs[dialogId];
+        isOpenedDialogId = dialogId;
 
-        isOpenedInterlocutorUsername = currentDialog["senderId"] === myId.toString() ?
-            currentDialog["receiverLogin"] : currentDialog["senderLogin"];
+        let lastMessage = dialogs[dialogId];
 
-        let messageList = document.getElementById("messages_list");
-        messageList.innerText = "";
+        if (lastMessage["senderId"] === myId.toString()) {
+            isOpenedInterlocutorUsername = lastMessage["receiverLogin"];
+            isOpenedInterlocutorId = lastMessage["receiverId"];
+        } else {
+            isOpenedInterlocutorUsername = lastMessage["senderLogin"];
+            isOpenedInterlocutorId = lastMessage["senderId"];
+        }
 
+        document.getElementById("messages_list").innerText = "";
+        document.getElementById("messages_list_header").innerText += " with " + isOpenedInterlocutorUsername;
 
         // Requesting message history for dialog that was clicked on
         $.ajax({
@@ -116,41 +122,11 @@ function openMessageHistory(dialogId) {
                 // Iterating over array of received messages
                 for (let msg in response) {
                     if (response.hasOwnProperty(msg)) {
-                        let sender = document.createElement("div");
-                        sender.classList.add("sender_username");
-                        sender.innerText = msg.hasOwnProperty("senderLogin") ?
-                            msg.senderLogin : console.error("Missing property \"senderLogin\"");
-
-                        let timestamp = document.createElement("div");
-                        timestamp.classList.add("timestamp");
-                        const date = msg.hasOwnProperty("timestamp") ?
-                            new Date(msg.timestamp) : console.error("Missing property \"timestamp\"");
-                        timestamp.innerText = date.getHours() + ":" + date.getMinutes();
-
-                        let messageText = document.createElement("div");
-                        messageText.classList.add("message_text");
-                        messageText.innerText = msg.hasOwnProperty("text") ?
-                            msg.text : console.error("Missing property \"text\"");
-
-
-                        let message = document.createElement("div");
-                        message.appendChild(sender);
-                        message.appendChild(messageText);
-                        message.appendChild(timestamp);
-
-                        if (msg.senderId === myId) {
-                            message.className = "outgoing_message";
-                        } else {
-                            message.className = "incoming_message";
-                            if (!isOpenedInterlocutorUsername) {
-                                isOpenedInterlocutorUsername = msg.hasOwnProperty("senderId") ?
-                                    msg.senderId : console.error("Missing property \"senderId\"");
-                            }
-                        }
-
-                        messageList.appendChild(message);
+                        addMessageToMessageList(response[msg]);
                     }
                 }
+                document.getElementById("messages_list").scrollTop =
+                    document.getElementById("messages_list").scrollHeight;
             })
         });
     } else {
@@ -158,4 +134,71 @@ function openMessageHistory(dialogId) {
     }
 }
 
-sendMessageButton.addEventListener('click', sendMessage, true);
+
+function addMessageToMessageList(msg) {
+    let messageList = document.getElementById("messages_list");
+
+    let sender = document.createElement("div");
+    sender.classList.add("sender_username");
+    sender.innerText = msg.hasOwnProperty("senderLogin") ?
+        msg.senderLogin : console.error("Missing property \"senderLogin\"");
+
+    let timestamp = document.createElement("div");
+    timestamp.classList.add("timestamp");
+    const date = msg.hasOwnProperty("timestamp") ?
+        new Date(Number(msg.timestamp)) : console.error("Missing property \"timestamp\"");
+    let minutes = date.getMinutes();
+    timestamp.innerText = date.getHours() + ":" + (minutes.toString().length === 2 ? minutes.toString() : minutes + "0");
+
+    let messageText = document.createElement("div");
+    messageText.classList.add("message_text");
+    messageText.innerText = msg.hasOwnProperty("text") ?
+        msg.text : console.error("Missing property \"text\"");
+
+
+    let messageBody = document.createElement("div");
+//    messageBody.appendChild(sender);
+    messageBody.appendChild(messageText);
+
+    let message = document.createElement("div");
+
+
+    if (msg.senderId === myId) {
+        messageBody.className = "outgoing_msg_body";
+        message.className = "outgoing_message";
+    } else {
+        messageBody.className = "incoming_msg_body";
+        message.className = "incoming_message";
+        if (!isOpenedInterlocutorUsername) {
+            isOpenedInterlocutorUsername = msg.hasOwnProperty("senderId") ?
+                msg.senderId : console.error("Missing property \"senderId\"");
+        }
+    }
+
+    message.appendChild(messageBody);
+    message.appendChild(timestamp);
+    messageList.appendChild(message);
+    document.getElementById("messages_list").scrollTop =
+        document.getElementById("messages_list").scrollHeight;
+}
+
+let send = function () {
+    let text = document.getElementById("send_message_field").value;
+    let message = {
+        "dialogId": isOpenedDialogId,
+        "senderId": myId,
+        "receiverId": isOpenedInterlocutorId,
+        "text": text,
+        "senderLogin": myUsername,
+        "receiverLogin": isOpenedInterlocutorUsername
+    };
+    sendMessage(message);
+
+    document.getElementById("send_message_field").value = "";
+};
+
+sendMessageButton.addEventListener('click', send, true);
+
+let sortDialogs = function (dialogs) {
+    return dialogs;
+}

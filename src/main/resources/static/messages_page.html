@@ -9,73 +9,73 @@
 </head>
 
 <body>
-<div id="header">
-    <div id="header_blocks">
-        <button id="user_profile_button" type="button" onclick="goToProfile();">My profile</button>
-        <button id="messages_button" type="button" onclick="goToMessages();">Messages</button>
-        <button id="search_button" type="button" onclick="goToSearch();">Search</button>
-        <button id="logout_button" type="button" onclick="logout();">Log out</button>
+    <div id="header">
+        <div id="header_blocks">
+            <button id="user_profile_button" type="button" onclick="goToProfile();">My profile</button>
+            <button id="messages_button" type="button" onclick="goToMessages();">Messages</button>
+            <button id="search_button" type="button" onclick="goToSearch();">Search</button>
+            <button id="logout_button" type="button" onclick="logout();">Log out</button>
+        </div>
     </div>
-</div>
 
-<div id="body">
-    <div id="body_blocks">
+    <div id="body">
+        <div id="body_blocks">
 
-        <div id="headers_block">
-            <div id="conversations_list_header">Conversations</div>
-            <div id="messages_list_header">Messages</div>
-        </div>
-
-        <div id="conversations_list">
-            <div id="123123123123123" class="person" onclick="openMessageHistory(this.id);">
-                <div class="login"></div>
-                <div class="last_message"></div>
-            </div>
-        </div>
-
-
-        <div id="messages_block">
-
-            <div id="messages_list">
-                <div class="incoming_message">
-                    <div class="sender_username">d1abl023</div>
-                    <div class="message_text">Hello!</div>
-                    <div class="timestamp">23:11:11</div>
-                </div>
-                <div class="outgoing_message">
-                    <div class="sender_username">me</div>
-                    <div class="message_text">Hello!</div>
-                    <div class="timestamp">23:11:11</div>
-                </div>
+            <div id="headers_block">
+                <div id="conversations_list_header">Conversations</div>
+                <div id="messages_list_header">Messages</div>
             </div>
 
-            <div id="send_messages_block">
-                <textarea id="send_message_field"></textarea>
+            <div id="conversations_list">
+                <!--                <div id="1" class="person" onclick="openMessageHistory(this.id);">-->
+                <!--                    <div class="login">andrei23</div>-->
+                <!--                    <div class="last_message">text responsee from Andrei23</div>-->
+                <!--                </div>-->
+            </div>
 
-                <div id="send_message_functional">
-                    <button id="send_message_button" onclick="sendMessage()">&#x25B2</button>
+
+            <div id="messages_block">
+
+                <div id="messages_list">
+                    <div class="incoming_message">
+                        <div class="incoming_msg_body">
+<!--                            <div class="sender_username">d1abl023</div>-->
+                            <div class="message_text">Hello!</div>
+                        </div>
+                        <div class="timestamp">23:11</div>
+                    </div>
+                    <div class="outgoing_message">
+                        <div class="outgoing_msg_body">
+<!--                            <div class="sender_username">me</div>-->
+                            <div class="message_text">Hello!</div>
+                        </div>
+                        <div class="timestamp">23:11</div>
+                    </div>
                 </div>
+
+                <div id="send_messages_block">
+                    <textarea id="send_message_field"></textarea>
+
+                    <div id="send_message_functional">
+                        <button id="send_message_button" onclick="sendMessage()">&#x25B2</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="newMessagePopUp" class="popup">
+                <div id="sender_username"></div>
+                <div id="part_of_message_text"></div>
             </div>
 
         </div>
-
-        <div id="newMessagePopUp" class="popup">
-            <div id="sender_username"></div>
-            <div id="part_of_message_text"></div>
-        </div>
-
     </div>
-</div>
 
-<div id="footer">
-    FOOTER
-</div>
 
-<script src="js/main.js" type="text/javascript"></script>
-<script src="js/utils/message_management.js" type="text/javascript"></script>
-<script src="js/message_actions.js" type="text/javascript"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-</body>
-</html>
+    <script src="js/main.js" type="text/javascript"></script>
+    <script src="js/utils/message_management.js" type="text/javascript"></script>
+    <script src="js/message_actions.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</body></html>

@@ -1,10 +1,8 @@
 package com.d1abl023.alien.tables;
 
 import com.d1abl023.alien.interfaces.DBTable;
-import com.d1abl023.alien.interfaces.Message;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "messages")
@@ -18,11 +16,11 @@ public class UserMessage implements DBTable {
     @Column(name = "dialogId")
     private long dialogId;
 
-    @Column(name = "sender")
-    private String sender;
+    @Column(name = "senderId")
+    private long senderId;
 
-    @Column(name = "receiver")
-    private String receiver;
+    @Column(name = "receiverId")
+    private long receiverId;
 
     @Column(name = "msg")
     private String text;
@@ -33,19 +31,19 @@ public class UserMessage implements DBTable {
     public UserMessage() {
     }
 
-    public UserMessage(long dialogId, String sender, String receiver, String text, long timestamp) {
+    public UserMessage(long dialogId, long senderId, long receiverId, String text, long timestamp) {
         this.dialogId = dialogId;
-        this.sender = sender;
-        this.receiver = receiver;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
         this.text = text;
         this.timestamp = timestamp;
     }
 
-    public UserMessage(long id, long dialogId, String sender, String receiver, String text, long timestamp) {
+    public UserMessage(long id, long dialogId, long senderId, long receiverId, String text, long timestamp) {
         this.id = id;
         this.dialogId = dialogId;
-        this.sender = sender;
-        this.receiver = receiver;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
         this.text = text;
         this.timestamp = timestamp;
     }
@@ -66,20 +64,20 @@ public class UserMessage implements DBTable {
         this.dialogId = dialogId;
     }
 
-    public String getSender() {
-        return sender;
+    public long getSenderId() {
+        return senderId;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setSenderId(long senderId) {
+        this.senderId = senderId;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public long getReceiverId() {
+        return receiverId;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setReceiverId(long receiverId) {
+        this.receiverId = receiverId;
     }
 
     public String getText() {
@@ -103,8 +101,8 @@ public class UserMessage implements DBTable {
         return "UserMessage{" +
                 "id=" + id +
                 ", dialogId=" + dialogId +
-                ", sender='" + sender + '\'' +
-                ", receiver='" + receiver + '\'' +
+                ", sender=" + senderId +
+                ", receiver=" + receiverId +
                 ", text='" + text + '\'' +
                 ", timestamp=" + timestamp +
                 '}';
