@@ -30,9 +30,9 @@ html {
     width: 250px;
     height: 81%;
     float: left;
-    border-style: outset;
-    border-color: #E29826;
-    border-width: 1.5px;
+/*    border-style: outset;*/
+/*    border-color: #E29826;*/
+/*    border-width: 1.5px;*/
     overflow: auto;
 }
 
@@ -45,8 +45,9 @@ html {
     border-top: 0;
     border-left: 0;
     border-right: 0;
-    border-bottom: 1.5px;
+    border-bottom: 0;
     border-color: #E29826;
+    border-radius: 10px;
     overflow: auto;
     margin-top: 6px;
     margin-bottom: 6px;
@@ -59,10 +60,12 @@ html {
     padding: 10px;
     text-align: center;
     font-family: cursive;
-    border-width: 3px;
+    border-width: 2px;
     border-style: outset;
     border-color: #E29826;
-    width: 25%;
+    border-radius: 10px;
+    width: 23%;
+    margin: 1%
 }
 
 #messages_list_header {
@@ -72,12 +75,15 @@ html {
     padding: 10px;
     text-align: center;
     font-family: cursive;
-    border-width: 3px;
+    border-width: 2px;
     border-style: outset;
     border-color: #E29826;
-    margin-left: -6px;
-    margin-right: -3px;
-    width: 69.76%;
+    border-radius: 10px;
+    margin-left: 2%;
+    margin-right: 1%;
+    margin-bottom: 1%;
+    margin-top: 1%;
+    width: 65%;
 
 }
 
@@ -87,9 +93,11 @@ html {
     width: 650px;
     height: 81%;
     margin-left: 250px;
+/*
     border-style: outset;
     border-width: 1.5px;
     border-color: #E29826;
+*/
 }
 
 #send_messages_block {
@@ -149,11 +157,14 @@ html {
     border-width: 1px;
     border-style: outset;
     border-color: #E29826;
+    border-radius: 10px;
     vertical-align: bottom;
     color: silver;
     padding: 5px 0px 1px 10px;
     font-family: sans-serif;
     font-size: 1.1em;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .login {
@@ -170,7 +181,6 @@ html {
     position: inherit;
     color: silver;
     padding: 10px 10px 10px 30px;
-    overflow: auto;
 }
 
 .outgoing_message {
@@ -178,7 +188,6 @@ html {
     position: inherit;
     color: silver;
     padding: 10px 10px 10px 30px;
-/*    overflow: auto;*/
     text-align: right
 }
 
@@ -223,7 +232,9 @@ html {
     vertical-align: middle;
     width: 50px;
     height: 70%;
+    padding-top: 2%;
     margin-left: -50px;
+    
     
 }
 
