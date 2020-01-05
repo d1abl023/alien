@@ -1,0 +1,40 @@
+{
+  "name": "alien",
+  "version": "0.0.1",
+  "author": "d1abl023",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d1abl023/alien.git"
+  },
+  "description": "CREATE TABLE user_info(id bigint, login text, date_of_birth date, sex text, phone_number bigint, country text, city text, status text, type text,PRIMARY KEY(id)); CREATE TABLE auth_data(id bigint, login text, password text, phone_number bigint, email text,PRIMARY KEY(id)); CREATE TABLE chat_room_1_messages(id bigint, type text, content text, sender text, timestamp text, PRIMARY KEY(id)); CREATE TABLE users(id bigint, login text, email text, date_of_birth date, sex text, phone_number bigint, country text, city text, place_of_work text, education text, status text, type text,PRIMARY KEY(id)); CREATE TABLE dialogs (id SERIAL NOT NULL, user1 bigint, user2 bigint, user1Login text, user2Login text, PRIMARY KEY(id)); CREATE TABLE messages (id SERIAL NOT NULL, dialogId bigint, sender text, msg text, receiver text, timestamp bigint, PRIMARY KEY(id));",
+  "bugs": {
+    "url": "https://github.com/d1abl023/alien/issues"
+  },
+  "homepage": "https://github.com/d1abl023/alien#readme",
+  "main": "index.js",
+  "dependencies": {
+    "@stomp/stompjs": "^5.4.2",
+    "@types/jquery": "^3.3.31",
+    "@types/node": "^12.7.12",
+    "brunch": "^2.10.17",
+    "core-js": "^3.2.1",
+    "core-js-bundle": "^3.2.1",
+    "css-brunch": "^2.10.0",
+    "javascript-brunch": "^2.10.0",
+    "less-brunch": "^2.10.0",
+    "rimraf": "^3.0.0",
+    "sockjs": "^0.3.19",
+    "stomp": "^0.1.1",
+    "typescript": "^3.7.4",
+    "typescript-brunch": "^2.3.0",
+    "uglify-js-brunch": "^2.10.0",
+    "web-pack": "^1.0.0"
+  },
+  "scripts": {
+    "clean": "rimraf ./src/main/resources/static/out",
+    "build-module": "tsc --project src/main/resources/static/tsconfig.json",
+    "prebuild": "npm run clean && npm run build-module",
+    "build": "node_modules\\.bin\\brunch build"
+  }
+}

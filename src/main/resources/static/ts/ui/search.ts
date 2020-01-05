@@ -1,7 +1,11 @@
-window.search = function () {
+import {MessageManager} from "../utils/message_manager";
+
+const messageManager: MessageManager = new MessageManager();
+
+let search = function () {
 
     document.getElementById("search_results").innerText = "";
-    let searchVal = document.getElementById("search_field").value;
+    let searchVal = (<HTMLInputElement>document.getElementById("search_field")).value;
 
     $.ajax({
         url: "search",
@@ -36,7 +40,7 @@ window.search = function () {
 
 };
 
-createUserBlock = function (userEntity) {
+function createUserBlock (userEntity) {
     let login = document.createElement("div");
     login.className = "login";
     login.innerText = userEntity.login;
@@ -56,7 +60,7 @@ createUserBlock = function (userEntity) {
     let sendMessageButton = document.createElement("button");
     sendMessageButton.className = "send_message_button";
     sendMessageButton.onclick = function () {
-        sendMessage(userEntity.id)
+        messageManager.sendMessage(userEntity.id)
     };
     sendMessageButton.innerText = "Message";
 
@@ -71,6 +75,6 @@ createUserBlock = function (userEntity) {
     return user;
 };
 
-openProfile = function (id) {
+function openProfile(id) {
     window.location.href = "page_of_user.html?" + id;
 };
