@@ -9,7 +9,7 @@
 <body>
 
 <div id="header">
-    HEADER
+    ALIEN
 </div>
 
 <div id="body">
@@ -18,7 +18,7 @@
             Registration form
         </div>
         <div id="error"></div>
-        <form id="registration" onsubmit="return makeJSON(this);">
+        <form id="registration" onsubmit="return RegistrationPage.sendRegistrationFormData(this);">
             <fieldset>
                 <legend>User info</legend>
                 <p class="reg_form_line">
@@ -78,7 +78,7 @@
     FOOTER
 </div>
 
-<script src="js/registration.js" type="text/javascript"></script>
+<script src="js/ui/registrationPage.js" type="text/javascript"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </body>
 </html>
