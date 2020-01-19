@@ -1,51 +1,54 @@
-function goToRegistration() {
-    window.location.href = "registration.html";
-}
+import * as React from "react";
 
-function sendFormData(form) {
+export class Index {
 
-    var authData = {
-        "username": form.username.value,
-        "password": form.password.value
-    };
+    static goToRegistration(): void {
+        window.location.href = "registration.html";
+    }
 
-    $.ajax({
-        url: "authentication",
-        type: "POST",
-        data: JSON.stringify(authData),
-        contentType: "application/json; charset=utf-8",
-        complete: (function (data) {
-            console.log(data);
+    static sendFormData(form) {
 
-            if (data.status === 200) {
-                console.log("login success");
-//                window.location.href = "page_of_user.html";
-            } else {
+        var authData = {
+            "username": form.username.value,
+            "password": form.password.value
+        };
 
-                document.getElementById("auth_error").style.textAlign = "center";
-                document.getElementById("auth_error").style.fontSize = "1.5em";
-                document.getElementById("auth_error").style.color = "#D01D33";
-                document.getElementById("auth_error").style.marginBottom = "15px";
+        $.ajax({
+            url: "authentication",
+            type: "POST",
+            data: JSON.stringify(authData),
+            contentType: "application/json; charset=utf-8",
+            complete: (function (data) {
+                console.log(data);
 
-                switch (data.responseText) {
-                    case "invalid password": {
-                        document.getElementById("auth_error").innerText
-                            = "Invalid password!\nPlease try again!";
-                        break;
-                    }
+                if (data.status === 200) {
+                    console.log("login success");
+                    //                window.location.href = "page_of_user.html";
+                } else {
 
-                    case "invalid login field": {
-                        document.getElementById("auth_error").innerText
-                            = "Invalid login!\nPlease try again!";
-                        break;
-                    }
+                    document.getElementById("auth_error").style.textAlign = "center";
+                    document.getElementById("auth_error").style.fontSize = "1.5em";
+                    document.getElementById("auth_error").style.color = "#D01D33";
+                    document.getElementById("auth_error").style.marginBottom = "15px";
 
-                    case "user description data does not exist": {
-                        break;
+                    switch (data.responseText) {
+                        case "invalid password": {
+                            document.getElementById("auth_error").innerText
+                                = "Invalid password!\nPlease try again!";
+                            break;
+                        }
+                        case "invalid login field": {
+                            document.getElementById("auth_error").innerText
+                                = "Invalid login!\nPlease try again!";
+                            break;
+                        }
+                        case "user description data does not exist": {
+                            break;
+                        }
                     }
                 }
-            }
-        })
-    });
-    return false;
+            })
+        });
+        return false;
+    }
 }

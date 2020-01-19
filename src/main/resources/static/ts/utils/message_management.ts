@@ -1,3 +1,6 @@
+import * as SockJS from "sockjs-client";
+import {Stomp} from "@stomp/stompjs";
+
 let myUsername;
 let myId;
 
@@ -6,7 +9,7 @@ let myId;
  */
 const connect = function () {
     let socket = new SockJS('/ws');
-    stompClient = Stomp.over(socket);
+    let stompClient = Stomp.over(socket);
 
     console.log("Trying to connect to the server...");
 

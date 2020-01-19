@@ -1,13 +1,11 @@
 //'use strict';
-import { Stomp } from "@stomp/stompjs";
-import { SockJS } from "sockjs";
 
-var chatPage = document.getElementById('#chat-page');
-var messageList = document.getElementById('#message_list');
-var messageInput = <HTMLInputElement>document.getElementById('#message');
-var messageForm = document.getElementById('#message_form');
-var sendMessageButton = document.getElementById('#send_message_button');
-var connectingElement = document.getElementById('.connecting');
+var chatPage = document.querySelector('#chat-page');
+var messageList = document.querySelector('#message_list');
+var messageInput = document.querySelector('#message');
+var messageForm = document.querySelector('#message_form');
+var sendMessageButton = document.querySelector('#send_message_button');
+//var connectingElement = document.querySelector('.connecting');
 
 var stompClient = null;
 var username = null;
@@ -82,7 +80,6 @@ function sendMessage(event) {
     event.preventDefault();
 }
 
-// @ts-ignore
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
 
@@ -116,6 +113,6 @@ const openMessageHistory = function (login) {
 if (window.addEventListener) {
     window.addEventListener('load', connect, true); //W3C
 } else {
-    window.onload = connect;
+    window.attachEvent('onload', connect);
 }
 sendMessageButton.addEventListener('click', sendMessage, true);

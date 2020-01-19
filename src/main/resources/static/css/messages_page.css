@@ -110,7 +110,7 @@ html {
 #send_message_field {
     position: relative;
     display: block;
-    width: 90%;
+    width: 87%;
     height: 100%;
     background-color: #454548;
     border-width: 0;
@@ -118,7 +118,6 @@ html {
     float: left;
     margin-left: 1%;
     border-radius: 10px 10px 10px 10px;
-
 }
 
 #send_message_functional {
@@ -135,16 +134,16 @@ html {
     position: relative;
     margin-left: auto;
     margin-right: auto;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border-width: 0;
-    background-color: #E29826;
+    width: 80px;
+    height: 37px;
+    border-radius: 13%;
+    border-width: 1px;
+    border-color: silver;
+    background-color: #282829;
     color: silver;
-    font-size: 2.5em;
-    padding-top: 0;
-    padding-bottom: 16px;
-    font-style: italic;
+    font-size: 1.5em;
+    padding: 10px 10px 10px 30px;
+
 }
 
 .person {
@@ -156,7 +155,7 @@ html {
     background-color: #2E2E2F;
     border-width: 1px;
     border-style: outset;
-    border-color: #E29826;
+    border-color: silver;
     border-radius: 10px;
     vertical-align: bottom;
     color: silver;
