@@ -1,35 +1,34 @@
-import {WebSocketActions} from "../utils/webSocketActions";
+import * as $ from "jquery";
+import Uri = require("jsuri");
+import {AbstractPage} from "../utils/abstractPage";
+import {WebSocketClient} from "../utils/webSocketClient";
 
-export class PageOfUser {
+export class PageOfUser extends AbstractPage {
+
+    private webSocketClient: WebSocketClient;
 
     constructor() {
-        let body = document.getElementsByTagName("body")[0];
-        body =
-        body.addEventListener("load", (e: Event) => this.showUserInfo());
-
-
+        super();
+        this.render();
+        this.webSocketClient = new WebSocketClient();
+        this.showUserInfo();
     }
 
     public showUserInfo() {
-        let param = window.location.search.substring(1);
+        let uri = new Uri(window.location.href);
+
 
         $.ajax({
             url: "user_info",
             type: "POST",
-            data: param,
+            data: uri.getQueryParamValue("pageOfUser"),
             contentType: "application/json; charset=utf-8",
         }).then(function (data) {
-            console.log(data.responseJSON);
-
-            let responseObject = data.responseJSON;
-
-            for (let key in responseObject) {
-                if (responseObject.hasOwnProperty(key) && responseObject[key] != null) {
-
+            for (let key in data) {
+                if (data.hasOwnProperty(key) && data[key] != null) {
                     if (key === "login") {
-                        document.title = responseObject[key];
+                        document.title = data[key];
                     }
-
                     let element = document.createElement("div");
                     element.className = "user_info_line";
 
@@ -39,7 +38,7 @@ export class PageOfUser {
 
                     let info = document.createElement("div");
                     info.className = "user_info_data";
-                    info.textContent = responseObject[key];
+                    info.textContent = data[key];
 
                     element.appendChild(label);
                     element.appendChild(info);
@@ -48,7 +47,21 @@ export class PageOfUser {
                 }
             }
         });
-
-        WebSocketActions.connect();
     };
+
+    public render() {
+        let body: HTMLDivElement = document.createElement("div");
+        body.id = "body";
+        body.innerHTML = "<div id='avatar'>Avatar</div><div id='short_user_data'></div>\n";
+
+        if (document.getElementById("body")) {
+            document.getElementById("body").remove();
+        }
+        if (document.getElementById("newMessagePopUp")) {
+            document.getElementById("newMessagePopUp").remove();
+        }
+        body.appendChild(this.createNewMessagePopupElement());
+        document.body.appendChild(body);
+    }
+
 }

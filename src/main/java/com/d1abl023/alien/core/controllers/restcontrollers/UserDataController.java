@@ -27,6 +27,11 @@ import java.util.Map;
 @RestController
 public class UserDataController {
 
+    @RequestMapping("/authentication")
+    public String authentication(){
+        return "authenticated";
+    }
+
     /**
      * Method userInfo() requests user data from DB
      *

@@ -3,9 +3,8 @@
     "./**/*.ts"
   ],
   "compilerOptions": {
-    "alwaysStrict": false,
-    "rootDir": "./ts",
-    "outDir": "./js"
+    "rootDir": "ts",
+    "outDir": "js"
   },
   "lib": [
     "dom",

@@ -142,8 +142,7 @@ html {
     background-color: #282829;
     color: silver;
     font-size: 1.5em;
-    padding: 10px 10px 10px 30px;
-
+    padding: 1px 1px 1px 1px;
 }
 
 .person {
@@ -166,9 +165,11 @@ html {
     margin-bottom: 5px;
 }
 
-.login {
+.users_login {
+    display: block;
+    width: 80%;
     font-size: 1.2em;
-    margin-bottom: 5px
+    padding: 1px 20px 1px 20px;
 }
 
 .last_message {
@@ -201,7 +202,6 @@ html {
 
 .outgoing_msg_body {
     display: inline-block;
-/*    max-width: 75%;*/
     padding: 10px 15px 10px 15px;
     text-align: right;
     border-style: solid;
@@ -213,8 +213,6 @@ html {
 
 .incoming_msg_body {
     display: inline-block;
-/*    position: absolute;*/
-/*    max-width: 75%;*/
     padding: 10px 15px 10px 15px;
     text-align: left;
     border-style: solid;

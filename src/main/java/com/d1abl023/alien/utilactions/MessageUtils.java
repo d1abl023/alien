@@ -41,7 +41,6 @@ public class MessageUtils {
                 throw new ExcessNumberOfTableValuesException("There are too many values in table \"dialogs\"", fetchedDialogs.size() - 1);
             } else {
                 // Creates new dialog in table Dialogs
-
                 Session createNewDialogSession = HibernateUtils.getSessionFactory().openSession();
                 Transaction createNewDialogTransaction = createNewDialogSession.beginTransaction();
                 dialogId = (Long) createNewDialogSession.save(
