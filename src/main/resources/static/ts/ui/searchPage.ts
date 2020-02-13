@@ -3,10 +3,13 @@ import {uiManager} from "../uiManager";
 import * as $ from "jquery";
 import {AbstractPage} from "../utils/abstractPage";
 import {WebSocketClient} from "../utils/webSocketClient";
+import {NewMessageBlock} from "./newMessageBlock";
+import {IUser} from "../utils/templates/iUser";
 
 export class SearchPage extends AbstractPage {
 
     private webSocketClient: WebSocketClient;
+    private users: { [key: string]: IUser };
 
     constructor() {
         super();
@@ -14,7 +17,7 @@ export class SearchPage extends AbstractPage {
         this.webSocketClient = new WebSocketClient();
     }
 
-    public search(): void {
+    public search = (): void => {
         document.getElementById("search_results").innerText = "";
         let searchVal: string = (<HTMLInputElement>document.getElementById("search_field")).value;
 
@@ -22,30 +25,36 @@ export class SearchPage extends AbstractPage {
             url: "search",
             type: "POST",
             data: searchVal,
-            contentType: "text/plain; charset=utf-8",
-            complete: (data: jqXHR<any>) => {
-                let response = data.responseJSON;
-
-                if (response.hasOwnProperty("users")) {
-                    let users = data.responseJSON["users"];
-                    for (let i = 0; i < users.length; i += 2) {
-
-                        let line = document.createElement("div");
-                        line.className = "line";
-                        line.appendChild(this.createUserBlock(users[i]));
-
-                        if (i + 1 < users.length) {
-                            line.appendChild(this.createUserBlock(users[i + 1]));
-                        }
-                        $("#search_results").append(line);
-                    }
-                }
-
-            }
+            contentType: "text/plain; charset=utf-8"
+        }).then((users: { [key: string]: any }) => {
+            this.processSearchResponse(users);
         });
-    }
+    };
 
-    public createUserBlock(userEntity): HTMLDivElement {
+    private processSearchResponse = (users: { [key: string]: IUser }): void => {
+        this.users = users;
+        let amountOfRemainingKeys: number = Object.keys(this.users).length;
+        let userLineCounter: number = 0;
+        let line: HTMLDivElement = document.createElement("div");
+        line.className = "line";
+
+        for (let user in this.users) {
+            if (amountOfRemainingKeys > 0) {
+                line.appendChild(this.createUserBlock(this.users[user]));
+                userLineCounter++;
+                amountOfRemainingKeys--;
+                if (userLineCounter === 2 || (userLineCounter === 1 && amountOfRemainingKeys === 0)) {
+                    $("#search_results").append(line);
+                    line = document.createElement("div");
+                    line.className = "line";
+                    userLineCounter = 0;
+                }
+            }
+        }
+
+    };
+
+    public createUserBlock(userEntity: IUser): HTMLDivElement {
         let login: HTMLDivElement = document.createElement("div");
         login.className = "login";
         login.innerText = userEntity.login;
@@ -62,7 +71,7 @@ export class SearchPage extends AbstractPage {
 
         let sendMessageButton: HTMLButtonElement = document.createElement("button");
         sendMessageButton.className = "send_message_button";
-        sendMessageButton.addEventListener("click", (e: Event) => this.openMessageSendingPopup(userEntity.id));
+        sendMessageButton.addEventListener("click", (e: Event) => new NewMessageBlock(this.webSocketClient, this.users[userEntity.id]));
         sendMessageButton.innerText = "Message";
 
         let user: HTMLDivElement = document.createElement("div");

@@ -15,7 +15,6 @@ export class WebSocketClient {
         }).then((data: string): void => {
             this.myId = data;
         });
-
         $.ajax({
             url: "get_username",
             type: "GET"
@@ -54,11 +53,11 @@ export class WebSocketClient {
         this.manageIncomingMessage(JSON.parse(event.data));
     };
 
-    public showPopUp = (message): void => {
-        if (message["senderId"] === this.myId) {
+    public showPopUp = (message: IMessage): void => {
+        if (message.senderId === this.myId) {
             document.getElementById("sender_username").innerText = "Message has been send.";
         } else {
-            document.getElementById("sender_username").innerText = "New message from " + message["senderLogin"];
+            document.getElementById("sender_username").innerText = "New message from " + message.senderLogin;
         }
         document.getElementById("part_of_message_text").innerText = message.text;
         document.getElementById("newMessagePopUp").style.visibility = "visible";
@@ -71,4 +70,8 @@ export class WebSocketClient {
     public manageIncomingMessage = (message): void => {
         this.showPopUp(message);
     };
+
+    public getMyData = (): { myId: string, myUsername: string } => {
+        return {myId: this.myId, myUsername: this.myUsername}
+    }
 }

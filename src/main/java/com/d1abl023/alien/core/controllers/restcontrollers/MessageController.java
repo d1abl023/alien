@@ -5,6 +5,7 @@ import com.d1abl023.alien.model.Message;
 import com.d1abl023.alien.tables.Dialogs;
 import com.d1abl023.alien.tables.UserMessage;
 import com.d1abl023.alien.utilactions.HibernateUtils;
+import com.d1abl023.alien.utilactions.MessageUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
@@ -12,13 +13,11 @@ import org.hibernate.Transaction;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sun.misc.resources.Messages;
 
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.security.Principal;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class MessageController {
@@ -33,63 +32,14 @@ public class MessageController {
      * @return map with pairs ( dialogId = lastMessage )
      */
     @RequestMapping(value = "/get_dialog_list")
-    public Map<Long, Message> getDialogList(Principal principal) {
+    public Map<String, Message> getDialogList(Principal principal) {
 
-        Map<Long, Message> response = new LinkedHashMap<>();
+        Map<String, Message> response = new LinkedHashMap<>();
 
-        //Get list of dialog id which refer to user
-        Session dialogsTableSession = HibernateUtils.getSessionFactory().openSession();
-        Transaction dialogsTableTransactions = dialogsTableSession.beginTransaction();
-        //Select all from table "dialogs" where
-        Query dialogsTableSessionQuery = dialogsTableSession
-                .createQuery("from Dialogs dialogs where dialogs.user1 = :id or user2 = :id");
-        dialogsTableSessionQuery.setParameter("id", new Long(principal.getName()));
-        List dialogs = dialogsTableSessionQuery.getResultList();
-        dialogsTableTransactions.commit();
+        List<Message> sortedlastMessages = MessageUtils.getSortedLastMessages(MessageUtils.getUserDialogsList(principal));
 
-        for (Object tmpObj : dialogs) {
-            Dialogs dialog = (Dialogs) tmpObj;
-
-            Session messagesTableSession = HibernateUtils.getSessionFactory().openSession();
-            Transaction messagesTableTransaction = messagesTableSession.beginTransaction();
-            //Select the last message for each dialog
-            Query messageTableQuery = messagesTableSession.createQuery("from UserMessage msg1 where msg1.timestamp = " +
-                    "(select max(msg2.timestamp) from UserMessage msg2 where msg2.dialogId = :id) and msg1.dialogId = :id");
-            messageTableQuery.setParameter("id", dialog.getId());
-            List listWithMessages = messageTableQuery.getResultList();
-            if (listWithMessages.size() > 0) {
-                UserMessage userMessage = (UserMessage) listWithMessages.get(0);
-                String senderLogin;
-                String receiverLogin;
-
-                // Defines sender login and receiver login
-                if (new Long(userMessage.getSenderId()).equals(dialog.getUser1()) &&
-                        new Long(userMessage.getReceiverId()).equals(dialog.getUser2())) {
-                    senderLogin = dialog.getUser1Login();
-                    receiverLogin = dialog.getUser2Login();
-                } else if (new Long(userMessage.getSenderId()).equals(dialog.getUser2()) &&
-                        new Long(userMessage.getReceiverId()).equals(dialog.getUser1())) {
-                    senderLogin = dialog.getUser2Login();
-                    receiverLogin = dialog.getUser1Login();
-                } else {
-                    throw new InternalError("Error while checking sender and receiver login. " +
-                            "Probably this message is not applicable to that dialog." +
-                            "Dialog: " + dialog.toString() + "\t" +
-                            "Message: " + userMessage.toString());
-                }
-
-                Message message = new Message(
-                        Long.toString(userMessage.getId()),
-                        Long.toString(userMessage.getTimestamp()),
-                        Long.toString(userMessage.getDialogId()),
-                        Long.toString(userMessage.getSenderId()),
-                        Long.toString(userMessage.getReceiverId()),
-                        userMessage.getText(),
-                        senderLogin,
-                        receiverLogin);
-                response.put(dialog.getId(), message);
-            }
-            messagesTableTransaction.commit();
+        for (Message message : sortedlastMessages) {
+            response.put(message.getDialogId(), message);
         }
 
         return response;
@@ -99,16 +49,18 @@ public class MessageController {
     public List<Message> getMessageHistory(@RequestBody String dialogId) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("from UserMessage messages where messages.dialogId = :dialogId");
+        TypedQuery<UserMessage> query = session.createQuery(
+                "from UserMessage messages where messages.dialogId = :dialogId",
+                UserMessage.class
+        );
         query.setParameter("dialogId", new Long(dialogId));
-        List messageList = query.getResultList();
+        List<UserMessage> messageList = query.getResultList();
         Dialogs dialog = session.get(Dialogs.class, new Long(dialogId));
         transaction.commit();
         session.close();
 
         List<Message> responseList = new LinkedList<>();
-        for (Object dbMessage : messageList) {
-            UserMessage message = (UserMessage) dbMessage;
+        for (UserMessage message : messageList) {
             try {
                 if (message.getSenderId() == dialog.getUser1() && message.getReceiverId() == dialog.getUser2()) {
                     responseList.add(new Message(
@@ -142,5 +94,6 @@ public class MessageController {
         }
         return responseList;
     }
+
 
 }

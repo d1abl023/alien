@@ -1,19 +1,17 @@
 'use strict';
-import {AbstractPage} from "../utils/abstractPage";
 import * as $ from "jquery";
+import {AbstractPage} from "../utils/abstractPage";
 import {WebSocketClient} from "../utils/webSocketClient";
-import {Logger} from "../utils/logger";
+import {IDialog} from "../utils/templates/iDialog";
 
 export class MessagesPage extends AbstractPage {
     private webSocketClient: WebSocketClient;
-
-    private dialogs: object = null;
-    // private dialogId: string = null;
-    private myUsername: string = null;
-    private isOpenedInterlocutorUsername: string = null;
-    private isOpenedInterlocutorId: string = null;
+    private dialogs: { [key: string]: IDialog };
+    private myUsername: string;
+    private isOpenedInterlocutorUsername: string;
+    private isOpenedInterlocutorId: string;
     private myId: string;
-    public isOpenedDialogId: string = null;
+    public isOpenedDialogId: string;
 
 
     constructor() {
@@ -22,11 +20,17 @@ export class MessagesPage extends AbstractPage {
         this.webSocketClient = new WebSocketClient();
         this.webSocketClient.manageIncomingMessage = this.manageIncomingMessage;
         this.onMessagesPageLoad();
+        this.requestDialogList();
     }
 
-    private manageIncomingMessage = (message): void => {
-        this.webSocketClient.showPopUp(message);
-        this.addMessageToMessageList(message);
+    private manageIncomingMessage = (message: IMessage): void => {
+        if (message.dialogId === this.isOpenedDialogId) {
+            this.addMessageToMessageList(message);
+            this.updateDialogHtmlElement(message);
+        } else {
+            this.updateDialogHtmlElement(message);
+            this.webSocketClient.showPopUp(message);
+        }
     };
 
     /**
@@ -36,17 +40,18 @@ export class MessagesPage extends AbstractPage {
      */
     public onMessagesPageLoad = (): void => {
         $.ajax({
-            url: "/get_id",
-            type: "GET",
-        }).then((data: string) => {
+            url: "get_id",
+            type: "GET"
+        }).then((data: string): void => {
             this.myId = data;
-            this.requestDialogList();
-        }).catch(
-            (data) => {
-                console.log("Error");
-                console.log(data);
-            }
-        );
+        });
+
+        $.ajax({
+            url: "get_username",
+            type: "GET"
+        }).then((data: string): void => {
+            this.myUsername = data;
+        });
         document.getElementById("send_message_button").addEventListener('click', this.send, true);
     };
 
@@ -54,11 +59,12 @@ export class MessagesPage extends AbstractPage {
         $.ajax({
             url: "/get_dialog_list",
             type: "GET",
-        }).then((data: object) => {
+        }).then((data) => {
             this.dialogs = data;
-            for (let dialog in this.dialogs) {
-                if (this.dialogs.hasOwnProperty(dialog)) {
-                    document.getElementById("conversations_list").appendChild(this.createDialogHtmlElement(dialog));
+            for (let dialogId in this.dialogs) {
+                if (this.dialogs.hasOwnProperty(dialogId)) {
+                    document.getElementById("conversations_list")
+                        .appendChild(this.createDialogHtmlElement(this.dialogs[dialogId]));
                 }
             }
         });
@@ -73,14 +79,14 @@ export class MessagesPage extends AbstractPage {
 
             this.isOpenedDialogId = dialogId;
 
-            let lastMessage = this.dialogs[dialogId];
+            let lastMessage: IMessage = this.dialogs[dialogId];
 
-            if (lastMessage["senderId"] === this.myId.toString()) {
-                this.isOpenedInterlocutorUsername = lastMessage["receiverLogin"];
-                this.isOpenedInterlocutorId = lastMessage["receiverId"];
+            if (lastMessage.senderId === this.myId) {
+                this.isOpenedInterlocutorUsername = lastMessage.receiverLogin;
+                this.isOpenedInterlocutorId = lastMessage.receiverId;
             } else {
-                this.isOpenedInterlocutorUsername = lastMessage["senderLogin"];
-                this.isOpenedInterlocutorId = lastMessage["senderId"];
+                this.isOpenedInterlocutorUsername = lastMessage.senderLogin;
+                this.isOpenedInterlocutorId = lastMessage.senderId;
             }
 
             document.getElementById("messages_list").innerText = "";
@@ -119,17 +125,15 @@ export class MessagesPage extends AbstractPage {
             receiverId: this.isOpenedInterlocutorId,
             text: SEND_MESSAGE_FIELD.value,
             senderLogin: this.myUsername,
-            receiverLogin: this.isOpenedInterlocutorUsername
+            receiverLogin: this.isOpenedInterlocutorUsername,
+            timestamp: Date.now().toString()
         };
         this.webSocketClient.sendMessage(JSON.stringify(message));
 
         SEND_MESSAGE_FIELD.value = "";
     };
 
-    public addMessageToMessageList(msg) {
-
-        Logger.info(msg);
-
+    public addMessageToMessageList(msg: IMessage) {
         let messageList: HTMLElement = document.getElementById("messages_list");
 
         let sender: HTMLDivElement = document.createElement("div");
@@ -144,8 +148,7 @@ export class MessagesPage extends AbstractPage {
 
         let messageText: HTMLDivElement = document.createElement("div");
         messageText.classList.add("message_text");
-        messageText.innerText = msg.hasOwnProperty("text") ?
-            msg.text : console.error("Missing property 'text'");
+        messageText.innerText = msg.text;
 
 
         let messageBody: HTMLDivElement = document.createElement("div");
@@ -161,8 +164,7 @@ export class MessagesPage extends AbstractPage {
             messageBody.className = "incoming_msg_body";
             message.className = "incoming_message";
             if (!this.isOpenedInterlocutorUsername) {
-                this.isOpenedInterlocutorUsername = msg.hasOwnProperty("senderId") ?
-                    msg.senderId : console.error("Missing property 'senderId'");
+                this.isOpenedInterlocutorUsername = msg.senderId;
             }
         }
 
@@ -171,10 +173,6 @@ export class MessagesPage extends AbstractPage {
         messageList.appendChild(message);
         document.getElementById("messages_list").scrollTop =
             document.getElementById("messages_list").scrollHeight;
-    }
-
-    public static sortDialogs(dialogs) {
-        return dialogs;
     }
 
     public render(): void {
@@ -209,33 +207,33 @@ export class MessagesPage extends AbstractPage {
         document.body.appendChild(body);
     }
 
-    private createDialogHtmlElement(dialog): HTMLDivElement {
+    private updateDialogHtmlElement(message: IMessage): void {
+        document.getElementById(
+            (message.senderId === this.myId ? message.receiverLogin : message.senderLogin) + "_message"
+        ).innerText = message.text;
+
+
+    }
+
+    private createDialogHtmlElement(message: IMessage): HTMLDivElement {
         let dialogEl: HTMLDivElement = document.createElement("div");
-        let login: HTMLDivElement = document.createElement("div");
-        let lastMessage: HTMLDivElement = document.createElement("div");
+        let loginEl: HTMLDivElement = document.createElement("div");
+        let lastMessageEl: HTMLDivElement = document.createElement("div");
 
-        dialog = this.dialogs[dialog];
-        if (dialog.hasOwnProperty("senderId") ? dialog["senderId"] === this.myId : false) {
-            dialogEl.id = dialog.hasOwnProperty("dialogId") ?
-                dialog["dialogId"] : console.error("Missing field 'dialogId'");
-            login.innerText = dialog.hasOwnProperty("receiverLogin") ?
-                dialog["receiverLogin"] : console.error("Missing field 'receiverLogin'");
-        } else {
-            dialogEl.id = dialog.hasOwnProperty("dialogId") ?
-                dialog["dialogId"] : console.error("Missing field 'dialogId'");
-            login.innerText = dialog.hasOwnProperty("senderLogin") ?
-                dialog["senderLogin"] : console.error("Missing field 'senderLogin'");
-        }
-
+        dialogEl.id = message.dialogId;
         dialogEl.className = "person";
         dialogEl.onclick = () => this.openMessageHistory(dialogEl.id);
 
-        login.className = "users_login";
-        lastMessage.className = "last_message";
-        lastMessage.innerText = dialog["text"];
+        loginEl.id = message.senderId === this.myId ? message.receiverLogin : message.senderLogin;
+        loginEl.className = "users_login";
+        loginEl.innerText = message.senderId === this.myId ? message.receiverLogin : message.senderLogin;
 
-        dialogEl.appendChild(login);
-        dialogEl.appendChild(lastMessage);
+        lastMessageEl.id = (message.senderId === this.myId ? message.receiverLogin : message.senderLogin) + "_message";
+        lastMessageEl.className = "last_message";
+        lastMessageEl.innerText = message.text;
+
+        dialogEl.appendChild(loginEl);
+        dialogEl.appendChild(lastMessageEl);
 
         return dialogEl;
     }

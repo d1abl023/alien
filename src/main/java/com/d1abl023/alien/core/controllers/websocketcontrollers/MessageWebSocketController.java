@@ -35,7 +35,7 @@ public class MessageWebSocketController {
         msg.setTimestamp(Long.toString(new Date().getTime()));
         logger.debug(msg.toString());
         try {
-            if (MessageUtils.insertMsgIntoDB(msg)) {
+            if (MessageUtils.insertMessageIntoDB(msg)) {
                 logger.trace("Message inserted into DB");
 
                 if (!msg.getReceiverId().equals(msg.getSenderId())) {
@@ -48,7 +48,7 @@ public class MessageWebSocketController {
                 this.simpMessagingTemplate
                         .convertAndSendToUser(msg.getSenderId(), "/queue/privateMessagesErrors", msg);
             }
-        } catch (ExcessNumberOfTableValuesException e) {
+        } catch (Exception e) {
 
             this.simpMessagingTemplate
                     .convertAndSendToUser(msg.getSenderId(), "/queue/privateMessagesErrors", msg);

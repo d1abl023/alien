@@ -1,6 +1,7 @@
 package com.d1abl023.alien.core.components;
 
 import com.d1abl023.alien.model.Message;
+import com.d1abl023.alien.utilactions.MessageUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,11 +26,17 @@ public class WebSocketMessageHandler extends AbstractWebSocketHandler {
 
         Message message = new ObjectMapper().readValue(textMessage.getPayload(), Message.class);
 
-        logger.info("From: " + session.getPrincipal().getName() + " messsage: " + message.getText());
-        if (sessionPool.containsKey(message.getReceiverId())){
-            sessionPool.get(message.getReceiverId()).sendMessage(new TextMessage(new ObjectMapper().writeValueAsString(message)));
+        logger.info("From: " + session.getPrincipal().getName() + " messsage: " + textMessage);
+        if (MessageUtils.insertMessageIntoDB(message)) {
+            if (sessionPool.containsKey(message.getReceiverId())) {
+                sessionPool.get(message.getReceiverId()).sendMessage(new TextMessage(new ObjectMapper().writeValueAsString(message)));
+            }
+            session.sendMessage(new TextMessage(new ObjectMapper().writeValueAsString(message)));
+        }else{
+            message.setId("0000000");
+            session.sendMessage(new TextMessage(new ObjectMapper().writeValueAsString(message)));
         }
-        session.sendMessage(new TextMessage(new ObjectMapper().writeValueAsString(message)));
+
     }
 
     @Override
