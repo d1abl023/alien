@@ -20,7 +20,6 @@ export class MessagesPage extends AbstractPage {
         this.webSocketClient = new WebSocketClient();
         this.webSocketClient.manageIncomingMessage = this.manageIncomingMessage;
         this.onMessagesPageLoad();
-        this.requestDialogList();
     }
 
     private manageIncomingMessage = (message: IMessage): void => {
@@ -44,6 +43,7 @@ export class MessagesPage extends AbstractPage {
             type: "GET"
         }).then((data: string): void => {
             this.myId = data;
+            this.requestDialogList();
         });
 
         $.ajax({
@@ -144,7 +144,7 @@ export class MessagesPage extends AbstractPage {
         timestamp.classList.add("timestamp");
         const date: Date = new Date(Number(msg.timestamp));
         let minutes: number = date.getMinutes();
-        timestamp.innerText = date.getHours() + ":" + (minutes.toString().length === 2 ? minutes.toString() : minutes + "0");
+        timestamp.innerText = date.getHours() + ":" + (minutes.toString().length === 2 ? minutes.toString() : "0" + minutes);
 
         let messageText: HTMLDivElement = document.createElement("div");
         messageText.classList.add("message_text");

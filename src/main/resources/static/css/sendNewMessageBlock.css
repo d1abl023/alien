@@ -27,6 +27,7 @@
 
 #send_new_message_field {
     display: block;
+    position: inherit;
     width: 90%;
     height: 50%;
     margin-left: 4.5%;
@@ -34,6 +35,7 @@
     margin-top: 35px;
     resize: none;
     float: left;
+    z-index: 999;
 }
 
 #send_new_message_buttons {

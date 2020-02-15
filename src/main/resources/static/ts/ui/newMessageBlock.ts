@@ -9,7 +9,7 @@ export class NewMessageBlock {
 
     constructor(webSocket: WebSocketClient, user: any) {
         this.webSocket = webSocket;
-        this.myData = webSocket.getMyData()
+        this.myData = webSocket.getMyData();
         this.user = user;
         this.render();
     }
@@ -64,7 +64,7 @@ export class NewMessageBlock {
             timestamp: Date.now().toString()
         };
         this.webSocket.sendMessage(JSON.stringify(message));
-
+        document.getElementById("send_new_message_block").remove();
     };
 
     private onClickCancel = (): void => {
