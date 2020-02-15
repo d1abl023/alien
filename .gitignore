@@ -3,4 +3,4 @@ target
 node_modules
 js
 out
-#package-lock.json
+package-lock.json
