@@ -118,14 +118,8 @@ public class Message implements Serializable {
     @Override
     public String toString() {
         return "Message{" +
-                "id='" + id + '\'' +
-                ", timestamp='" + timestamp + '\'' +
-                ", dialogId='" + dialogId + '\'' +
-                ", senderId='" + senderId + '\'' +
-                ", receiverId='" + receiverId + '\'' +
-                ", text='" + text + '\'' +
-                ", senderLogin='" + senderLogin + '\'' +
-                ", receiverLogin='" + receiverLogin + '\'' +
-                '}';
+                "id='" + id + "', timestamp='" + timestamp + "', dialogId='" + dialogId +
+                "', senderId='" + senderId + "', receiverId='" + receiverId + "', text='" + text +
+                "', senderLogin='" + senderLogin + "', receiverLogin='" + receiverLogin + "'}";
     }
 }

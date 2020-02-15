@@ -1,25 +1,17 @@
 {
-    "include": [
-        "./**/*.ts", "js/utils/templates/message.js"
-    ],
-    "compilerOptions": {
-        "rootDir": "./ts",
-        "outDir": "./js",
-        "target": "es6",
-        // "module": "commonjs",
-        "lib": [
-            "dom",
-            "es5",
-            "webworker",
-            "es2015"
-        ],
-        "types": [
-            "node"
-        ],
-        "typeRoots": [
-            "./App/js/client-module/@types",
-            "./node_modules/@types",
-            "./types"
-        ]
-    }
+  "include": [
+    "./**/*.ts"
+  ],
+  "compilerOptions": {
+    "rootDir": "ts",
+    "outDir": "js"
+  },
+  "lib": [
+    "dom",
+    "es5",
+    "es2015"
+  ],
+  "types": [
+    "node"
+  ]
 }

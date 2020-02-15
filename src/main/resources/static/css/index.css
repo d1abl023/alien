@@ -42,12 +42,20 @@
     padding-bottom: 10px;
 }
 
+#error {
+    text-align : center;
+    font-size : 1.5em;
+    color : #D01D33;
+    margin-bottom: 15px;
+}
+
 .reg_form_button {
     border-style: inherit;
     color: silver;
     background-color: #313233;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 10px;
     display: block;
     width: 120px;
     height: 25px;

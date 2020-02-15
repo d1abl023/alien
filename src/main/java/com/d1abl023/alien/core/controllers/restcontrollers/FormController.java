@@ -11,11 +11,10 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,22 +24,19 @@ public class FormController {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public Map<String, List> search(@RequestBody String requestBody, HttpServletResponse response) throws IOException {
-
-        Map<String, List> searchResult = new LinkedHashMap<>();
-
+    public Map<String, JSUser> search(@RequestBody String requestBody) {
+        Map<String, JSUser> searchResult = new LinkedHashMap<>();
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-
-        Query selectUsers = session.createQuery("from User user where user.login = :userLogin");
+        TypedQuery<User> selectUsers = session.createQuery(
+                "from User user where user.login = :userLogin", User.class);
         selectUsers.setParameter("userLogin", requestBody);
-        List dbUsers = selectUsers.getResultList();
-        List<JSUser> users = new LinkedList<>();
-        for (Object tmpUser : dbUsers) {
-            users.add(new JSUser((User) tmpUser));
+        List<User> dbUsers = selectUsers.getResultList();
+        for (User tmpUser : dbUsers) {
+            searchResult.put(Long.toString(tmpUser.getId()), (new JSUser(tmpUser)));
         }
-        searchResult.put("users", users);
-
+        transaction.commit();
+        session.close();
         return searchResult;
     }
 
