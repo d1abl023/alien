@@ -1,11 +1,18 @@
 module.exports = {
     paths: {
         public: "src/main/resources/static/out",
-        watched: ["src/main/resources/static/js"]
+        watched: [
+            "src/main/resources/static/js",
+            "src/main/resources/static/css",
+            "node_modules/bootstrap/dist/css"
+        ]
     },
     files: {
         javascripts: {
             joinTo: "app.js"
+        },
+        stylesheets: {
+            joinTo: "app.css"
         }
     },
     plugins: {

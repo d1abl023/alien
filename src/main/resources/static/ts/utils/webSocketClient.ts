@@ -5,22 +5,12 @@ export class WebSocketClient {
 
     private WS_PATH: string = "ws://localhost:8080/websocket";
     private webSocket: WebSocket = new WebSocket(this.WS_PATH);
-    private myId: string;
-    private myUsername: string;
+    private readonly myId: string;
+    private readonly myUsername: string;
 
-    constructor() {
-        $.ajax({
-            url: "get_id",
-            type: "GET"
-        }).then((data: string): void => {
-            this.myId = data;
-        });
-        $.ajax({
-            url: "get_username",
-            type: "GET"
-        }).then((data: string): void => {
-            this.myUsername = data;
-        });
+    constructor(myId: string, myUsername: string) {
+        this.myId = myId;
+        this.myUsername = myUsername;
         this.webSocket.onmessage = this.onMessage;
         this.webSocket.onclose = this.onClose;
         this.webSocket.onerror = this.onError;

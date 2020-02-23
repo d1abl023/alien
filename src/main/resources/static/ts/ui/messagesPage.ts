@@ -7,17 +7,15 @@ import {IDialog} from "../utils/templates/iDialog";
 export class MessagesPage extends AbstractPage {
     private webSocketClient: WebSocketClient;
     private dialogs: { [key: string]: IDialog };
-    private myUsername: string;
     private isOpenedInterlocutorUsername: string;
     private isOpenedInterlocutorId: string;
-    private myId: string;
     public isOpenedDialogId: string;
 
 
-    constructor() {
-        super();
+    constructor(myId: string, myUsername: string) {
+        super(myId, myUsername);
         this.render();
-        this.webSocketClient = new WebSocketClient();
+        this.webSocketClient = new WebSocketClient(this.myId, this.myUsername);
         this.webSocketClient.manageIncomingMessage = this.manageIncomingMessage;
         this.onMessagesPageLoad();
     }
@@ -176,8 +174,7 @@ export class MessagesPage extends AbstractPage {
     }
 
     public render(): void {
-        let body: HTMLElement = document.createElement("div");
-        body.id = "body";
+        let body: HTMLElement = document.getElementById("body");
         body.innerHTML =
             "<div id='body_blocks'>\n" +
             "            <div id='headers_block'>\n" +
@@ -200,11 +197,7 @@ export class MessagesPage extends AbstractPage {
             "            </div>\n" +
             "        </div>\n" +
             "    </div>\n";
-        if (document.getElementById("body")) {
-            document.getElementById("body").remove();
-        }
         body.appendChild(this.createNewMessagePopupElement());
-        document.body.appendChild(body);
     }
 
     private updateDialogHtmlElement(message: IMessage): void {

@@ -1,5 +1,13 @@
 export abstract class AbstractPage {
 
+    protected myId: string;
+    protected myUsername: string;
+
+    protected constructor(myId:string, myUsername: string) {
+        this.myId = myId;
+        this.myUsername = myUsername;
+    }
+
     public abstract render(): void;
 
     protected createNewMessagePopupElement(): HTMLDivElement {

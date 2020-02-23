@@ -4,32 +4,41 @@
     <meta charset="UTF-8">
     <title>Welcome!</title>
     <link href="out/app.css" type="text/css" rel="stylesheet">
-
 </head>
 
 <body>
-
-    <div id="header">
+<div class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="header" class="navbar navbar-dark bg-dark col-md-12"></nav>
+        </div>
     </div>
-    <script src="out/app.js" type="text/javascript"></script>
-    <script>
-        let Uri = require("jsuri");
-        let url = new Uri(window.location.href);
-        let page;
-        if (url.hasQueryParam("login") || url.query() === "") {
-            page = {
-                pageName: "login"
-            };
-        } else if (url.hasQueryParam("pageOfUser")) {
-            page = {
-                pageName: "profile",
-                user: url.getQueryParamValue("pageOfUser")
-            };
-        } else {
-            page = {
-                pageName: url.query().split("&")[0].substring(1)
-            };
-        }
-        require("src/main/resources/static/js/uiManager.js").uiManager.getPage(page);
-    </script>
-</body></html>
+    <div class="container-sm">
+        <div class="row">
+            <div id="body" class="col-md-12"></div>
+        </div>
+    </div>
+</div>
+<script src="out/app.js" type="text/javascript"></script>
+<script>
+    let Uri = require("jsuri");
+    let url = new Uri(window.location.href);
+    let page;
+    if (url.hasQueryParam("login") || url.query() === "") {
+        page = {
+            pageName: "login"
+        };
+    } else if (url.hasQueryParam("pageOfUser")) {
+        page = {
+            pageName: "profile",
+            user: url.getQueryParamValue("pageOfUser")
+        };
+    } else {
+        page = {
+            pageName: url.query().split("&")[0].substring(1)
+        };
+    }
+    require("src/main/resources/static/js/uiManager.js").uiManager.getPage(page);
+</script>
+</body>
+</html>

@@ -8,13 +8,13 @@ import {IUser} from "../utils/templates/iUser";
 
 export class SearchPage extends AbstractPage {
 
-    private webSocketClient: WebSocketClient;
+    readonly webSocketClient: WebSocketClient;
     private users: { [key: string]: IUser };
 
-    constructor() {
-        super();
+    constructor(myId: string, myUsername: string) {
+        super(myId, myUsername);
         this.render();
-        this.webSocketClient = new WebSocketClient();
+        this.webSocketClient = new WebSocketClient(this.myId, this.myUsername);
     }
 
     public search = (): void => {
@@ -92,8 +92,7 @@ export class SearchPage extends AbstractPage {
     };
 
     public render(): void {
-        let body: HTMLDivElement = document.createElement("div");
-        body.id = "body";
+        let body: HTMLElement = document.getElementById("body");
         body.innerHTML =
             "        <form id='search_form'>\n" +
             "            <label id='search_label' for='search_field'>Search: </label>\n" +
@@ -102,11 +101,7 @@ export class SearchPage extends AbstractPage {
             "        </form>\n" +
             "        <div id='search_results'>\n" +
             "        </div>";
-        if (document.getElementById("body")) {
-            document.getElementById("body").remove();
-        }
         body.appendChild(this.createNewMessagePopupElement());
-        document.body.appendChild(body);
         document.getElementById("search_data_button").addEventListener("click", () => this.search());
 
     }

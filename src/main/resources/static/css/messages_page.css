@@ -1,28 +1,24 @@
-html {
-    overflow: hidden;
-}
+/*#body {*/
+/*    position: fixed;*/
+/*    top: 60px;*/
+/*    height: 600px;*/
+/*    width: 100%;*/
+/*    overflow: hidden;*/
+/*}*/
 
-#body {
-    position: fixed;
-    top: 60px;
-    height: 600px;
-    width: 100%;
-    overflow: hidden;
-}
+/*#footer {*/
+/*    position: fixed;*/
+/*    bottom: 0;*/
+/*}*/
 
-#footer {
-    position: fixed;
-    bottom: 0;
-}
-
-#body_blocks {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10px;
-    width: 900px;
-    height: 87%;
-}
+/*#body_blocks {*/
+/*    display: block;*/
+/*    margin-left: auto;*/
+/*    margin-right: auto;*/
+/*    margin-top: 10px;*/
+/*    width: 900px;*/
+/*    height: 87%;*/
+/*}*/
 
 #conversations_list {
     display: block;

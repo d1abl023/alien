@@ -85,4 +85,6 @@ public class AuthUserData implements DBTable {
     public void setEmail(String email) {
         this.email = email;
     }
+
+
 }

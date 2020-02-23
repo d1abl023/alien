@@ -7,10 +7,10 @@ export class PageOfUser extends AbstractPage {
 
     private webSocketClient: WebSocketClient;
 
-    constructor() {
-        super();
+    constructor(myId: string, myUsername: string) {
+        super(myId, myUsername);
         this.render();
-        this.webSocketClient = new WebSocketClient();
+        this.webSocketClient = new WebSocketClient(this.myId, this.myUsername);
         this.showUserInfo();
     }
 
@@ -50,18 +50,9 @@ export class PageOfUser extends AbstractPage {
     };
 
     public render() {
-        let body: HTMLDivElement = document.createElement("div");
-        body.id = "body";
-        body.innerHTML = "<div id='avatar'>Avatar</div><div id='short_user_data'></div>\n";
-
-        if (document.getElementById("body")) {
-            document.getElementById("body").remove();
-        }
-        if (document.getElementById("newMessagePopUp")) {
-            document.getElementById("newMessagePopUp").remove();
-        }
+        let body: HTMLElement = document.getElementById("body");
+        body.innerHTML = "<div id='short_user_data'></div>";
         body.appendChild(this.createNewMessagePopupElement());
-        document.body.appendChild(body);
     }
 
 }
