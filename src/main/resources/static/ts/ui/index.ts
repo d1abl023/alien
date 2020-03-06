@@ -3,8 +3,8 @@ import {AbstractPage} from "../utils/abstractPage";
 
 export class Index extends AbstractPage {
 
-    constructor() {
-        super();
+    constructor(myId:string, myUsername: string) {
+        super(myId, myUsername);
         this.render()
     }
 

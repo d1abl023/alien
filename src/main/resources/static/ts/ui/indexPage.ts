@@ -55,7 +55,7 @@ export class IndexPage extends AbstractPage {
     public render(): void {
         let body: HTMLElement = document.getElementById("body");
         body.innerHTML =
-            '<div id="reg_auth_info" class="col-xs-12 col-sm-12 col-md-4 card">' +
+            '<div id="reg_auth_info" class="col-xs-12 col-sm-12 col-md-4 card mx-auto">' +
             '        <div id="reg_auth_info_text" class="card-header">Register or authenticate!</div>' +
             '        <div id="auth_error"></div>' +
             '        <form id="auth_form" action="/login" method="post">' +
@@ -67,8 +67,14 @@ export class IndexPage extends AbstractPage {
             '                <label for="password" class="reg_form_labels">Password:</label>' +
             '                <input type="password" id="password" name="password" class="form-control" required>' +
             '            </p>' +
-            '            <button id="authentication" type="submit" class="btn btn-dark" form="auth_form">Log in</button>' +
-            '            <button id="go_to_registration" type="button" class="btn btn-dark">Registration</button>' +
+            '            <div id="form_buttons" class="col-12 text-center">' +
+            '                <button id="authentication" type="submit" class="btn btn-dark form_button" form="auth_form">' +
+            '                    Log in' +
+            '                </button>' +
+            '                <button id="go_to_registration" type="button" class="btn btn-dark form_button">' +
+            '                    Registration' +
+            '                </button>' +
+            '            </div>' +
             '        </form>' +
             '    </div>' +
             '</div>';

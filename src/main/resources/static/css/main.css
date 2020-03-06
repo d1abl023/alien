@@ -3,7 +3,7 @@ body {
     height: 100%;
     margin-top: 0px;
     margin-bottom: 0;
-    background-color: #282829;
+    background-color: #edeef0;
     overflow: hidden;
 }
 
@@ -12,42 +12,6 @@ body {
     flex-wrap: wrap;
     align-content: center;
 }
-
-/*#header {*/
-/*    font-size: 3em;*/
-/*    display: block;*/
-/*    position: fixed;*/
-/*    top: 0;*/
-/*    height: 60px;*/
-/*    width: 100%;*/
-/*    background-color: #000000;*/
-/*    color: silver;*/
-/*    vertical-align: middle;*/
-/*    margin-top: 0;*/
-/*}*/
-
-/*#header_blocks{*/
-/*    margin-left: auto;*/
-/*    margin-right: auto;*/
-/*    min-width: 550px;*/
-/*    max-width:1000px;*/
-/*    height: 60px;*/
-/*}*/
-
-/*#body {*/
-/*    display: block;*/
-/*    background-color: #282829;*/
-/*    min-height: 99.4%;*/
-/*!*    max-height: 100%;*!*/
-/*}*/
-
-/*#footer {*/
-/*    display: block;*/
-/*    min-height: 50px;*/
-/*    width: 100%;*/
-/*    background-color: #282829;*/
-/*    color: #E29826;*/
-/*}*/
 
 #newMessagePopUp{
     position: fixed;
