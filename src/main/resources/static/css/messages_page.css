@@ -1,4 +1,3 @@
-.container{max-width:1170px; margin:auto;}
 img{ max-width:100%;}
 .inbox_people {
     background: #f8f8f8 none repeat scroll 0 0;
@@ -56,7 +55,7 @@ img{ max-width:100%;}
     margin: 0;
     padding: 18px 16px 10px;
 }
-.inbox_chat { height: 550px; overflow-y: scroll;}
+.inbox_chat { overflow-y: scroll;}
 
 .active_chat{ background:#ebebeb;}
 
@@ -112,9 +111,16 @@ img{ max-width:100%;}
     font-size: 15px;
     min-height: 48px;
     width: 100%;
+    padding: 2%;
 }
 
-.type_msg {border-top: 1px solid #c4c4c4;position: relative;}
+.type_msg {
+    display: flex;
+    height: 80%;
+    border-top: 1px solid #c4c4c4;
+    position: relative;
+}
+
 .msg_send_btn {
     background: #05728f none repeat scroll 0 0;
     border: medium none;
@@ -128,8 +134,12 @@ img{ max-width:100%;}
     top: 11px;
     width: 33px;
 }
-.messaging { padding: 0 0 50px 0;}
-.msg_history {
-    height: 516px;
-    overflow-y: auto;
+
+.msg_history{
+    height: 80%;
+}
+
+.write_msg {
+    width:92%;
+    height: 15%;
 }

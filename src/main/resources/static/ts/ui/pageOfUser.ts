@@ -53,8 +53,9 @@ export class PageOfUser extends AbstractPage {
 
   public render() {
     let body: HTMLElement = document.getElementById("body");
-    body.innerHTML = `<div id='short_user_data' class='card mb-3'>
-      <div class="row no-gutters">
+    body.innerHTML = `<div class="col-2"></div>
+    <div id='short_user_data' class='card col-8'>
+      <div class="row">
       <div class="col-md-4">
       <svg class="bd-placeholder-img" width="100%" height="250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image">
         <title>Placeholder</title>
@@ -70,7 +71,8 @@ export class PageOfUser extends AbstractPage {
           </div>
         </div>
        </div>
-      </div>`;
+      </div>
+      <div class="col-2">`;
 
     body.appendChild(this.createNewMessagePopupElement());
   }

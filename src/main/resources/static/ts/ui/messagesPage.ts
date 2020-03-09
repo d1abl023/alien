@@ -175,10 +175,9 @@ export class MessagesPage extends AbstractPage {
 
     public render(): void {
         let body: HTMLElement = document.getElementById("body");
-        body.innerHTML = `<div class="container">
-        <div class="messaging">
-        <div class="inbox_msg">
-        <div class="inbox_people">
+        body.innerHTML = `
+        <div class="inbox_msg h-100">
+        <div class="inbox_people h-100">
           <div class="headind_srch">
             <div class="recent_heading">
               <h4 class="text-dark">People</h4>
@@ -216,7 +215,7 @@ export class MessagesPage extends AbstractPage {
             </div>
           </div>
         </div>
-        <div class="mesgs">
+        <div class="mesgs h-100">
           <div class="msg_history">
             <div class="incoming_msg">
               <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
@@ -258,14 +257,13 @@ export class MessagesPage extends AbstractPage {
             </div>
           </div>
           <div class="type_msg">
-            <div class="input_msg_write">
-              <input type="text" class="write_msg" placeholder="Type a message" />
+            <div class="input_msg_write w-100">
+              <textarea class="write_msg" placeholder="Type a message"></textarea>
               <button class="msg_send_btn bg-dark" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
             </div>
           </div>
         </div>
-        </div>
-        </div></div>`;
+        </div>`;
         body.appendChild(this.createNewMessagePopupElement());
     }
 
