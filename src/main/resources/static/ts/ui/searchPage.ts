@@ -93,14 +93,15 @@ export class SearchPage extends AbstractPage {
 
     public render(): void {
         let body: HTMLElement = document.getElementById("body");
-        body.innerHTML =
-            "        <form id='search_form'>\n" +
-            "            <label id='search_label' for='search_field'>Search: </label>\n" +
-            "            <input id='search_field' name='search_field' type='text' />\n" +
-            "            <button id='search_data_button' type='button'>Search</button>\n" +
-            "        </form>\n" +
-            "        <div id='search_results'>\n" +
-            "        </div>";
+        body.innerHTML =`<div class="row">
+                    <form id='search_form'>
+                        <label id='search_label' for='search_field'>Search: </label>
+                        <input id='search_field' name='search_field' type='text' />
+                       <button id='search_data_button' type='button'>Search</button>
+                    </form>
+                    <div id='search_results' class='mx-auto'>
+                    </div>
+                    </div>`;
         body.appendChild(this.createNewMessagePopupElement());
         document.getElementById("search_data_button").addEventListener("click", () => this.search());
 

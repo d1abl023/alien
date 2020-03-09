@@ -1,3 +1,7 @@
+#short_user_data{
+    margin-top: 2%
+}
+
 .user_info_line {
     display: flex;
 }
