@@ -30,6 +30,8 @@ class UIManager {
         }).then((data: string): void => {
             this.myUsername = data;
         });
+
+        window.onresize = this.onWindowResize;
     }
 
     public getPage(pageObject): void {
@@ -101,6 +103,13 @@ class UIManager {
     private renderHeader() {
         if (this.header === null) {
             this.header = new Header();
+        }
+    }
+
+    private onWindowResize(){
+        if(document.location.search.indexOf("messages") > -1){
+            (document.querySelector("div.inbox_msg") as HTMLDivElement).style.cssText = `height: ${$(window).height() - 60}px;`;
+            (document.querySelector("div.msg_history") as HTMLDivElement).style.cssText = `height: ${$(window).height() - 210}px;`;
         }
     }
 }

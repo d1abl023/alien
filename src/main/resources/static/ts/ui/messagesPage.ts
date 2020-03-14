@@ -61,9 +61,13 @@ export class MessagesPage extends AbstractPage {
             this.dialogs = data;
             for (let dialogId in this.dialogs) {
                 if (this.dialogs.hasOwnProperty(dialogId)) {
-                    document.getElementById("conversations_list")
+                    document.getElementById("people_list")
                         .appendChild(this.createDialogHtmlElement(this.dialogs[dialogId]));
                 }
+            }
+            let keys = Object.keys(this.dialogs);
+            if (keys.length > 0) {
+              this.openMessageHistory(keys[0]);
             }
         });
     }
@@ -73,8 +77,13 @@ export class MessagesPage extends AbstractPage {
      * show messages on front-end
      */
     public openMessageHistory(dialogId) {
-        if (this.dialogs[dialogId]) {
 
+        document.getElementById(`${dialogId}_dialog`).className = "chat_list active_chat";
+        if(this.isOpenedDialogId) {
+          document.getElementById(`${this.isOpenedDialogId}_dialog`).className = "chat_list";
+        }
+
+        if (this.dialogs[dialogId]) {
             this.isOpenedDialogId = dialogId;
 
             let lastMessage: IMessage = this.dialogs[dialogId];
@@ -87,9 +96,8 @@ export class MessagesPage extends AbstractPage {
                 this.isOpenedInterlocutorId = lastMessage.senderId;
             }
 
-            document.getElementById("messages_list").innerText = "";
-            document.getElementById("messages_list_header").innerText = "Messages with " + this.isOpenedInterlocutorUsername;
-
+            document.getElementById("dialog_history").innerText = "";
+          
             // Requesting message history for dialog that was clicked on
             $.ajax({
                 url: "/get_message_history",
@@ -106,8 +114,8 @@ export class MessagesPage extends AbstractPage {
                         this.addMessageToMessageList(response[msg]);
                     }
                 }
-                document.getElementById("messages_list").scrollTop =
-                    document.getElementById("messages_list").scrollHeight;
+                document.getElementById("dialog_history").scrollTop =
+                    document.getElementById("dialog_history").scrollHeight;
             });
         } else {
             console.error("Missing dialog with id: " + dialogId);
@@ -116,68 +124,62 @@ export class MessagesPage extends AbstractPage {
 
     public send = (): void => {
         const SEND_MESSAGE_FIELD: HTMLInputElement =
-            <HTMLInputElement>document.getElementById("send_message_field");
-        let message: IMessage = {
+            <HTMLInputElement>document.querySelector("textarea.write_msg");
+        let text: string = SEND_MESSAGE_FIELD.value.trim();
+
+        if (text.length > 0) {
+          let message: IMessage = {
             dialogId: this.isOpenedDialogId,
             senderId: this.myId,
             receiverId: this.isOpenedInterlocutorId,
-            text: SEND_MESSAGE_FIELD.value,
+            text: text,
             senderLogin: this.myUsername,
             receiverLogin: this.isOpenedInterlocutorUsername,
             timestamp: Date.now().toString()
-        };
-        this.webSocketClient.sendMessage(JSON.stringify(message));
+          };
+          this.webSocketClient.sendMessage(JSON.stringify(message));
+        }
 
         SEND_MESSAGE_FIELD.value = "";
     };
 
     public addMessageToMessageList(msg: IMessage) {
-        let messageList: HTMLElement = document.getElementById("messages_list");
-
-        let sender: HTMLDivElement = document.createElement("div");
-        sender.classList.add("sender_username");
-        sender.innerText = msg.senderLogin;
-
-        let timestamp: HTMLDivElement = document.createElement("div");
-        timestamp.classList.add("timestamp");
         const date: Date = new Date(Number(msg.timestamp));
-        let minutes: number = date.getMinutes();
-        timestamp.innerText = date.getHours() + ":" + (minutes.toString().length === 2 ? minutes.toString() : "0" + minutes);
-
-        let messageText: HTMLDivElement = document.createElement("div");
-        messageText.classList.add("message_text");
-        messageText.innerText = msg.text;
-
-
-        let messageBody: HTMLDivElement = document.createElement("div");
-        // messageBody.appendChild(sender);
-        messageBody.appendChild(messageText);
-
+        const minutes: number = date.getMinutes();
+        const stringDate = ` ${date.getHours()}:${minutes.toString().length === 2 ? minutes.toString() : "0" + minutes}   |    ${date.getMonth()} / ${date.getDate()}`;
         let message: HTMLDivElement = document.createElement("div");
 
-        if (msg.senderId === this.myId) {
-            messageBody.className = "outgoing_msg_body";
-            message.className = "outgoing_message";
+        if(msg.senderId === this.myId){
+          message.innerHTML = `
+            <div class="outgoing_msg">
+              <div class="sent_msg">
+                <p class="bg-dark">${msg.text}</p>
+                <span class="time_date">${stringDate}</span> 
+              </div>
+            </div>`
         } else {
-            messageBody.className = "incoming_msg_body";
-            message.className = "incoming_message";
-            if (!this.isOpenedInterlocutorUsername) {
-                this.isOpenedInterlocutorUsername = msg.senderId;
-            }
+          message.innerHTML = `<div class="incoming_msg">
+        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+        <div class="received_msg">
+          <div class="received_withd_msg">
+            <p>${msg.text}</p>
+            <span class="time_date"> ${stringDate}</span>
+          </div>
+        </div>
+      </div>`;
         }
 
-        message.appendChild(messageBody);
-        message.appendChild(timestamp);
+        let messageList: HTMLElement = document.getElementById("dialog_history");
         messageList.appendChild(message);
-        document.getElementById("messages_list").scrollTop =
-            document.getElementById("messages_list").scrollHeight;
+        messageList.scrollTop = messageList.scrollHeight;
     }
 
     public render(): void {
         let body: HTMLElement = document.getElementById("body");
         body.innerHTML = `
-        <div class="inbox_msg h-100">
-        <div class="inbox_people h-100">
+        <div class="col-md-2"></div>
+        <div class="inbox_msg col-md-8" style="height: ${$(window).height() - 60}px;">
+        <div class="inbox_people h-100 col-4">
           <div class="headind_srch">
             <div class="recent_heading">
               <h4 class="text-dark">People</h4>
@@ -190,72 +192,10 @@ export class MessagesPage extends AbstractPage {
                 </span> </div>
             </div>
           </div>
-          <div class="inbox_chat">
-            <div class="chat_list active_chat">
-              <div class="chat_people">
-                <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                <div class="chat_ib">
-                  <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
-                  <p>Test, which is a new approach to have all solutions 
-                    astrology under one roof.</p>
-                </div>
-              </div>
-            </div>
-            
-            
-            <div class="chat_list">
-              <div class="chat_people">
-                <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                <div class="chat_ib">
-                  <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
-                  <p>Test, which is a new approach to have all solutions 
-                    astrology under one roof.</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div id="people_list" class="inbox_chat"></div>
         </div>
-        <div class="mesgs h-100">
-          <div class="msg_history">
-            <div class="incoming_msg">
-              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-              <div class="received_msg">
-                <div class="received_withd_msg">
-                  <p>Test which is a new approach to have all
-                    solutions</p>
-                  <span class="time_date"> 11:01 AM    |    June 9</span></div>
-              </div>
-            </div>
-            <div class="outgoing_msg">
-              <div class="sent_msg">
-                <p class="bg-dark">Test which is a new approach to have all
-                  solutions</p>
-                <span class="time_date"> 11:01 AM    |    June 9</span> </div>
-            </div>
-            <div class="incoming_msg">
-              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-              <div class="received_msg">
-                <div class="received_withd_msg">
-                  <p>Test, which is a new approach to have</p>
-                  <span class="time_date"> 11:01 AM    |    Yesterday</span></div>
-              </div>
-            </div>
-            <div class="outgoing_msg">
-              <div class="sent_msg">
-                <p class="bg-dark">Apollo University, Delhi, India Test</p>
-                <span class="time_date"> 11:01 AM    |    Today</span> </div>
-            </div>
-            <div class="incoming_msg">
-              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-              <div class="received_msg">
-                <div class="received_withd_msg">
-                  <p>We work directly with our designers and suppliers,
-                    and sell direct to you, which means quality, exclusive
-                    products, at a price anyone can afford.</p>
-                  <span class="time_date"> 11:01 AM    |    Today</span></div>
-              </div>
-            </div>
-          </div>
+        <div class="mesgs h-100 col-8">
+          <div id="dialog_history" class="msg_history" style="height: ${$(window).height() - 210}px;"></div>
           <div class="type_msg">
             <div class="input_msg_write w-100">
               <textarea class="write_msg" placeholder="Type a message"></textarea>
@@ -263,37 +203,62 @@ export class MessagesPage extends AbstractPage {
             </div>
           </div>
         </div>
-        </div>`;
+        </div>
+        <div class="col-md-2"></div>`;
         body.appendChild(this.createNewMessagePopupElement());
+        document.querySelector("button.msg_send_btn.bg-dark").addEventListener("click", this.send);
     }
 
     private updateDialogHtmlElement(message: IMessage): void {
-        document.getElementById(
-            (message.senderId === this.myId ? message.receiverLogin : message.senderLogin) + "_message"
-        ).innerText = message.text;
-
-
+        let msgDate = new Date(Number(message.timestamp));
+        document.getElementById(`${message.dialogId}_last_message_date`).innerHTML = `${msgDate.getMonth()} / ${msgDate.getDate()}`;
+        document.getElementById(`${message.dialogId}_last_message`).innerText = message.text;
+        let dialog: HTMLDivElement = (document.getElementById(`${message.dialogId}_dialog`).cloneNode(true) as HTMLDivElement);
+        dialog.onclick = () => this.openMessageHistory(message.dialogId);
+        document.getElementById(`${message.dialogId}_dialog`).remove();
+        document.getElementById(`people_list`).prepend(dialog);
     }
 
     private createDialogHtmlElement(message: IMessage): HTMLDivElement {
         let dialogEl: HTMLDivElement = document.createElement("div");
-        let loginEl: HTMLDivElement = document.createElement("div");
-        let lastMessageEl: HTMLDivElement = document.createElement("div");
+        let chatPeopleEl: HTMLDivElement = document.createElement("div");
+        let avatarEl: HTMLDivElement = document.createElement("div");
+        let chatIbEl: HTMLDivElement = document.createElement("div");
+        let imgEl: HTMLImageElement = document.createElement("img");
+        let dateEl: HTMLSpanElement = document.createElement("span");
+        let nameEl: HTMLElement = document.createElement("h5");
+        let textEl: HTMLElement = document.createElement("p");
+        
+        imgEl.src = "https://ptetutorials.com/images/user-profile.png";
+        imgEl.alt = "avatar";
 
-        dialogEl.id = message.dialogId;
-        dialogEl.className = "person";
-        dialogEl.onclick = () => this.openMessageHistory(dialogEl.id);
+        avatarEl.id = (message.senderId === this.myId ? message.receiverLogin : message.senderLogin) + "_avatar";
+        avatarEl.className = "chat_img";
+        avatarEl.appendChild(imgEl);
 
-        loginEl.id = message.senderId === this.myId ? message.receiverLogin : message.senderLogin;
-        loginEl.className = "users_login";
-        loginEl.innerText = message.senderId === this.myId ? message.receiverLogin : message.senderLogin;
+        let msgDate = new Date(Number(message.timestamp));
+        dateEl.id = `${message.dialogId}_last_message_date`;
+        dateEl.className = "chat_date";
+        dateEl.innerHTML = `${msgDate.getMonth()} / ${msgDate.getDate()}`;
 
-        lastMessageEl.id = (message.senderId === this.myId ? message.receiverLogin : message.senderLogin) + "_message";
-        lastMessageEl.className = "last_message";
-        lastMessageEl.innerText = message.text;
+        nameEl.innerHTML = message.senderId === this.myId ? message.receiverLogin : message.senderLogin;
+        nameEl.appendChild(dateEl);
 
-        dialogEl.appendChild(loginEl);
-        dialogEl.appendChild(lastMessageEl);
+        textEl.id = `${message.dialogId}_last_message`;
+        textEl.innerHTML = message.text;
+
+        chatIbEl.className = "chat_ib";
+        chatIbEl.appendChild(nameEl);
+        chatIbEl.appendChild(textEl);
+    
+        chatPeopleEl.className = "chat_people";
+        chatPeopleEl.appendChild(avatarEl);
+        chatPeopleEl.appendChild(chatIbEl);
+
+        dialogEl.id = `${message.dialogId}_dialog`;
+        dialogEl.className = "chat_list";
+        dialogEl.onclick = () => this.openMessageHistory(message.dialogId);
+        dialogEl.appendChild(chatPeopleEl);
 
         return dialogEl;
     }

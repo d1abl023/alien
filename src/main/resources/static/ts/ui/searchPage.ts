@@ -93,8 +93,8 @@ export class SearchPage extends AbstractPage {
 
     public render(): void {
         let body: HTMLElement = document.getElementById("body");
-        body.innerHTML =`<div class="row">
-                    <form id='search_form'>
+        body.innerHTML =`<div class='row'>
+                    <form id='search_form' class='col-8 justify-content-center'>
                         <label id='search_label' for='search_field'>Search: </label>
                         <input id='search_field' name='search_field' type='text' />
                        <button id='search_data_button' type='button'>Search</button>
