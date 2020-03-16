@@ -33,9 +33,9 @@ public class HibernateUtils {
         return new Configuration()
                 .setProperties(getProperties())
                 .addAnnotatedClass(AuthUserData.class)
-                .addAnnotatedClass(User.class)
-                .addAnnotatedClass(UserMessage.class)
-                .addAnnotatedClass(ChatRoom1Msg.class)
+                .addAnnotatedClass(UserGeneralData.class)
+                .addAnnotatedClass(Messages.class)
+//                .addAnnotatedClass(ChatRoom1Msg.class)
                 .addAnnotatedClass(Dialogs.class);
     }
 

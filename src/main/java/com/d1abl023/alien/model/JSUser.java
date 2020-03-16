@@ -1,6 +1,6 @@
 package com.d1abl023.alien.model;
 
-import com.d1abl023.alien.tables.User;
+import com.d1abl023.alien.tables.UserGeneralData;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -50,19 +50,19 @@ public class JSUser implements Serializable {
         this.type = type;
     }
 
-    public JSUser(User user){
-        this.id = Long.toString(user.getId());
-        this.login = user.getLogin();
-        this.email = user.getEmail();
-        this.date = user.getDate();
-        this.sex = user.getSex();
-        this.number = user.getNumber();
-        this.country = user.getCountry();
-        this.city = user.getCity();
-        this.placeOfWork = user.getPlaceOfWork();
-        this.education = user.getEducation();
-        this.status = user.getStatus();
-        this.type = user.getType();
+    public JSUser(UserGeneralData userGeneralData){
+        this.id = Long.toString(userGeneralData.getId());
+        this.login = userGeneralData.getLogin();
+        this.email = userGeneralData.getEmail();
+        this.date = userGeneralData.getDate();
+        this.sex = userGeneralData.getSex();
+        this.number = userGeneralData.getPhoneNumber();
+        this.country = userGeneralData.getCountry();
+        this.city = userGeneralData.getCity();
+        this.placeOfWork = userGeneralData.getPlaceOfWork();
+        this.education = userGeneralData.getEducation();
+        this.status = userGeneralData.getStatus();
+        this.type = userGeneralData.getType();
     }
 
     public String getId() {

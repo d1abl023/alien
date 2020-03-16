@@ -2,7 +2,7 @@ package com.d1abl023.alien.forms;
 
 import com.d1abl023.alien.interfaces.Form;
 import com.d1abl023.alien.tables.AuthUserData;
-import com.d1abl023.alien.tables.User;
+import com.d1abl023.alien.tables.UserGeneralData;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -117,8 +117,8 @@ public class UserRegForm implements Form {
      * Method {@code createUserTableDataObject()} creates object
      * for mapping data into table {@code users}
      */
-    public User createUserTableObject() {
-        return new User(login, email, dateOfBirth, sex, phoneNumber, country, city, "null", "null");
+    public UserGeneralData createUserTableObject() {
+        return new UserGeneralData(login, email, dateOfBirth, sex, phoneNumber, country, city, "null", "null");
     }
 
     /**

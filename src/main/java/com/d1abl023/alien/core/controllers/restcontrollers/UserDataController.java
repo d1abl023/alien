@@ -1,20 +1,13 @@
 package com.d1abl023.alien.core.controllers.restcontrollers;
 
-import com.d1abl023.alien.tables.User;
-import com.d1abl023.alien.utilactions.Base64Actions;
+import com.d1abl023.alien.tables.UserGeneralData;
 import com.d1abl023.alien.utilactions.HibernateUtils;
-import com.d1abl023.alien.utilactions.TokenUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotNull;
 import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -50,18 +43,18 @@ public class UserDataController {
         //Requesting DB for user data
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        List list = session.createQuery("from User user where user.id = '" + userId + "'").list();
+        List list = session.createQuery("from UserGeneralData user where user.id = '" + userId + "'").list();
         transaction.commit();
 
         //If request was successful putting data into resulting map
         if (list.size() > 0) {
-            User user = (User) list.get(0);
-            responseMap.put("login", user.getLogin());
-            responseMap.put("sex", user.getSex());
-            responseMap.put("country", user.getCountry());
-            responseMap.put("city", user.getCity());
-            responseMap.put("work", user.getPlaceOfWork());
-            responseMap.put("education", user.getEducation());
+            UserGeneralData userGeneralData = (UserGeneralData) list.get(0);
+            responseMap.put("login", userGeneralData.getLogin());
+            responseMap.put("sex", userGeneralData.getSex());
+            responseMap.put("country", userGeneralData.getCountry());
+            responseMap.put("city", userGeneralData.getCity());
+            responseMap.put("work", userGeneralData.getPlaceOfWork());
+            responseMap.put("education", userGeneralData.getEducation());
             response.setStatus(200);
         }
 
@@ -90,7 +83,7 @@ public class UserDataController {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
 
-        Query query = session.createQuery("select user.login from User user where user.id = :id");
+        Query query = session.createQuery("select user.login from UserGeneralData user where user.id = :id");
         query.setParameter("id", new Long(id));
         String username = (String) query.getSingleResult();
         transaction.commit();

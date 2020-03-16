@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "messages")
-public class UserMessage implements DBTable {
+public class Messages implements DBTable {
 
     @Id
     @Column(name = "id")
@@ -16,10 +16,10 @@ public class UserMessage implements DBTable {
     @Column(name = "dialogId")
     private long dialogId;
 
-    @Column(name = "senderId")
+    @Column(name = "sender")
     private long senderId;
 
-    @Column(name = "receiverId")
+    @Column(name = "receiver")
     private long receiverId;
 
     @Column(name = "msg")
@@ -28,10 +28,10 @@ public class UserMessage implements DBTable {
     @Column(name = "timestamp")
     private long timestamp;
 
-    public UserMessage() {
+    public Messages() {
     }
 
-    public UserMessage(long dialogId, long senderId, long receiverId, String text, long timestamp) {
+    public Messages(long dialogId, long senderId, long receiverId, String text, long timestamp) {
         this.dialogId = dialogId;
         this.senderId = senderId;
         this.receiverId = receiverId;
@@ -39,7 +39,7 @@ public class UserMessage implements DBTable {
         this.timestamp = timestamp;
     }
 
-    public UserMessage(long id, long dialogId, long senderId, long receiverId, String text, long timestamp) {
+    public Messages(long id, long dialogId, long senderId, long receiverId, String text, long timestamp) {
         this.id = id;
         this.dialogId = dialogId;
         this.senderId = senderId;

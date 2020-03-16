@@ -3,7 +3,7 @@ package com.d1abl023.alien.core.controllers.restcontrollers;
 import com.d1abl023.alien.forms.UserRegForm;
 import com.d1abl023.alien.model.JSUser;
 import com.d1abl023.alien.tables.AuthUserData;
-import com.d1abl023.alien.tables.User;
+import com.d1abl023.alien.tables.UserGeneralData;
 import com.d1abl023.alien.utilactions.HibernateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +27,12 @@ public class FormController {
         Map<String, JSUser> searchResult = new LinkedHashMap<>();
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        TypedQuery<User> selectUsers = session.createQuery(
-                "from User user where user.login = :userLogin", User.class);
+        TypedQuery<UserGeneralData> selectUsers = session.createQuery(
+                "from UserGeneralData user where user.login = :userLogin", UserGeneralData.class);
         selectUsers.setParameter("userLogin", requestBody);
-        List<User> dbUsers = selectUsers.getResultList();
-        for (User tmpUser : dbUsers) {
-            searchResult.put(Long.toString(tmpUser.getId()), (new JSUser(tmpUser)));
+        List<UserGeneralData> dbUserGeneralData = selectUsers.getResultList();
+        for (UserGeneralData tmpUserGeneralData : dbUserGeneralData) {
+            searchResult.put(Long.toString(tmpUserGeneralData.getId()), (new JSUser(tmpUserGeneralData)));
         }
         transaction.commit();
         session.close();
@@ -47,23 +46,23 @@ public class FormController {
             //Creating DB session
             Session session = HibernateUtils.getSessionFactory().openSession();
 
-            User user = userRegForm.createUserTableObject();
+            UserGeneralData userGeneralData = userRegForm.createUserTableObject();
 
             //Saving used data(id, login, email, date of birth, sex, phone number,
             // country, city, status, user type) into DB table
             Transaction transaction = session.beginTransaction();
-            session.save(user);
+            session.save(userGeneralData);
             transaction.commit();
 
             //Verifying if user data has been successfully added into DB table
             //If success - adding user auth data, else - throwing InternalError
             transaction = session.beginTransaction();
-            if (session.createQuery("from User user where user.id = " + user.getId()).list().size() > 0) {
+            if (session.createQuery("from UserGeneralData user where user.id = " + userGeneralData.getId()).list().size() > 0) {
 
                 transaction.commit();
 
                 AuthUserData authUserData = userRegForm.createUserAuthTableObject();
-                authUserData.setId(user.getId());
+                authUserData.setId(userGeneralData.getId());
 
                 //Saving user authentication data (id, login, password) into DB table
                 transaction = session.beginTransaction();

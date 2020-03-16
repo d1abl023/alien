@@ -1,7 +1,7 @@
 package com.d1abl023.alien.core.exceptions;
 
 import com.d1abl023.alien.tables.Dialogs;
-import com.d1abl023.alien.tables.UserMessage;
+import com.d1abl023.alien.tables.Messages;
 
 
 /**
@@ -11,7 +11,7 @@ import com.d1abl023.alien.tables.UserMessage;
  */
 public class InappropriateMessageForDialogException extends Throwable {
 
-    public InappropriateMessageForDialogException(UserMessage message, Dialogs dialog) {
+    public InappropriateMessageForDialogException(Messages message, Dialogs dialog) {
         super(message.toString() + "\n" + dialog.toString());
     }
 }

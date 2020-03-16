@@ -1,25 +1,19 @@
 package com.d1abl023.alien.tables;
 
 import com.d1abl023.alien.interfaces.DBTable;
-import com.d1abl023.alien.utilactions.HibernateUtils;
-import org.apache.commons.lang3.RandomUtils;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
 import javax.persistence.*;
 import java.util.Date;
 
+
 @Entity
-@Table(name = "users")
-public class User implements DBTable {
+@Table(name = "user_general_data")
+public class UserGeneralData implements DBTable {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(name = "login")
-    private String login;
 
     @Column(name = "email")
     private String email;
@@ -31,7 +25,7 @@ public class User implements DBTable {
     private String sex;
 
     @Column(name = "phone_number")
-    private long number;
+    private long phoneNumber;
 
     @Column(name = "country")
     private String country;
@@ -45,40 +39,27 @@ public class User implements DBTable {
     @Column(name = "education")
     private String education;
 
-    @Column(name = "status")
-    private String status;
+    @Column(name = "position")
+    private String position;
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "amount_of_mentions")
+    private int amountOfMentions;
 
-    public User() {
+    public UserGeneralData() {
     }
 
-    public User(String login, String email, Date date, String sex, long number, String country, String city, String status, String type) {
-        this.id = System.nanoTime();
-        this.login = login;
+    public UserGeneralData(String email, Date date, String sex, long phoneNumber, String country,
+                           String city, String placeOfWork, String education, String position, int amountOfMentions) {
         this.email = email;
         this.date = date;
         this.sex = sex;
-        this.number = number;
+        this.phoneNumber = phoneNumber;
         this.country = country;
         this.city = city;
-        this.status = status;
-        this.type = type;
-    }
-
-    public User(long id, String login, String email, Date date, String sex,
-                long number, String country, String city, String status, String type) {
-        this.id = id;
-        this.login = login;
-        this.email = email;
-        this.date = date;
-        this.sex = sex;
-        this.number = number;
-        this.country = country;
-        this.city = city;
-        this.status = status;
-        this.type = type;
+        this.placeOfWork = placeOfWork;
+        this.education = education;
+        this.position = position;
+        this.amountOfMentions = amountOfMentions;
     }
 
     public long getId() {
@@ -86,32 +67,7 @@ public class User implements DBTable {
     }
 
     public void setId(long id) {
-
-        boolean contains = true;
-        Session session = HibernateUtils.getSessionFactory().openSession();
-
-        Transaction transaction = session.beginTransaction();
-
-        while (contains) {
-
-            Query query = session.createQuery("from User user where user.id = " + id);
-            if (query.list().size() == 0) {
-                contains = false;
-            }else{
-                id = RandomUtils.nextLong();
-            }
-
-        }
-        transaction.commit();
         this.id = id;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     public String getEmail() {
@@ -138,12 +94,12 @@ public class User implements DBTable {
         this.sex = sex;
     }
 
-    public long getNumber() {
-        return number;
+    public long getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setNumber(long number) {
-        this.number = number;
+    public void setPhoneNumber(long phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getCountry() {
@@ -162,14 +118,6 @@ public class User implements DBTable {
         this.city = city;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getPlaceOfWork() {
         return placeOfWork;
     }
@@ -186,29 +134,36 @@ public class User implements DBTable {
         this.education = education;
     }
 
-    public String getType() {
-        return type;
+    public String getPosition() {
+        return position;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public int getAmountOfMentions() {
+        return amountOfMentions;
+    }
+
+    public void setAmountOfMentions(int amountOfMentions) {
+        this.amountOfMentions = amountOfMentions;
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", login='" + login + '\'' +
                 ", email='" + email + '\'' +
                 ", date=" + date +
                 ", sex='" + sex + '\'' +
-                ", number=" + number +
+                ", number=" + phoneNumber +
                 ", country='" + country + '\'' +
                 ", city='" + city + '\'' +
                 ", placeOfWork='" + placeOfWork + '\'' +
                 ", education='" + education + '\'' +
-                ", status='" + status + '\'' +
-                ", type='" + type + '\'' +
+                ", position='" + position + '\'' +
+                ", amountOfMentions=" + amountOfMentions +
                 '}';
     }
 }

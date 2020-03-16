@@ -3,7 +3,7 @@ package com.d1abl023.alien.core.controllers.restcontrollers;
 import com.d1abl023.alien.core.exceptions.InappropriateMessageForDialogException;
 import com.d1abl023.alien.model.Message;
 import com.d1abl023.alien.tables.Dialogs;
-import com.d1abl023.alien.tables.UserMessage;
+import com.d1abl023.alien.tables.Messages;
 import com.d1abl023.alien.utilactions.HibernateUtils;
 import com.d1abl023.alien.utilactions.MessageUtils;
 import org.apache.logging.log4j.LogManager;
@@ -13,7 +13,6 @@ import org.hibernate.Transaction;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sun.misc.resources.Messages;
 
 import javax.persistence.TypedQuery;
 import java.security.Principal;
@@ -49,18 +48,18 @@ public class MessageController {
     public List<Message> getMessageHistory(@RequestBody String dialogId) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        TypedQuery<UserMessage> query = session.createQuery(
-                "from UserMessage messages where messages.dialogId = :dialogId",
-                UserMessage.class
+        TypedQuery<Messages> query = session.createQuery(
+                "from Messages messages where messages.dialogId = :dialogId",
+                Messages.class
         );
         query.setParameter("dialogId", new Long(dialogId));
-        List<UserMessage> messageList = query.getResultList();
+        List<Messages> messageList = query.getResultList();
         Dialogs dialog = session.get(Dialogs.class, new Long(dialogId));
         transaction.commit();
         session.close();
 
         List<Message> responseList = new LinkedList<>();
-        for (UserMessage message : messageList) {
+        for (Messages message : messageList) {
             try {
                 if (message.getSenderId() == dialog.getUser1() && message.getReceiverId() == dialog.getUser2()) {
                     responseList.add(new Message(
