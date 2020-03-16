@@ -81,7 +81,32 @@ export class SearchPage extends AbstractPage {
         user.appendChild(openProfileButton);
         user.appendChild(sendMessageButton);
 
-        return user;
+
+        let userBlock: HTMLDivElement = document.createElement("div");
+
+
+        //TODO: to add feedbacks about employes in  program
+        userBlock.innerHTML = `
+        <div class="row no-gutters">
+          <div class="col-md-4 align-self-stratch">
+            <img src="pictures/photo/no_avatar.jpg" class="card-img" alt="${userEntity.login}">
+            <button id="open_profile" class="nav-item btn btn-dark header_button align-self-bottom col-12 mx-0 text-center" type="button">Open</button>
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">${userEntity.login}</h5>
+              <p id="was_online" class="card-text my-0"><small class="text-muted">Was onlone 3 mins ago</small></p>
+              <p class="card-text my-0">Lives at: ${userEntity.country}, ${userEntity.city}</p>
+              <p class="card-text my-0">Works at: ${userEntity.placeOfWork}</p>
+              <p class="card-text my-0">Feedbacks: 0</p>
+            </div>
+          </div>
+        </div>`;
+
+        userBlock.className = "card mb-3";
+        userBlock.style.maxWidth = "430px";
+
+        return userBlock;
     }
 
     public openProfile = function (id: string): void {
@@ -93,14 +118,22 @@ export class SearchPage extends AbstractPage {
 
     public render(): void {
         let body: HTMLElement = document.getElementById("body");
-        body.innerHTML =`<div class='row'>
-                    <form id='search_form' class='col-8 justify-content-center'>
-                        <label id='search_label' for='search_field'>Search: </label>
-                        <input id='search_field' name='search_field' type='text' />
-                       <button id='search_data_button' type='button'>Search</button>
-                    </form>
-                    <div id='search_results' class='mx-auto'>
-                    </div>
+        body.innerHTML =`
+                    <div class='row col-12'>
+                        <div class='col-2'></div>
+                        <div class='col-8'>
+                            <div class='row col-12'>
+                                <form id='search_form' class='justify-content-center'>
+                                    <label id='search_label' for='search_field' class='align-self-center text-dark'>Search: </label>
+                                    <div class="md-form active-dark-2 align-self-center">
+                                        <input id='search_field' name='search_field' class="form-control align-self-center" type="text" placeholder="Search" aria-label="Search">
+                                    </div>
+                                    <button id='search_data_button' type='button' class='btn btn-dark align-self-center mx-0 text-center'>Search</button>
+                                </form>
+                            </div>
+                            <div id='search_results' class='row mx-auto col-12'></div>
+                        </div>
+                        <div class='col-2'></div>
                     </div>`;
         body.appendChild(this.createNewMessagePopupElement());
         document.getElementById("search_data_button").addEventListener("click", () => this.search());

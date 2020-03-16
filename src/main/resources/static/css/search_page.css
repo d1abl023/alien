@@ -13,33 +13,37 @@
     font-size: 1.6em;
     margin-left: 30px;
     margin-right: 30px;
+    margin-bottom: 0em;
     padding-bottom: 5px
 }
 
 #search_field {
     float: left;
-    display: inline-flex;
     width: 500px;
-    height: 20px;
     margin-left: 30px;
     margin-right: 30px;
 }
 
 #search_data_button {
-    display: inline-flex;
+    /* display: inline-flex; */
     width: 100px;
-    height: 30px;
+    /* height: 30px;
     margin-left: 30px;
-    margin-right: 30px;
+    margin-right: 30px; */
 }
 
 #search_results {
     display: flex;
     margin-top: 50px;
     width: 900px;
-    border-style: dashed;
+    /* border-style: dashed;
     border-width: 2px;
-    border-color: gold;
+    border-color: gold; */
+}
+
+.active-dark-2 input[type=text]:focus:not([readonly]) {
+    border-bottom: 1px solid #343a40;
+    box-shadow: 0 1px 0 0 #343a40;
 }
 
 .line {
