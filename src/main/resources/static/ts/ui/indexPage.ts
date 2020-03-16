@@ -1,10 +1,10 @@
 import {uiManager} from "../uiManager";
 import {AbstractPage} from "../utils/abstractPage";
 
-export class Index extends AbstractPage {
+export class IndexPage extends AbstractPage {
 
     constructor() {
-        super();
+        super(undefined, undefined);
         this.render()
     }
 
@@ -53,30 +53,31 @@ export class Index extends AbstractPage {
     }
 
     public render(): void {
-        let body: HTMLDivElement = document.createElement("div");
-        body.id = "body";
+        let body: HTMLElement = document.getElementById("body");
         body.innerHTML =
-            '<div id="reg_auth_info">\n' +
-            '        <div id="reg_auth_info_text">Register or authenticate!</div>\n' +
-            '        <div id="auth_error"></div>\n' +
-            '        <form id="auth_form" action="/login" method="post">\n' +
-            '            <p>\n' +
-            '                <label for="username" class="reg_form_labels">Login:</label>\n' +
-            '                <input type="text" id="username" name="username" class="reg_form_fields" required>\n' +
-            '            </p>\n' +
-            '            <p>\n' +
-            '                <label for="password" class="reg_form_labels">Password:</label>\n' +
-            '                <input type="password" id="password" name="password" class="reg_form_fields" required>\n' +
-            '            </p>\n' +
-            '            <button id="authentication" type="submit" class="reg_form_button" form="auth_form">Log in</button>\n' +
-            '            <button id="go_to_registration" type="button" class="reg_form_button" onclick="goToRegistration();">Registration</button>\n' +
-            '        </form>\n' +
-            '    </div>\n' +
-            '</div>\n';
-        if (document.getElementById("body")) {
-            document.getElementById("body").remove();
-        }
-        document.body.appendChild(body);
+            '<div id="reg_auth_info" class="col-xs-12 col-sm-12 col-md-4 card mx-auto">' +
+            '        <div id="reg_auth_info_text" class="card-header">Register or authenticate!</div>' +
+            '        <div id="auth_error"></div>' +
+            '        <form id="auth_form" action="/login" method="post">' +
+            '            <p class="form-group">' +
+            '                <label for="username" class="reg_form_labels">Login:</label>' +
+            '                <input type="text" id="username" name="username" class="form-control" required>' +
+            '            </p>' +
+            '            <p class="form-group">' +
+            '                <label for="password" class="reg_form_labels">Password:</label>' +
+            '                <input type="password" id="password" name="password" class="form-control" required>' +
+            '            </p>' +
+            '            <div id="form_buttons" class="col-12 text-center">' +
+            '                <button id="authentication" type="submit" class="btn btn-dark form_button" form="auth_form">' +
+            '                    Log in' +
+            '                </button>' +
+            '                <button id="go_to_registration" type="button" class="btn btn-dark form_button">' +
+            '                    Registration' +
+            '                </button>' +
+            '            </div>' +
+            '        </form>' +
+            '    </div>' +
+            '</div>';
         document.getElementById("go_to_registration").addEventListener("click", () => {
             document.getElementById("body").remove();
             uiManager.getPage("registration");

@@ -1,10 +1,11 @@
 'use strict';
 import {AbstractPage} from "../utils/abstractPage";
+import jqXHR = JQuery.jqXHR;
 
 export class RegistrationPage extends AbstractPage {
 
     constructor() {
-        super();
+        super(undefined, undefined);
         this.render();
     }
 
@@ -14,7 +15,7 @@ export class RegistrationPage extends AbstractPage {
             type: "POST",
             data: JSON.stringify(RegistrationPage.createObjectFromRegistrationForm(form)),
             contentType: "application/json; charset=utf-8",
-            complete: (function (data) {
+            complete: (function (data: jqXHR<any>) {
                 if (data.status === 201) {
                     window.location.href = 'application.html';
                 } else {
@@ -44,69 +45,67 @@ export class RegistrationPage extends AbstractPage {
         };
     }
 
-    render() {
-        let body: HTMLDivElement = document.createElement("div");
-        body.id = "body";
+    public render(): void {
+        let body: HTMLElement = document.getElementById("body");
         body.innerHTML =
-            "<div id=\"reg_form\">\n" +
-            "        <div id=\"reg_form_info\">\n" +
-            "            Registration form\n" +
-            "        </div>\n" +
-            "        <div id=\"error\"></div>\n" +
-            "        <form id=\"registration\" onsubmit=\"return makeJSON(this);\">\n" +
-            "            <fieldset>\n" +
-            "                <legend>User info</legend>\n" +
-            "                <p class=\"reg_form_line\">\n" +
-            "                    <label for=\"phone_number\" class=\"reg_form_label\">Phone:</label>\n" +
-            "                    <input id=\"phone_number\" name=\"phone_number\" type=\"text\" form=\"registration\" class=\"reg_form_input\">\n" +
-            "                </p>\n" +
-            "                <p class=\"reg_form_line\">\n" +
-            "                    <label for=\"country\" class=\"reg_form_label\">Country:</label>\n" +
-            "                    <input id=\"country\" name=\"country\" type=\"text\" form=\"registration\" class=\"reg_form_input\">\n" +
-            "                </p>\n" +
-            "                <p class=\"reg_form_line\">\n" +
-            "                    <label for=\"city\" class=\"reg_form_label\">City:</label>\n" +
-            "                    <input id=\"city\" name=\"city\" type=\"text\" form=\"registration\" class=\"reg_form_input\">\n" +
-            "                </p>\n" +
-            "                <p class=\"reg_form_line\">\n" +
-            "                    <label for=\"date_of_birth\" class=\"reg_form_label\">Date:</label>\n" +
-            "                    <input id=\"date_of_birth\" name=\"date_of_birth\" type=\"date\" form=\"registration\"\n" +
-            "                           class=\"reg_form_input\">\n" +
-            "                </p>\n" +
-            "                <p class=\"reg_form_line\">\n" +
-            "                    <Label for=\"email\" class=\"reg_form_label\">Email:</Label>\n" +
-            "                    <input id=\"email\" name=\"email\" type=\"text\" form=\"registration\" class=\"reg_form_input\">\n" +
-            "                </p>\n" +
-            "                <p class=\"reg_form_line\">\n" +
-            "                    Sex:\n" +
-            "                    <label for=\"male\" id=\"m_sex_label\">M</label>\n" +
-            "                    <input id=\"male\" type=\"radio\" name=\"sex\" value=\"male\">\n" +
-            "                    <label for=\"female\" id=\"f_sex_label\">F</label>\n" +
-            "                    <input id=\"female\" type=\"radio\" name=\"sex\" value=\"female\">\n" +
-            "                </p>\n" +
-            "            </fieldset>\n" +
-            "            <fieldset>\n" +
-            "                <legend>Login data</legend>\n" +
-            "                <p class=\"reg_form_line\">\n" +
-            "                    <label for=\"login\" class=\"reg_form_label\">Login:</label>\n" +
-            "                    <input id=\"login\" name=\"login\" type=\"text\" form=\"registration\" class=\"reg_form_input\">\n" +
-            "                </p>\n" +
-            "                <p class=\"reg_form_line\">\n" +
-            "                    <label for=\"password\" class=\"reg_form_label\">Password:</label>\n" +
-            "                    <input id=\"password\" name=\"password\" type=\"password\" form=\"registration\" class=\"reg_form_input\">\n" +
-            "                </p>\n" +
-            "                <p class=\"reg_form_line\">\n" +
-            "                    <label for=\"passwordValidation\" class=\"reg_form_label\">Confirm password:</label>\n" +
-            "                    <input id=\"passwordValidation\" name=\"passwordValidation\" type=\"password\" form=\"registration\"\n" +
-            "                           class=\"reg_form_input\">\n" +
-            "                </p>\n" +
-            "            </fieldset>\n" +
-            "            <button id=\"reg_button\" class=\"regButton\" type=\"submit\" form=\"registration\">Register</button>\n" +
-            "        </form>\n" +
-            "    </div>";
-        if (document.getElementById("body")) {
-            document.getElementById("body").remove();
-        }
-        document.body.appendChild(body);
+            '<div id="reg_form">' +
+            '      <div id="reg_form_info">' +
+            '          Registration form' +
+            '      </div>' +
+            '      <div id="error"></div>' +
+            '      <form id="registration">' +
+            '          <fieldset>' +
+            '              <legend>User info</legend>' +
+            '              <p class="reg_form_line">' +
+            '                  <label for="phone_number" class="reg_form_label">Phone:</label>' +
+            '                  <input id="phone_number" name="phone_number" type="text" form="registration" class="reg_form_input">' +
+            '              </p>' +
+            '              <p class="reg_form_line">' +
+            '                  <label for="country" class="reg_form_label">Country:</label>' +
+            '                  <input id="country" name="country" type="text" form="registration" class="reg_form_input">' +
+            '              </p>' +
+            '              <p class="reg_form_line">' +
+            '                  <label for="city" class="reg_form_label">City:</label>' +
+            '                  <input id="city" name="city" type="text" form="registration" class="reg_form_input">' +
+            '              </p>' +
+            '              <p class="reg_form_line">' +
+            '                  <label for="date_of_birth" class="reg_form_label">Date:</label>' +
+            '                  <input id="date_of_birth" name="date_of_birth" type="date" form="registration"' +
+            '                         class="reg_form_input">' +
+            '              </p>' +
+            '              <p class="reg_form_line">' +
+            '                  <Label for="email" class="reg_form_label">Email:</Label>' +
+            '                  <input id="email" name="email" type="text" form="registration" class="reg_form_input">' +
+            '              </p>' +
+            '              <p class="reg_form_line">' +
+            '                  Sex:' +
+            '                  <label for="male" id="m_sex_label">M</label>' +
+            '                  <input id="male" type="radio" name="sex" value="male">' +
+            '                  <label for="female" id="f_sex_label">F</label>' +
+            '                  <input id="female" type="radio" name="sex" value="female">' +
+            '              </p>' +
+            '          </fieldset>' +
+            '          <fieldset>' +
+            '              <legend>Login data</legend>' +
+            '              <p class="reg_form_line">' +
+            '                  <label for="login" class="reg_form_label">Login:</label>' +
+            '                  <input id="login" name="login" type="text" form="registration" class="reg_form_input">' +
+            '              </p>' +
+            '              <p class="reg_form_line">' +
+            '                  <label for="password" class="reg_form_label">Password:</label>' +
+            '                  <input id="password" name="password" type="password" form="registration" class="reg_form_input">' +
+            '              </p>' +
+            '              <p class="reg_form_line">' +
+            '                  <label for="passwordValidation" class="reg_form_label">Confirm password:</label>' +
+            '                  <input id="passwordValidation" name="passwordValidation" type="password" form="registration"' +
+            '                         class="reg_form_input">' +
+            '              </p>' +
+            '          </fieldset>' +
+            '          <button id="reg_button" class="regButton" type="submit" form="registration">Register</button>' +
+            '      </form>' +
+            '  </div>';
+
+        document.getElementById("registration")
+            .addEventListener("submit", () => RegistrationPage.sendRegistrationFormData(this));
     }
 }

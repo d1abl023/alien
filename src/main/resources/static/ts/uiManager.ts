@@ -2,16 +2,37 @@ import {Header} from "./ui/header";
 import {MessagesPage} from "./ui/messagesPage";
 import {PageOfUser} from "./ui/pageOfUser";
 import {SearchPage} from "./ui/searchPage";
-import {Index} from "./ui";
+import {IndexPage} from "./ui/indexPage";
 import {RegistrationPage} from "./ui/registrationPage";
 import {AbstractPage} from "./utils/abstractPage";
 import * as $ from "jquery";
 import jqXHR = JQuery.jqXHR;
+import {SpendingsPage} from "./ui/spendingsPage";
 
 class UIManager {
 
     private header: Header = null;
     private page: AbstractPage;
+
+    private myId: string;
+    private myUsername: string;
+
+    constructor() {
+        $.ajax({
+            url: "get_id",
+            type: "GET"
+        }).then((data: string): void => {
+            this.myId = data;
+        });
+        $.ajax({
+            url: "get_username",
+            type: "GET"
+        }).then((data: string): void => {
+            this.myUsername = data;
+        });
+
+        window.onresize = this.onWindowResize;
+    }
 
     public getPage(pageObject): void {
         $.ajax(
@@ -32,34 +53,41 @@ class UIManager {
     }
 
 
-    private loadPage(pageObject): void {
+    private loadPage = (pageObject): void => {
         switch (pageObject.pageName) {
             case "messages": {
                 this.renderHeader();
                 history.pushState("", "", `application.html?messages`);
-                this.page = new MessagesPage();
+                this.page = new MessagesPage(this.myId, this.myUsername);
                 break;
             }
             case "profile": {
                 this.renderHeader();
                 history.pushState("", "", `application.html?pageOfUser=${pageObject.user}`);
-                this.page = new PageOfUser();
+                this.page = new PageOfUser(this.myId, this.myUsername);
                 break;
             }
             case "search": {
                 this.renderHeader();
                 history.pushState("", "", `application.html?search`);
-                this.page = new SearchPage();
+                this.page = new SearchPage(this.myId, this.myUsername);
+                break;
+            }
+            case "spendings": {
+                this.renderHeader();
+                history.pushState("","", `application.html?spendings`);
+                this.page = new SpendingsPage(this.myId, this.myUsername);
                 break;
             }
             case "login": {
                 this.header = null;
                 history.pushState("", "", `application.html?login`);
-                this.page = new Index();
+                this.page = new IndexPage();
                 break;
             }
             case "registration": {
                 this.header = null;
+                history.pushState("", "", `application.html?registration`);
                 this.page = new RegistrationPage();
                 break;
             }
@@ -70,11 +98,18 @@ class UIManager {
             }
         }
         this.renderHeader();
-    }
+    };
 
     private renderHeader() {
         if (this.header === null) {
             this.header = new Header();
+        }
+    }
+
+    private onWindowResize(){
+        if(document.location.search.indexOf("messages") > -1){
+            (document.querySelector("div.inbox_msg") as HTMLDivElement).style.cssText = `height: ${$(window).height() - 60}px;`;
+            (document.querySelector("div.msg_history") as HTMLDivElement).style.cssText = `height: ${$(window).height() - 210}px;`;
         }
     }
 }

@@ -1,55 +1,16 @@
-#user_profile_button {
-    float: left;
-    display: block;
-    width: 120px;
-    height: 60px;
-    border-style: inherit;
-    color: silver;
-    background-color: #000000;
-    display: block;
-    font-size: 0.4em;
-    font-family: cursive;
-
+.header_button{
+    margin-left: 3px;
+    margin-right: 3px;
 }
 
-#messages_button {
-    float: left;
-    display: block;
-    width: 100px;
-    height: 60px;
-    border-style: inherit;
-    color: silver;
-    background-color: #000000;
-    display: block;
-    font-size: 0.4em;
-    font-family: cursive;
-
+#header_blocks{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
 }
 
-#search_button{
-    float: left;
-    display: block;
-    width: 100px;
-    height: 60px;
-    border-style: inherit;
-    color: silver;
-    background-color: #000000;
-    display: block;
-    font-size: 0.4em;
-    font-family: cursive;
-}
-
-#logout_button {
-    float: right;
-    display: block;
-    margin-left: auto;
-    margin-right: 0;
-    width: 100px;
-    height: 60px;
-    border-style: inherit;
-    color: silver;
-    background-color: #000000;
-    display: block;
-    font-size: 0.4em;
-    font-family: cursive;
+#header_menu{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
 }
