@@ -35,6 +35,7 @@ class UIManager {
     }
 
     public getPage(pageObject): void {
+        if(pageObject.pageName !== "registration" && pageObject.pageName !== "login"){
         $.ajax(
             {
                 url: "/authentication",
@@ -50,6 +51,9 @@ class UIManager {
                 this.loadPage(pageObject);
             }
         });
+        } else {
+            this.loadPage(pageObject);
+        }
     }
 
 
@@ -110,6 +114,8 @@ class UIManager {
         if(document.location.search.indexOf("messages") > -1){
             (document.querySelector("div.inbox_msg") as HTMLDivElement).style.cssText = `height: ${$(window).height() - 60}px;`;
             (document.querySelector("div.msg_history") as HTMLDivElement).style.cssText = `height: ${$(window).height() - 210}px;`;
+        }else if(document.location.search.indexOf("registration") > -1) {
+            (document.querySelector("div#reg_form_block") as HTMLDivElement).style.cssText = `height: ${$(window).height() - 60}px;`;
         }
     }
 }

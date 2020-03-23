@@ -1,63 +1,30 @@
-fieldset{
-    border: 0px;
-}
-#reg_form {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    padding-bottom: 0;
-    width: 350px
+#reg_form{
+    display: flex;
+    flex-wrap: wrap;
+    width: 430px;
 }
 
-#reg_form_info {
-    display: block;
-    color: silver;
-    padding: 20px;
-    font-size: 2.6em;
+#reg_form_block {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
 }
 
-#registration {
-    display: block;
-    color: #E29826;
-    width: 350px;
-}
-
-#m_sex_label {
-    display: inline-block;
-    width: 150px;
-    text-align: right;
-}
-
-#f_sex_label {
-    
-}
-
-#reg_button {
-    border-style: inherit;
-    color: silver;
-    background-color: #313233;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    width: 180px;
-    height: 25px;
+#reg_form_block::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
 }
 
 .reg_form_label {
-    display: inline-block;
-    width: 130px;
+    display: inline-flex;
+    width: 30%;
 }
 
 .reg_form_input {
-    display: inline-block;
+    display: inline-flex;
+    width: 65%;
 }
-.reg_form_line {
-    display: block;
-    width: 430px
-}
-
-legend {
-    display: block;
-    width: 350px;
-    text-align: center;
+.regButton {
+    margin: 50px 50px 50px 50px;
 }

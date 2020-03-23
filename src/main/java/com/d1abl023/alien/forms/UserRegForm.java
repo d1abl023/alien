@@ -1,8 +1,9 @@
 package com.d1abl023.alien.forms;
 
 import com.d1abl023.alien.interfaces.Form;
-import com.d1abl023.alien.tables.AuthUserData;
+import com.d1abl023.alien.tables.UserAuthData;
 import com.d1abl023.alien.tables.UserGeneralData;
+import com.d1abl023.alien.tables.UserNameData;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,6 +11,15 @@ import java.util.Date;
 
 @JsonAutoDetect
 public class UserRegForm implements Form {
+
+    @JsonProperty("first_name")
+    private String firstName;
+
+    @JsonProperty("second_name")
+    private String secondName;
+
+    @JsonProperty("last_name")
+    private String lastName;
 
     @JsonProperty("login")
     private String login;
@@ -29,11 +39,44 @@ public class UserRegForm implements Form {
     @JsonProperty("date_of_birth")
     private Date dateOfBirth;
 
+    @JsonProperty("education")
+    private String education;
+
+    @JsonProperty("place_of_work")
+    private String placeOfWork;
+
+    @JsonProperty("position")
+    private String position;
+
     @JsonProperty("email")
     private String email;
 
     @JsonProperty("sex")
     private String sex;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     public String getLogin() {
         return login;
@@ -83,6 +126,30 @@ public class UserRegForm implements Form {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getPlaceOfWork() {
+        return placeOfWork;
+    }
+
+    public void setPlaceOfWork(String placeOfWork) {
+        this.placeOfWork = placeOfWork;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -114,18 +181,46 @@ public class UserRegForm implements Form {
     }
 
     /**
-     * Method {@code createUserTableDataObject()} creates object
-     * for mapping data into table {@code users}
+     * Method {@code createUserGeneralDataTableObject()} creates object
+     * for mapping data into table {@code user_general_data}
      */
-    public UserGeneralData createUserTableObject() {
-        return new UserGeneralData(login, email, dateOfBirth, sex, phoneNumber, country, city, "null", "null");
+    public UserGeneralData createUserGeneralDataTableObject() {
+        return new UserGeneralData(
+                this.email,
+                this.dateOfBirth,
+                this.sex,
+                this.phoneNumber,
+                this.country,
+                this.city,
+                this.placeOfWork,
+                this.education,
+                this.position,
+                0
+        );
     }
 
     /**
-     * Method {@code createUserAuthTableObject()} creates object
+     * Method {@code createUserNameDataTableObject()} creates object
+     * for mapping data into table {@code user_name_data}
+     */
+    public UserNameData createUserNameDataTableObject(){
+        return new UserNameData(
+                this.firstName,
+                this.secondName,
+                this.lastName
+        );
+    }
+
+    /**
+     * Method {@code createUserAuthDataTableObject()} creates object
      * for mapping data into table {@code auth_data}
      */
-    public AuthUserData createUserAuthTableObject() {
-        return new AuthUserData(login, password, phoneNumber, email);
+    public UserAuthData createUserAuthDataTableObject() {
+        return new UserAuthData(
+                this.login,
+                this.password,
+                this.phoneNumber,
+                this.email
+        );
     }
 }

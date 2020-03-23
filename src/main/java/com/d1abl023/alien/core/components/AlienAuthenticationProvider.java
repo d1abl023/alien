@@ -1,6 +1,6 @@
 package com.d1abl023.alien.core.components;
 
-import com.d1abl023.alien.tables.AuthUserData;
+import com.d1abl023.alien.tables.UserAuthData;
 import com.d1abl023.alien.utilactions.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -37,14 +37,14 @@ public class AlienAuthenticationProvider implements AuthenticationProvider {
         Query query;
 
         if (numericMatcher.matches()) {
-            query = session.createQuery("from AuthUserData authData where authData.id = :username " +
+            query = session.createQuery("from UserAuthData authData where authData.id = :username " +
                     "or authData.phone = :username");
             query.setParameter("username", new Long(username));
         } else if (username.contains("@")) {
-            query = session.createQuery("from AuthUserData authData where authData.email = :username");
+            query = session.createQuery("from UserAuthData authData where authData.email = :username");
             query.setParameter("username", username);
         } else {
-            query = session.createQuery("from AuthUserData authData where authData.login = :username");
+            query = session.createQuery("from UserAuthData authData where authData.login = :username");
             query.setParameter("username", username);
         }
 
@@ -56,7 +56,7 @@ public class AlienAuthenticationProvider implements AuthenticationProvider {
 
         if (dbData.size() == 1) {
 
-            AuthUserData user = (AuthUserData) dbData.get(0);
+            UserAuthData user = (UserAuthData) dbData.get(0);
 
             if (user.getPassword().equals(password)) {
                 return new UsernamePasswordAuthenticationToken(user.getId(), user.getPassword(), authorities);

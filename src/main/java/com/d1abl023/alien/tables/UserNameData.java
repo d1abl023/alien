@@ -1,13 +1,12 @@
 package com.d1abl023.alien.tables;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.d1abl023.alien.interfaces.DBTable;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "user_name_data")
-public class UserNameData {
+public class UserNameData implements DBTable {
 
     @Id
     @Column(name = "id")
@@ -23,6 +22,12 @@ public class UserNameData {
     private String lastName;
 
     public UserNameData() {
+    }
+
+    public UserNameData(String firstName, String secondName, String lastName){
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.lastName = lastName;
     }
 
     public UserNameData(long id, String firstName, String secondName, String lastName){

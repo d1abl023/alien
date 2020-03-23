@@ -2,10 +2,13 @@ import * as $ from "jquery";
 import Uri = require("jsuri");
 import {AbstractPage} from "../utils/abstractPage";
 import {WebSocketClient} from "../utils/webSocketClient";
+import { IUser } from "../utils/templates/iUser";
 
 export class PageOfUser extends AbstractPage {
 
   private webSocketClient: WebSocketClient;
+  private shortName: string;
+  private fullName: string;
 
   constructor(myId: string, myUsername: string) {
     super(myId, myUsername);
@@ -14,65 +17,94 @@ export class PageOfUser extends AbstractPage {
     this.showUserInfo();
   }
 
-  public showUserInfo() {
+  public showUserInfo = () => {
     let uri = new Uri(window.location.href);
-
-
     $.ajax({
       url: "user_info",
       type: "POST",
       data: uri.getQueryParamValue("pageOfUser"),
       contentType: "application/json; charset=utf-8",
-    }).then(function (data) {
-      for (let key in data) {
-        if (data.hasOwnProperty(key) && data[key] != null) {
-          if (key === "login") {
-            document.title = data[key];
-            document.querySelector("h5#username").innerHTML = data[key];
-            continue;
-          }
-          let element = document.createElement("div");
-          element.className = "user_info_line col-12";
-
-          let label = document.createElement("div");
-          label.className = "user_info_label col-4";
-          label.textContent = key + ":";
-
-          let info = document.createElement("div");
-          info.className = "user_info_data col-8";
-          info.textContent = data[key];
-
-          element.appendChild(label);
-          element.appendChild(info);
-
-          document.querySelector("div#user_info_fields").appendChild(element);
-        }
-      }
+    }).then((data: IUser) => {
+      this.shortName = `${data.firstName}, ${data.lastName}`;
+      this.fullName = `${data.firstName}${data.secondName ? `-${data.secondName}`: ""}, ${data.lastName}`;
+      document.title = this.shortName;
+      document.querySelector("h5#username").innerHTML = this.fullName;
+      this.addUserInfoField("email", "Email", data.email);
+      this.addUserInfoField("dateOfBirth", "Date of birth", data.date);
+      this.addUserInfoField("sex", "Sex", data.sex);
+      this.addUserInfoField("number", "Phonew number", data.number.toString());
+      this.addUserInfoField("location", "Lives at", `${data.country}, ${data.city}`);
+      this.addUserInfoField("company", "Works at", data.placeOfWork);
+      this.addUserInfoField("position", "Works as", data.position);
+      this.addUserInfoField("education", "Studied at", data.education);
+      $('#mentions_title_lable').text(`Mentions about ${data.firstName}: `)
+      $('#amount_of_mentions').text(data.amountOfMentions);
     });
   };
 
-  public render() {
-    let body: HTMLElement = document.getElementById("body");
-    body.innerHTML = `<div class="col-2"></div>
-    <div id='short_user_data' class='card col-8'>
-      <div class="row">
-      <div class="col-md-4">
-      <svg class="bd-placeholder-img" width="100%" height="250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image">
-        <title>Placeholder</title>
-        <rect width="100%" height="100%" fill="#868e96"></rect>
-        <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image</text>
-      </svg>
+  private addUserInfoField(id: string, labelText: string, infoText: string): void {
+    let element: HTMLDivElement = document.createElement("div");
+    element.id = id;
+    element.className = "user_info_line col-12";
+
+    let label: HTMLDivElement = document.createElement("div");
+    label.className = "user_info_label col-4";
+    label.textContent = labelText + ":";
+
+    let info: HTMLDivElement = document.createElement("div");
+    info.className = "user_info_data col-8";
+    info.textContent = infoText;
+
+    element.appendChild(label);
+    element.appendChild(info);
+
+    document.querySelector("div#user_info_fields").appendChild(element);
+  }
+
+  public renderMentions(): void {
+
+  }
+
+  public addMentionBlock(){
+    return `
+    <div class="row">
+    <div class="col-md-4"><img src="pictures/photo/no_avatar.jpg" class="card-img"></div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 id="username" class="card-title">Card title</h5>
+        <p class="card-text"><small class="text-muted">Was online 3 mins ago</small></p>
+        <div id="user_info_fields" class="card-text"></div>
       </div>
-      <div class="col-md-8">
-        <div class="card-body">
-            <h5 id="username" class="card-title">Card title</h5>
-            <p class="card-text"><small class="text-muted">Was online 3 mins ago</small></p>
-            <div id="user_info_fields" class="card-text"></div>
+    </div>
+  </div>`;
+  }
+
+  public render = () => {
+    let body: HTMLElement = document.getElementById("body");
+    body.innerHTML = `
+      <div id='short_user_data' class='card mx-auto user_data_element'>
+        <div class="row">
+          <div class="col-md-4"><img src="pictures/photo/no_avatar.jpg" class="card-img"></div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 id="username" class="card-title">Card title</h5>
+              <p class="card-text"><small class="text-muted">Was online 3 mins ago</small></p>
+              <div id="user_info_fields" class="card-text"></div>
+            </div>
           </div>
         </div>
-       </div>
       </div>
-      <div class="col-2">`;
+
+      <div id='mentions' class='card mx-auto user_data_element'>
+        <div class="row">
+        <div class="col-12">
+         <div id="mentions_title_text" class="card-body">
+            <split id="mentions_title_lable"></split><split id="amount_of_mentions"></split>
+           </div>
+         </div>
+        </div>
+
+      </div>`;
 
     body.appendChild(this.createNewMessagePopupElement());
   }

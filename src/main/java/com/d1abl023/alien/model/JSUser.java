@@ -1,16 +1,20 @@
 package com.d1abl023.alien.model;
 
 import com.d1abl023.alien.tables.UserGeneralData;
+import com.d1abl023.alien.tables.UserNameData;
 
 import java.io.Serializable;
 import java.util.Date;
 
 public class JSUser implements Serializable {
 
-
     private String id;
 
-    private String login;
+    private String firstName;
+
+    private String secondName;
+
+    private String lastName;
 
     private String email;
 
@@ -26,18 +30,19 @@ public class JSUser implements Serializable {
 
     private String placeOfWork;
 
+    private String position;
+
     private String education;
 
-    private String status;
-
-    private String type;
+    private int amountOfMentions;
 
     public JSUser() {
     }
 
-    public JSUser(String id, String login, String email, Date date, String sex, long number, String country, String city, String placeOfWork, String education, String status, String type) {
+    public JSUser(String id, String firstName, String secondName, String lastName, String email, Date date,
+                  String sex, long number, String country, String city, String placeOfWork, String position,
+                  String education, int amountOfMentions) {
         this.id = id;
-        this.login = login;
         this.email = email;
         this.date = date;
         this.sex = sex;
@@ -45,14 +50,16 @@ public class JSUser implements Serializable {
         this.country = country;
         this.city = city;
         this.placeOfWork = placeOfWork;
+        this.position = position;
         this.education = education;
-        this.status = status;
-        this.type = type;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.lastName = lastName;
+        this.amountOfMentions = amountOfMentions;
     }
 
-    public JSUser(UserGeneralData userGeneralData){
+    public JSUser(UserGeneralData userGeneralData, UserNameData userNameData) {
         this.id = Long.toString(userGeneralData.getId());
-        this.login = userGeneralData.getLogin();
         this.email = userGeneralData.getEmail();
         this.date = userGeneralData.getDate();
         this.sex = userGeneralData.getSex();
@@ -60,9 +67,12 @@ public class JSUser implements Serializable {
         this.country = userGeneralData.getCountry();
         this.city = userGeneralData.getCity();
         this.placeOfWork = userGeneralData.getPlaceOfWork();
+        this.position = userGeneralData.getPosition();
         this.education = userGeneralData.getEducation();
-        this.status = userGeneralData.getStatus();
-        this.type = userGeneralData.getType();
+        this.firstName = userNameData.getFirstName();
+        this.secondName = userNameData.getSecondName();
+        this.lastName = userNameData.getLastName();
+        this.amountOfMentions = userGeneralData.getAmountOfMentions();
     }
 
     public String getId() {
@@ -73,12 +83,28 @@ public class JSUser implements Serializable {
         this.id = id;
     }
 
-    public String getLogin() {
-        return login;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -137,6 +163,14 @@ public class JSUser implements Serializable {
         this.placeOfWork = placeOfWork;
     }
 
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
     public String getEducation() {
         return education;
     }
@@ -145,19 +179,11 @@ public class JSUser implements Serializable {
         this.education = education;
     }
 
-    public String getStatus() {
-        return status;
+    public int getAmountOfMentions() {
+        return amountOfMentions;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setAmountOfMentions(int amountOfMentions) {
+        this.amountOfMentions = amountOfMentions;
     }
 }

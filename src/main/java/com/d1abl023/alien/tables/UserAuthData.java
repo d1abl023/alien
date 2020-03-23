@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "auth_data")
-public class AuthUserData implements DBTable {
+public class UserAuthData implements DBTable {
 
     @Id
     private long id;
@@ -27,11 +27,11 @@ public class AuthUserData implements DBTable {
     private String email;
 
 
-    public AuthUserData() {
+    public UserAuthData() {
     }
 
 
-    public AuthUserData(long id, String login, String password, long phone, String email) {
+    public UserAuthData(long id, String login, String password, long phone, String email) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -39,7 +39,7 @@ public class AuthUserData implements DBTable {
         this.email = email;
     }
 
-    public AuthUserData(String login, String password, long phone, String email) {
+    public UserAuthData(String login, String password, long phone, String email) {
         this.login = login;
         this.password = password;
         this.phone = phone;

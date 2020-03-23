@@ -2,11 +2,13 @@ package com.d1abl023.alien.core.controllers.restcontrollers;
 
 import com.d1abl023.alien.forms.UserRegForm;
 import com.d1abl023.alien.model.JSUser;
-import com.d1abl023.alien.tables.AuthUserData;
+import com.d1abl023.alien.tables.UserAuthData;
 import com.d1abl023.alien.tables.UserGeneralData;
+import com.d1abl023.alien.tables.UserNameData;
 import com.d1abl023.alien.utilactions.HibernateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.web.bind.annotation.*;
@@ -26,70 +28,55 @@ public class FormController {
     public Map<String, JSUser> search(@RequestBody String requestBody) {
         Map<String, JSUser> searchResult = new LinkedHashMap<>();
         Session session = HibernateUtils.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
-        TypedQuery<UserGeneralData> selectUsers = session.createQuery(
-                "from UserGeneralData user where user.login = :userLogin", UserGeneralData.class);
-        selectUsers.setParameter("userLogin", requestBody);
-        List<UserGeneralData> dbUserGeneralData = selectUsers.getResultList();
-        for (UserGeneralData tmpUserGeneralData : dbUserGeneralData) {
-            searchResult.put(Long.toString(tmpUserGeneralData.getId()), (new JSUser(tmpUserGeneralData)));
+//        Transaction transaction = session.beginTransaction();
+        TypedQuery<UserNameData> selectUsers = session.createQuery(
+                "from UserNameData user where user.first_name = :firstName", UserNameData.class);
+        selectUsers.setParameter("firstName", requestBody);
+        List<UserNameData> dbUserGeneralData = selectUsers.getResultList();
+        for (UserNameData tmpUserGeneralData : dbUserGeneralData) {
+            searchResult.put(Long.toString(tmpUserGeneralData.getId()),
+                    new JSUser(session.get(UserGeneralData.class, tmpUserGeneralData.getId()), tmpUserGeneralData));
         }
-        transaction.commit();
+//        transaction.commit();
         session.close();
         return searchResult;
     }
 
     @RequestMapping("/registration")
     public void registration(@RequestBody UserRegForm userRegForm, HttpServletResponse response) {
+        //Creating DB session
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Long userId = null;
 
         try {
-            //Creating DB session
-            Session session = HibernateUtils.getSessionFactory().openSession();
+            UserGeneralData userGeneralData = userRegForm.createUserGeneralDataTableObject();
 
-            UserGeneralData userGeneralData = userRegForm.createUserTableObject();
-
-            //Saving used data(id, login, email, date of birth, sex, phone number,
-            // country, city, status, user type) into DB table
+            //Saving used general data into DB table
             Transaction transaction = session.beginTransaction();
-            session.save(userGeneralData);
+            userId = (Long) session.save(userGeneralData);
             transaction.commit();
 
-            //Verifying if user data has been successfully added into DB table
-            //If success - adding user auth data, else - throwing InternalError
+            UserAuthData userAuthData = userRegForm.createUserAuthDataTableObject();
+            userAuthData.setId(userId);
+
+            //Saving user authentication data into DB table
             transaction = session.beginTransaction();
-            if (session.createQuery("from UserGeneralData user where user.id = " + userGeneralData.getId()).list().size() > 0) {
+            session.save(userAuthData);
+            transaction.commit();
 
-                transaction.commit();
+            UserNameData userNameData = userRegForm.createUserNameDataTableObject();
+            userNameData.setId(userId);
 
-                AuthUserData authUserData = userRegForm.createUserAuthTableObject();
-                authUserData.setId(userGeneralData.getId());
+            //Saving user name data into DB table
+            transaction = session.beginTransaction();
+            session.save(userNameData);
+            transaction.commit();
+            response.setStatus(201);
 
-                //Saving user authentication data (id, login, password) into DB table
-                transaction = session.beginTransaction();
-                session.save(authUserData);
-                transaction.commit();
-
-                //Verifying if user authentication data has been successfully added onto DB table
-                //If success - setting response status 201 and adding response cookies, else - throwing InternalError
-                transaction = session.beginTransaction();
-                if (session.createQuery("from AuthUserData authData where authData.id = "
-                        + authUserData.getId()).list().size() > 0) {
-
-                    transaction.commit();
-
-                    response.setStatus(201);
-
-                } else {
-                    transaction.commit();
-                    throw new InternalError("Error adding into \"auth_data\" DB table!");
-                }
-            } else {
-                transaction.commit();
-                throw new InternalError("Error adding into \"users\" DB table!");
-            }
-        } catch (InternalError e) {
+        } catch (InternalError | HibernateException e) {
             LOGGER.error(e.getMessage());
             response.setStatus(500);
+            // TODO: to implement logic in case of failure
         }
     }
 

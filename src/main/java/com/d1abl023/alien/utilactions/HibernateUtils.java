@@ -32,10 +32,10 @@ public class HibernateUtils {
     public static Configuration getConfiguration(){
         return new Configuration()
                 .setProperties(getProperties())
-                .addAnnotatedClass(AuthUserData.class)
+                .addAnnotatedClass(UserAuthData.class)
                 .addAnnotatedClass(UserGeneralData.class)
+                .addAnnotatedClass(UserNameData.class)
                 .addAnnotatedClass(Messages.class)
-//                .addAnnotatedClass(ChatRoom1Msg.class)
                 .addAnnotatedClass(Dialogs.class);
     }
 

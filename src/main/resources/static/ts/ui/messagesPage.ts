@@ -76,7 +76,7 @@ export class MessagesPage extends AbstractPage {
      * Function openMessageHistory() request from the server message history and
      * show messages on front-end
      */
-    public openMessageHistory(dialogId) {
+    public openMessageHistory(dialogId : string): void {
 
         document.getElementById(`${dialogId}_dialog`).className = "chat_list active_chat";
         if(this.isOpenedDialogId) {

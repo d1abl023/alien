@@ -55,23 +55,27 @@ export class IndexPage extends AbstractPage {
     public render(): void {
         let body: HTMLElement = document.getElementById("body");
         body.innerHTML =
-            '<div id="reg_auth_info" class="col-xs-12 col-sm-12 col-md-4 card mx-auto">' +
-            '        <div id="reg_auth_info_text" class="card-header">Register or authenticate!</div>' +
+            '<div id="reg_auth_info" class="card mx-auto">' +
+            '        <div id="reg_auth_info_text" class="card-header"><h3 class="text-center">Welcome</h3></div>' +
             '        <div id="auth_error"></div>' +
             '        <form id="auth_form" action="/login" method="post">' +
-            '            <p class="form-group">' +
-            '                <label for="username" class="reg_form_labels">Login:</label>' +
-            '                <input type="text" id="username" name="username" class="form-control" required>' +
-            '            </p>' +
-            '            <p class="form-group">' +
-            '                <label for="password" class="reg_form_labels">Password:</label>' +
-            '                <input type="password" id="password" name="password" class="form-control" required>' +
-            '            </p>' +
+            '            <div class="form-group auth_form_line">' +
+            '                <label for="username" class="reg_form_label">Login:</label>' +
+            '                <div class="md-form active-dark-2 align-self-center reg_form_input">' +
+            '                   <input type="text" id="username" name="username" class="form-control" required>' +
+            '                </div>' +
+            '            </div>' +
+            '            <div class="form-group auth_form_line">' +
+            '                <label for="password" class="reg_form_label">Password:</label>' +
+            '                <div class="md-form active-dark-2 align-self-center reg_form_input">' +
+            '                   <input type="password" id="password" name="password" class="form-control" required>' +
+            '                </div>' +
+            '            </div>' +
             '            <div id="form_buttons" class="col-12 text-center">' +
             '                <button id="authentication" type="submit" class="btn btn-dark form_button" form="auth_form">' +
             '                    Log in' +
             '                </button>' +
-            '                <button id="go_to_registration" type="button" class="btn btn-dark form_button">' +
+            '                <button id="go_to_registration" type="button" class="btn btn-primary form_button">' +
             '                    Registration' +
             '                </button>' +
             '            </div>' +
@@ -79,8 +83,8 @@ export class IndexPage extends AbstractPage {
             '    </div>' +
             '</div>';
         document.getElementById("go_to_registration").addEventListener("click", () => {
-            document.getElementById("body").remove();
-            uiManager.getPage("registration");
+            document.getElementById("body").innerHTML = "";
+            uiManager.getPage({pageName: "registration"});
         });
     }
 }
