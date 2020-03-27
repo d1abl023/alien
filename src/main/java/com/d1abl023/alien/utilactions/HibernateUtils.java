@@ -21,8 +21,6 @@ public class HibernateUtils {
             properties.put(Environment.USER, "postgres");
             properties.put(Environment.PASS, "postgres");
             properties.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQL95Dialect");
-
-//            properties.put(Environment.HBM2DDL_AUTO, "true");
             properties.put(Environment.SHOW_SQL, "true");
         }
         return properties;
@@ -35,6 +33,8 @@ public class HibernateUtils {
                 .addAnnotatedClass(UserAuthData.class)
                 .addAnnotatedClass(UserGeneralData.class)
                 .addAnnotatedClass(UserNameData.class)
+                .addAnnotatedClass(UserAdditionalData.class)
+                .addAnnotatedClass(UserMentionsId.class)
                 .addAnnotatedClass(Messages.class)
                 .addAnnotatedClass(Dialogs.class);
     }

@@ -1,0 +1,30 @@
+#new_person_form{
+    display: flex;
+    flex-wrap: wrap;
+    width: 430px;
+}
+
+#new_person_form_block {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+#new_person_form_block::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+}
+
+.new_person_form_label {
+    display: inline-flex;
+    width: 30%;
+}
+
+.new_person_form_input {
+    display: inline-flex;
+    width: 65%;
+}
+.regButton {
+    margin: 50px 50px 50px 50px;
+}

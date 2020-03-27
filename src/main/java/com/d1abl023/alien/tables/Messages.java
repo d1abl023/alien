@@ -1,12 +1,12 @@
 package com.d1abl023.alien.tables;
 
-import com.d1abl023.alien.interfaces.DBTable;
+import com.d1abl023.alien.interfaces.IDBTable;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "messages")
-public class Messages implements DBTable {
+public class Messages implements IDBTable {
 
     @Id
     @Column(name = "id")

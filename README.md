@@ -7,4 +7,5 @@ CREATE TABLE dialogs (id SERIAL NOT NULL, user1 bigint, user2 bigint, user1Login
 CREATE TABLE messages (id SERIAL NOT NULL, dialogId bigint, sender text, msg text, receiver text, timestamp bigint, PRIMARY KEY(id));<br>
 CREATE TABLE mentions(id bigint, mentions text, PRIMARY KEY(id));<br>
 CREATE TABLE settings(id bigint, settings text, PRIMARY KEY (id));<br>
+CREATE TABLE user_additional_data( id bigint, homecountry text, hometown text, school_list text, PRIMARY KEY(id));<br>
 </div>

@@ -1,6 +1,8 @@
 package com.d1abl023.alien.forms;
 
-import com.d1abl023.alien.interfaces.Form;
+import com.d1abl023.alien.interfaces.IPersonDataForm;
+import com.d1abl023.alien.interfaces.IUserDataForm;
+import com.d1abl023.alien.tables.UserAdditionalData;
 import com.d1abl023.alien.tables.UserAuthData;
 import com.d1abl023.alien.tables.UserGeneralData;
 import com.d1abl023.alien.tables.UserNameData;
@@ -10,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 
 @JsonAutoDetect
-public class UserRegForm implements Form {
+public class UserRegistrationForm implements IPersonDataForm, IUserDataForm {
 
     @JsonProperty("first_name")
     private String firstName;
@@ -53,6 +55,15 @@ public class UserRegForm implements Form {
 
     @JsonProperty("sex")
     private String sex;
+
+    @JsonProperty("homecountry")
+    private String homecountry;
+
+    @JsonProperty("hometown")
+    private String hometown;
+
+    @JsonProperty("schoolList")
+    private String schoolList;
 
     public String getFirstName() {
         return firstName;
@@ -166,6 +177,30 @@ public class UserRegForm implements Form {
         this.sex = sex;
     }
 
+    public String getHomecountry() {
+        return homecountry;
+    }
+
+    public void setHomecountry(String homecountry) {
+        this.homecountry = homecountry;
+    }
+
+    public String getHometown() {
+        return hometown;
+    }
+
+    public void setHometown(String hometown) {
+        this.hometown = hometown;
+    }
+
+    public String getSchoolList() {
+        return schoolList;
+    }
+
+    public void setSchoolList(String schoolList) {
+        this.schoolList = schoolList;
+    }
+
     @Override
     public String toString() {
         return "UserRegForm{" +
@@ -185,18 +220,7 @@ public class UserRegForm implements Form {
      * for mapping data into table {@code user_general_data}
      */
     public UserGeneralData createUserGeneralDataTableObject() {
-        return new UserGeneralData(
-                this.email,
-                this.dateOfBirth,
-                this.sex,
-                this.phoneNumber,
-                this.country,
-                this.city,
-                this.placeOfWork,
-                this.education,
-                this.position,
-                0
-        );
+        return new UserGeneralData(this);
     }
 
     /**
@@ -204,11 +228,15 @@ public class UserRegForm implements Form {
      * for mapping data into table {@code user_name_data}
      */
     public UserNameData createUserNameDataTableObject(){
-        return new UserNameData(
-                this.firstName,
-                this.secondName,
-                this.lastName
-        );
+        return new UserNameData(this);
+    }
+
+    /**
+     * Method {@code createUserAdditionalDataTableObject()} creates object
+     * for mapping data into table {@code user_additional_data}
+     */
+    public UserAdditionalData createUserAdditionalDataTableObject(){
+        return new UserAdditionalData(this);
     }
 
     /**
@@ -216,11 +244,6 @@ public class UserRegForm implements Form {
      * for mapping data into table {@code auth_data}
      */
     public UserAuthData createUserAuthDataTableObject() {
-        return new UserAuthData(
-                this.login,
-                this.password,
-                this.phoneNumber,
-                this.email
-        );
+        return new UserAuthData(this);
     }
 }

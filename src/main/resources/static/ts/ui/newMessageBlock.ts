@@ -1,13 +1,14 @@
 import {WebSocketClient} from "../utils/webSocketClient";
 import {IUser} from "../utils/templates/iUser";
+import * as $ from "jquery";
 
 export class NewMessageBlock {
 
     private webSocket: WebSocketClient;
-    private user: IUser;
+    private user: {receiverShortName: string, receiverId: string};
     private myData: {myId: string, myUsername: string};
 
-    constructor(webSocket: WebSocketClient, user: any) {
+    constructor(webSocket: WebSocketClient, user: {receiverShortName: string, receiverId: string}) {
         this.webSocket = webSocket;
         this.myData = webSocket.getMyData();
         this.user = user;
@@ -17,17 +18,22 @@ export class NewMessageBlock {
     private render(): void {
         let sendNewMessageBlock: HTMLDivElement = document.createElement("div");
         sendNewMessageBlock.id = "send_new_message_block";
+        sendNewMessageBlock.className = "flex-column";
+        sendNewMessageBlock.innerHTML = `
+            <h3 id="receiver_info" class="text-dark justify-content-center">Send message to ${this.user.receiverShortName}</h3>
+            <textarea id="send_new_message_field"></textarea>`;
 
-        sendNewMessageBlock.appendChild(this.createReceiverInfoBlock());
-        sendNewMessageBlock.appendChild(this.createSendNewMessageField());
+
+        // sendNewMessageBlock.appendChild(this.createReceiverInfoBlock());
+        // sendNewMessageBlock.appendChild(this.createSendNewMessageField());
         sendNewMessageBlock.appendChild(this.createSendNewMessageButtonsBlock());
-        document.body.appendChild(sendNewMessageBlock);
+        $("#body").append(sendNewMessageBlock);
     }
 
     private createReceiverInfoBlock(): HTMLDivElement {
         let receiverInfoBlock: HTMLDivElement = document.createElement("div");
         receiverInfoBlock.id = "receiver_info";
-        receiverInfoBlock.innerText = `Send message to ${this.user.login}`;
+        receiverInfoBlock.innerText = `Send message to ${this.user.receiverShortName}`;
         return receiverInfoBlock;
     }
 
@@ -38,16 +44,21 @@ export class NewMessageBlock {
     }
 
     private createSendNewMessageButtonsBlock(): HTMLDivElement {
-        let sendNewMessageButtonsBlock: HTMLDivElement = document.createElement("div");
-        sendNewMessageButtonsBlock.id = "send_new_message_buttons";
         let sendButton: HTMLButtonElement = document.createElement("button");
         sendButton.id = "send_new_message_button";
+        sendButton.className = "btn btn-success send_new_message_block_button";
         sendButton.innerText = "Send";
         sendButton.addEventListener("click", () => this.onClickSend());
+
         let cancelButton: HTMLButtonElement = document.createElement("button");
         cancelButton.id = "cancel_button";
+        cancelButton.className = "btn btn-danger send_new_message_block_button";
         cancelButton.innerText = "Cancel";
         cancelButton.addEventListener("click", () => this.onClickCancel());
+
+        let sendNewMessageButtonsBlock: HTMLDivElement = document.createElement("div");
+        sendNewMessageButtonsBlock.id = "send_new_message_buttons";
+        sendNewMessageButtonsBlock.className = "col-12 justify-content-center";
         sendNewMessageButtonsBlock.appendChild(sendButton);
         sendNewMessageButtonsBlock.appendChild(cancelButton);
         return sendNewMessageButtonsBlock;
@@ -56,18 +67,18 @@ export class NewMessageBlock {
     private onClickSend = (): void => {
         let message: IMessage = {
             dialogId: "0",
-            receiverId: this.user.id,
-            receiverLogin: this.user.login,
+            receiverId: this.user.receiverId,
+            receiverLogin: this.user.receiverShortName,
             senderId: this.myData.myId,
             senderLogin: this.myData.myUsername,
-            text: (<HTMLTextAreaElement> document.getElementById("send_new_message_field")).value,
+            text: $("#send_new_message_field").val().toString(),
             timestamp: Date.now().toString()
         };
         this.webSocket.sendMessage(JSON.stringify(message));
-        document.getElementById("send_new_message_block").remove();
+        $("#send_new_message_block").remove();
     };
 
     private onClickCancel = (): void => {
-        document.getElementById("send_new_message_block").remove();
+        $("#send_new_message_block").remove();
     };
 }

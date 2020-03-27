@@ -1,6 +1,7 @@
 package com.d1abl023.alien.tables;
 
-import com.d1abl023.alien.interfaces.DBTable;
+import com.d1abl023.alien.interfaces.IDBTable;
+import com.d1abl023.alien.interfaces.IUserDataForm;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "auth_data")
-public class UserAuthData implements DBTable {
+public class UserAuthData implements IDBTable {
 
     @Id
     private long id;
@@ -31,19 +32,11 @@ public class UserAuthData implements DBTable {
     }
 
 
-    public UserAuthData(long id, String login, String password, long phone, String email) {
-        this.id = id;
-        this.login = login;
-        this.password = password;
-        this.phone = phone;
-        this.email = email;
-    }
-
-    public UserAuthData(String login, String password, long phone, String email) {
-        this.login = login;
-        this.password = password;
-        this.phone = phone;
-        this.email = email;
+    public UserAuthData(IUserDataForm userDataForm) {
+        this.login = userDataForm.getLogin();
+        this.password = userDataForm.getPassword();
+        this.email = userDataForm.getEmail();
+        this.phone = userDataForm.getPhoneNumber();
     }
 
     public long getId() {

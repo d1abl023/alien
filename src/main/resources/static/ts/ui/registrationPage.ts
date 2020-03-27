@@ -1,49 +1,53 @@
 import {AbstractPage} from "../utils/abstractPage";
-import { IRegistration } from "../utils/templates/IRegistration";
+import {IRegistration} from "../utils/templates/IRegistration";
 import jqXHR = JQuery.jqXHR;
 import * as $ from "jquery";
+import ClickEvent = JQuery.ClickEvent;
+import SubmitEvent = JQuery.SubmitEvent;
 
 export class RegistrationPage extends AbstractPage {
 
     constructor() {
         super(undefined, undefined);
         this.render();
-        document.getElementById("reg_form")
-        .addEventListener("submit", () => RegistrationPage.sendRegistrationFormData());
+        $("#reg_button").on("click",(event) => {
+            event.preventDefault();
+            RegistrationPage.sendRegistrationFormData();
+        });
     }
+
+
 
     static sendRegistrationFormData() {
         $.ajax({
             url: "/registration",
             type: "POST",
             data: JSON.stringify(RegistrationPage.createObjectFromRegistrationForm()),
-            contentType: "application/json; charset=utf-8",
-            complete: (function (data: jqXHR<any>) {
-                if (data.status === 201) {
-                    window.location.href = 'application.html';
-                } else {
-                    document.getElementById("error").style.textAlign = "center";
-                    document.getElementById("error").style.fontSize = "1.5em";
-                    document.getElementById("error").style.color = "#D01D33";
-                    document.getElementById("error").style.marginBottom = "15px";
-                    document.getElementById("error").innerText = "Registration failed!\nTry one more time!";
-                    document.getElementById("registration");
-                }
-            })
-        });
-
-        return false;
+            contentType: "application/json; charset=utf-8"
+        }).done(() => {
+            // if (data.status === 201) {
+            // window.location.href = 'application.html';
+            // } else {
+            //     document.getElementById("error").style.textAlign = "center";
+            //     document.getElementById("error").style.fontSize = "1.5em";
+            //     document.getElementById("error").style.color = "#D01D33";
+            //     document.getElementById("error").style.marginBottom = "15px";
+            //     document.getElementById("error").innerText = "Registration failed!\nTry one more time!";
+            //     document.getElementById("registration");
+            // }
+        })
     }
+
 
     static createObjectFromRegistrationForm(): IRegistration {
         return {
             first_name: $("#first_name").val().toString(),
             second_name: $("#second_name").val().toString(),
             last_name: $("#last_name").val().toString(),
-    
+
             login: $("#login").val().toString(),
             password: $("#password").val().toString(),
-        
+
             phone_number: $("#phone_number").val().toString(),
             country: $("#country").val().toString(),
             city: $("#city").val().toString(),
@@ -52,13 +56,17 @@ export class RegistrationPage extends AbstractPage {
             place_of_work: $("#company").val().toString(),
             position: $("#position").val().toString(),
             email: $("#email").val().toString(),
-            sex: $("#male").prop("checked") ? $("#male").val().toString() : $("#female").val().toString()
+            sex: $("#male").prop("checked") ? $("#male").val().toString() : $("#female").val().toString(),
+
+            homecountry: $("#homecountry").val().toString(),
+            hometown: $("#hometown").val().toString(),
+            schoolList: $("#school_list").val().toString()
         };
     }
 
     public render(): void {
         let body: HTMLElement = document.getElementById("body");
-        body.innerHTML =`
+        body.innerHTML = `
         <div class="row col-12">
         <div id="reg_form_block" class="col-12 justify-content-center" style="height: ${$(window).height() - 60}px;">
             <h1 id="reg_form_info" class="col-12 text-center">
@@ -150,7 +158,27 @@ export class RegistrationPage extends AbstractPage {
                     </div>
                 </fieldset>
 
-
+                <fieldset class="form-group">
+                <legend class="col-12 text-center">Additional info</legend>
+                <div class="reg_form_line">
+                    <label for="homecountry" class="reg_form_label">Native country:</label>
+                    <div class="md-form active-dark-2 align-self-center reg_form_input">
+                        <input id="homecountry" name="homecountry" type="text" form="registration" class="form-control">
+                    </div>
+                </div>
+                <div class="reg_form_line">
+                    <label for="hometown" class="reg_form_label">Hometown:</label>
+                    <div class="md-form active-dark-2 align-self-center reg_form_input">
+                        <input id="hometown" name="hometown" type="text" form="registration" class="form-control">
+                    </div>
+                </div>
+                <div class="reg_form_line">
+                    <label for="school_list" class="reg_form_label">Schools:</label>
+                    <div class="md-form active-dark-2 align-self-center reg_form_input">
+                        <input id="school_list" name="school_list" type="text" form="registration" class="form-control">
+                    </div>
+                </div>
+                </fieldset>
 
                 <fieldset class="form-group">
                     <legend class="col-12 text-center">Login data</legend>
@@ -173,7 +201,7 @@ export class RegistrationPage extends AbstractPage {
                         </div>
                     </div>
                 </fieldset>
-                <button id="reg_button" class="regButton btn btn-primary" type="submit" form="reg_form">Register</button>
+                <button id="reg_button" class="regButton btn btn-primary" form="reg_form">Register</button>
             </form>
         </div>
         </div>`;

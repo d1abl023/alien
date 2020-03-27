@@ -26,7 +26,7 @@ export class SearchPage extends AbstractPage {
             type: "POST",
             data: searchVal,
             contentType: "text/plain; charset=utf-8"
-        }).then((users: { [key: string]: any }) => {
+        }).then((users: { [key: string]: IUser }) => {
             this.processSearchResponse(users);
         });
     };
@@ -54,57 +54,41 @@ export class SearchPage extends AbstractPage {
 
     };
 
-    public createUserBlock(userEntity: IUser): HTMLDivElement {
-        let login: HTMLDivElement = document.createElement("div");
-        login.className = "login";
-        login.innerText = userEntity.login;
+    public createUserBlock =(userEntity: IUser): HTMLDivElement => {
 
-        let location: HTMLDivElement = document.createElement("div");
-        location.className = "location";
-        location.innerText = userEntity.country + ", " + userEntity.city;
+        let shortName: string = `${userEntity.firstName}, ${userEntity.lastName}`;
 
-
-        let openProfileButton: HTMLButtonElement = <HTMLButtonElement>document.createElement("button");
-        openProfileButton.className = "open_profile_button";
-        openProfileButton.addEventListener("click", (e: Event) => this.openProfile(userEntity.id));
+        let openProfileButton: HTMLButtonElement = document.createElement("button");
+        openProfileButton.className = "nav-item btn btn-dark header_button align-self-bottom col-12 mx-0 text-center";
+        openProfileButton.addEventListener("click", () => this.openProfile(userEntity.id));
         openProfileButton.innerText = "Open";
 
-        let sendMessageButton: HTMLButtonElement = document.createElement("button");
-        sendMessageButton.className = "send_message_button";
-        sendMessageButton.addEventListener("click", (e: Event) => new NewMessageBlock(this.webSocketClient, this.users[userEntity.id]));
-        sendMessageButton.innerText = "Message";
+        let imgBtnBlock: HTMLDivElement = document.createElement("div");
+        imgBtnBlock.className = "col-md-4 align-self-stratch";
+        imgBtnBlock.innerHTML = `<img src="pictures/photo/no_avatar.jpg" class="card-img" alt="${shortName}">`;
+        imgBtnBlock.appendChild(openProfileButton);
 
-        let user: HTMLDivElement = document.createElement("div");
-        user.className = "user";
-        user.appendChild(login);
-        user.appendChild(location);
-        user.appendChild(openProfileButton);
-        user.appendChild(sendMessageButton);
-
-
-        let userBlock: HTMLDivElement = document.createElement("div");
-
-
-        //TODO: to add feedbacks about employes in  program
-        userBlock.innerHTML = `
-        <div class="row no-gutters">
-          <div class="col-md-4 align-self-stratch">
-            <img src="pictures/photo/no_avatar.jpg" class="card-img" alt="${userEntity.login}">
-            <button id="open_profile" class="nav-item btn btn-dark header_button align-self-bottom col-12 mx-0 text-center" type="button">Open</button>
-          </div>
-          <div class="col-md-8">
+        let cardBodyBlock: HTMLDivElement = document.createElement("div");
+        cardBodyBlock.className = "col-md-8";
+        cardBodyBlock.innerHTML = `
             <div class="card-body">
-              <h5 class="card-title">${userEntity.login}</h5>
+              <h5 class="card-title">${shortName}</h5>
               <p id="was_online" class="card-text my-0"><small class="text-muted">Was onlone 3 mins ago</small></p>
               <p class="card-text my-0">Lives at: ${userEntity.country}, ${userEntity.city}</p>
               <p class="card-text my-0">Works at: ${userEntity.placeOfWork}</p>
               <p class="card-text my-0">Feedbacks: 0</p>
-            </div>
-          </div>
-        </div>`;
+            </div>`;
 
+        // TODO: to add feedbacks about employes in  program
+        let userInnerBlock: HTMLDivElement = document.createElement("div");
+        userInnerBlock.className = "row no-gutters";
+        userInnerBlock.appendChild(imgBtnBlock);
+        userInnerBlock.appendChild(cardBodyBlock);
+
+        let userBlock: HTMLDivElement = document.createElement("div");
         userBlock.className = "card mb-3";
         userBlock.style.maxWidth = "430px";
+        userBlock.appendChild(userInnerBlock);
 
         return userBlock;
     }

@@ -1,6 +1,6 @@
 package com.d1abl023.alien.tables;
 
-import com.d1abl023.alien.interfaces.DBTable;
+import com.d1abl023.alien.interfaces.IDBTable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "settings")
-public class Settings implements DBTable {
+public class Settings implements IDBTable {
 
     @Id
     @Column(name = "id")

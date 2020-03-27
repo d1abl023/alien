@@ -8,6 +8,7 @@ import {AbstractPage} from "./utils/abstractPage";
 import * as $ from "jquery";
 import jqXHR = JQuery.jqXHR;
 import {SpendingsPage} from "./ui/spendingsPage";
+import { NewPearsonPage } from "./ui/newPearsonPage";
 
 class UIManager {
 
@@ -89,6 +90,11 @@ class UIManager {
                 this.page = new IndexPage();
                 break;
             }
+            case "addNewPearson": {
+                history.pushState("", "", `application.html?addNewPearson`);
+                this.page = new NewPearsonPage();
+                break;
+            }
             case "registration": {
                 this.header = null;
                 history.pushState("", "", `application.html?registration`);
@@ -112,10 +118,12 @@ class UIManager {
 
     private onWindowResize(){
         if(document.location.search.indexOf("messages") > -1){
-            (document.querySelector("div.inbox_msg") as HTMLDivElement).style.cssText = `height: ${$(window).height() - 60}px;`;
+            (document.querySelector("div.inbox_msg") as HTMLDivElement).style.cssText = `width: 900px; height: ${$(window).height() - 60}px;`;
             (document.querySelector("div.msg_history") as HTMLDivElement).style.cssText = `height: ${$(window).height() - 210}px;`;
         }else if(document.location.search.indexOf("registration") > -1) {
             (document.querySelector("div#reg_form_block") as HTMLDivElement).style.cssText = `height: ${$(window).height() - 60}px;`;
+        }else if(document.location.search.indexOf("pageOfUser") > -1) {
+            $("#user_page").css({"height": `${$(window).height() - 60}px`});
         }
     }
 }

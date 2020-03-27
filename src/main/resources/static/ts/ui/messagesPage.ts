@@ -77,11 +77,10 @@ export class MessagesPage extends AbstractPage {
      * show messages on front-end
      */
     public openMessageHistory(dialogId : string): void {
-
-        document.getElementById(`${dialogId}_dialog`).className = "chat_list active_chat";
         if(this.isOpenedDialogId) {
           document.getElementById(`${this.isOpenedDialogId}_dialog`).className = "chat_list";
         }
+        document.getElementById(`${dialogId}_dialog`).className = "chat_list active_chat";
 
         if (this.dialogs[dialogId]) {
             this.isOpenedDialogId = dialogId;
@@ -177,8 +176,8 @@ export class MessagesPage extends AbstractPage {
     public render(): void {
         let body: HTMLElement = document.getElementById("body");
         body.innerHTML = `
-        <div class="col-md-2"></div>
-        <div class="inbox_msg col-md-8" style="height: ${$(window).height() - 60}px;">
+        <div class="col-md-12">
+        <div class="inbox_msg mx-auto" style="width:900px; height: ${$(window).height() - 60}px;">
         <div class="inbox_people h-100 col-4">
           <div class="headind_srch">
             <div class="recent_heading">
@@ -204,7 +203,8 @@ export class MessagesPage extends AbstractPage {
           </div>
         </div>
         </div>
-        <div class="col-md-2"></div>`;
+        </div>`;
+        
         body.appendChild(this.createNewMessagePopupElement());
         document.querySelector("button.msg_send_btn.bg-dark").addEventListener("click", this.send);
     }

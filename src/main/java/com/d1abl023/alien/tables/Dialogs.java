@@ -1,12 +1,12 @@
 package com.d1abl023.alien.tables;
 
-import com.d1abl023.alien.interfaces.DBTable;
+import com.d1abl023.alien.interfaces.IDBTable;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "dialogs")
-public class Dialogs implements DBTable {
+public class Dialogs implements IDBTable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

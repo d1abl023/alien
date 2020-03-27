@@ -1,6 +1,6 @@
 package com.d1abl023.alien.tables;
 
-import com.d1abl023.alien.interfaces.DBTable;
+import com.d1abl023.alien.interfaces.IDBTable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,21 +9,21 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "mentions")
-public class Mentions implements DBTable {
+public class Mentions implements IDBTable {
 
     @Id
     @Column(name = "id")
     private long id;
 
     @Column(name = "mentions")
-    private String mentions;
+    private String mention;
 
     public Mentions() {
     }
 
-    public Mentions(long id, String mentions) {
+    public Mentions(long id, String mention) {
         this.id = id;
-        this.mentions = mentions;
+        this.mention = mention;
     }
 
     public long getId() {
@@ -34,11 +34,11 @@ public class Mentions implements DBTable {
         this.id = id;
     }
 
-    public String getMentions() {
-        return mentions;
+    public String getMention() {
+        return mention;
     }
 
-    public void setMentions(String mentions) {
-        this.mentions = mentions;
+    public void setMention(String mention) {
+        this.mention = mention;
     }
 }

@@ -1,10 +1,7 @@
-export interface IRegistration {
+export interface INewPearson {
     first_name: string;
     second_name: string;
     last_name: string;
-
-    login: string;
-    password: string;
     
     phone_number: string;
     country: string;
@@ -15,6 +12,7 @@ export interface IRegistration {
     position: string;
     email: string;
     sex: string;
+
 
     homecountry: string;
     hometown: string;

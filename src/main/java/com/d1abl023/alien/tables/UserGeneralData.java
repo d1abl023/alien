@@ -1,6 +1,7 @@
 package com.d1abl023.alien.tables;
 
-import com.d1abl023.alien.interfaces.DBTable;
+import com.d1abl023.alien.interfaces.IDBTable;
+import com.d1abl023.alien.interfaces.IPersonDataForm;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "user_general_data")
-public class UserGeneralData implements DBTable {
+public class UserGeneralData implements IDBTable {
 
     @Id
     @Column(name = "id")
@@ -48,18 +49,17 @@ public class UserGeneralData implements DBTable {
     public UserGeneralData() {
     }
 
-    public UserGeneralData(String email, Date date, String sex, long phoneNumber, String country,
-                           String city, String placeOfWork, String education, String position, int amountOfMentions) {
-        this.email = email;
-        this.date = date;
-        this.sex = sex;
-        this.phoneNumber = phoneNumber;
-        this.country = country;
-        this.city = city;
-        this.placeOfWork = placeOfWork;
-        this.education = education;
-        this.position = position;
-        this.amountOfMentions = amountOfMentions;
+    public UserGeneralData(IPersonDataForm pearsonDataForm) {
+        this.email = pearsonDataForm.getEmail();
+        this.date = pearsonDataForm.getDateOfBirth();
+        this.sex = pearsonDataForm.getSex();
+        this.phoneNumber = pearsonDataForm.getPhoneNumber();
+        this.country = pearsonDataForm.getCountry();
+        this.city = pearsonDataForm.getCity();
+        this.placeOfWork = pearsonDataForm.getPlaceOfWork();
+        this.education = pearsonDataForm.getEducation();
+        this.position = pearsonDataForm.getPosition();
+        this.amountOfMentions = 0;
     }
 
     public long getId() {
