@@ -120,7 +120,7 @@ public class FormController {
     }
 
     @RequestMapping("/add_new_person")
-    public String addNewPerson(@RequestBody AddPersonForm addPearsonForm, HttpServletResponse response){
+    public String addNewPerson(@RequestBody AddPersonForm addPearsonForm, HttpServletResponse response) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             UserGeneralData userGeneralData = addPearsonForm.createUserGeneralDataTableObject();
 

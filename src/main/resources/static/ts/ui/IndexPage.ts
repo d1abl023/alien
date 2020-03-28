@@ -1,5 +1,5 @@
-import {uiManager} from "../uiManager";
-import {AbstractPage} from "../utils/abstractPage";
+import {uiManager} from "../UiManager";
+import {AbstractPage} from "../utils/AbstractPage";
 
 export class IndexPage extends AbstractPage {
 

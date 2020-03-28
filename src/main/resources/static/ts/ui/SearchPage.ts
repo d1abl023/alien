@@ -1,10 +1,10 @@
 import jqXHR = JQuery.jqXHR;
-import {uiManager} from "../uiManager";
+import {uiManager} from "../UiManager";
 import * as $ from "jquery";
-import {AbstractPage} from "../utils/abstractPage";
-import {WebSocketClient} from "../utils/webSocketClient";
-import {NewMessageBlock} from "./newMessageBlock";
-import {IUser} from "../utils/templates/iUser";
+import {AbstractPage} from "../utils/AbstractPage";
+import {WebSocketClient} from "../utils/WebSocketClient";
+import {NewMessageBlock} from "./NewMessageBlock";
+import {IUser} from "../utils/templates/IUser";
 
 export class SearchPage extends AbstractPage {
 
@@ -54,7 +54,7 @@ export class SearchPage extends AbstractPage {
 
     };
 
-    public createUserBlock =(userEntity: IUser): HTMLDivElement => {
+    public createUserBlock = (userEntity: IUser): HTMLDivElement => {
 
         let shortName: string = `${userEntity.firstName}, ${userEntity.lastName}`;
 
@@ -102,7 +102,7 @@ export class SearchPage extends AbstractPage {
 
     public render(): void {
         let body: HTMLElement = document.getElementById("body");
-        body.innerHTML =`
+        body.innerHTML = `
                     <div class='row col-12'>
                         <div class='col-2'></div>
                         <div class='col-8'>

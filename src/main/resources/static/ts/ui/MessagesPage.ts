@@ -1,8 +1,8 @@
 'use strict';
 import * as $ from "jquery";
-import {AbstractPage} from "../utils/abstractPage";
-import {WebSocketClient} from "../utils/webSocketClient";
-import {IDialog} from "../utils/templates/iDialog";
+import {AbstractPage} from "../utils/AbstractPage";
+import {WebSocketClient} from "../utils/WebSocketClient";
+import {IDialog} from "../utils/templates/IDialog";
 
 export class MessagesPage extends AbstractPage {
     private webSocketClient: WebSocketClient;
@@ -67,7 +67,7 @@ export class MessagesPage extends AbstractPage {
             }
             let keys = Object.keys(this.dialogs);
             if (keys.length > 0) {
-              this.openMessageHistory(keys[0]);
+                this.openMessageHistory(keys[0]);
             }
         });
     }
@@ -76,9 +76,9 @@ export class MessagesPage extends AbstractPage {
      * Function openMessageHistory() request from the server message history and
      * show messages on front-end
      */
-    public openMessageHistory(dialogId : string): void {
-        if(this.isOpenedDialogId) {
-          document.getElementById(`${this.isOpenedDialogId}_dialog`).className = "chat_list";
+    public openMessageHistory(dialogId: string): void {
+        if (this.isOpenedDialogId) {
+            document.getElementById(`${this.isOpenedDialogId}_dialog`).className = "chat_list";
         }
         document.getElementById(`${dialogId}_dialog`).className = "chat_list active_chat";
 
@@ -96,7 +96,7 @@ export class MessagesPage extends AbstractPage {
             }
 
             document.getElementById("dialog_history").innerText = "";
-          
+
             // Requesting message history for dialog that was clicked on
             $.ajax({
                 url: "/get_message_history",
@@ -127,16 +127,16 @@ export class MessagesPage extends AbstractPage {
         let text: string = SEND_MESSAGE_FIELD.value.trim();
 
         if (text.length > 0) {
-          let message: IMessage = {
-            dialogId: this.isOpenedDialogId,
-            senderId: this.myId,
-            receiverId: this.isOpenedInterlocutorId,
-            text: text,
-            senderLogin: this.myUsername,
-            receiverLogin: this.isOpenedInterlocutorUsername,
-            timestamp: Date.now().toString()
-          };
-          this.webSocketClient.sendMessage(JSON.stringify(message));
+            let message: IMessage = {
+                dialogId: this.isOpenedDialogId,
+                senderId: this.myId,
+                receiverId: this.isOpenedInterlocutorId,
+                text: text,
+                senderLogin: this.myUsername,
+                receiverLogin: this.isOpenedInterlocutorUsername,
+                timestamp: Date.now().toString()
+            };
+            this.webSocketClient.sendMessage(JSON.stringify(message));
         }
 
         SEND_MESSAGE_FIELD.value = "";
@@ -148,8 +148,8 @@ export class MessagesPage extends AbstractPage {
         const stringDate = ` ${date.getHours()}:${minutes.toString().length === 2 ? minutes.toString() : "0" + minutes}   |    ${date.getMonth()} / ${date.getDate()}`;
         let message: HTMLDivElement = document.createElement("div");
 
-        if(msg.senderId === this.myId){
-          message.innerHTML = `
+        if (msg.senderId === this.myId) {
+            message.innerHTML = `
             <div class="outgoing_msg">
               <div class="sent_msg">
                 <p class="bg-dark">${msg.text}</p>
@@ -157,7 +157,7 @@ export class MessagesPage extends AbstractPage {
               </div>
             </div>`
         } else {
-          message.innerHTML = `<div class="incoming_msg">
+            message.innerHTML = `<div class="incoming_msg">
         <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
         <div class="received_msg">
           <div class="received_withd_msg">
@@ -204,7 +204,7 @@ export class MessagesPage extends AbstractPage {
         </div>
         </div>
         </div>`;
-        
+
         body.appendChild(this.createNewMessagePopupElement());
         document.querySelector("button.msg_send_btn.bg-dark").addEventListener("click", this.send);
     }
@@ -228,7 +228,7 @@ export class MessagesPage extends AbstractPage {
         let dateEl: HTMLSpanElement = document.createElement("span");
         let nameEl: HTMLElement = document.createElement("h5");
         let textEl: HTMLElement = document.createElement("p");
-        
+
         imgEl.src = "https://ptetutorials.com/images/user-profile.png";
         imgEl.alt = "avatar";
 
@@ -250,7 +250,7 @@ export class MessagesPage extends AbstractPage {
         chatIbEl.className = "chat_ib";
         chatIbEl.appendChild(nameEl);
         chatIbEl.appendChild(textEl);
-    
+
         chatPeopleEl.className = "chat_people";
         chatPeopleEl.appendChild(avatarEl);
         chatPeopleEl.appendChild(chatIbEl);

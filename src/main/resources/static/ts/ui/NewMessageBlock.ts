@@ -1,14 +1,14 @@
-import {WebSocketClient} from "../utils/webSocketClient";
-import {IUser} from "../utils/templates/iUser";
+import {WebSocketClient} from "../utils/WebSocketClient";
+import {IUser} from "../utils/templates/IUser";
 import * as $ from "jquery";
 
 export class NewMessageBlock {
 
     private webSocket: WebSocketClient;
-    private user: {receiverShortName: string, receiverId: string};
-    private myData: {myId: string, myUsername: string};
+    private user: { receiverShortName: string, receiverId: string };
+    private myData: { myId: string, myUsername: string };
 
-    constructor(webSocket: WebSocketClient, user: {receiverShortName: string, receiverId: string}) {
+    constructor(webSocket: WebSocketClient, user: { receiverShortName: string, receiverId: string }) {
         this.webSocket = webSocket;
         this.myData = webSocket.getMyData();
         this.user = user;

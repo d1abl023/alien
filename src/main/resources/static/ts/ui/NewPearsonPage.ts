@@ -1,9 +1,9 @@
-import {AbstractPage} from "../utils/abstractPage";
-import { IRegistration } from "../utils/templates/IRegistration";
+import {AbstractPage} from "../utils/AbstractPage";
+import {IRegistration} from "../utils/templates/IRegistration";
 import jqXHR = JQuery.jqXHR;
 import * as $ from "jquery";
-import { INewPearson } from "../utils/templates/iNewPearson";
-import { uiManager } from "../uiManager";
+import {INewPearson} from "../utils/templates/INewPearson";
+import {uiManager} from "../UiManager";
 
 export class NewPearsonPage extends AbstractPage {
 
@@ -18,7 +18,7 @@ export class NewPearsonPage extends AbstractPage {
     }
 
     private static submitFormData(): void {
-        if (NewPearsonPage.verifyForEmptyFields()){
+        if (NewPearsonPage.verifyForEmptyFields()) {
             NewPearsonPage.sendNewPersonFormData()
         } else {
             alert("Fill all nessary fields, please!")
@@ -26,18 +26,18 @@ export class NewPearsonPage extends AbstractPage {
     }
 
     private static verifyForEmptyFields(): boolean {
-        let necessaryFieldsId: string[] = ["#first_name","#second_name", "#last_name",
+        let necessaryFieldsId: string[] = ["#first_name", "#second_name", "#last_name",
             "#phone_number", "#country", "#city", "#date_of_birth", "#education", "sex",
-            "#company", "#position", "#email", "#homecountry","#hometown","#school_list"
+            "#company", "#position", "#email", "#homecountry", "#hometown", "#school_list"
         ];
 
         let result: boolean = true;
 
-        for (let index in necessaryFieldsId){
-            if(necessaryFieldsId[index] === "sex"){
+        for (let index in necessaryFieldsId) {
+            if (necessaryFieldsId[index] === "sex") {
                 result = ($("#male").prop("checked") || $("#female").prop("checked")) === false ? false : result;
-            }else if(!$(necessaryFieldsId[index]).val()) {
-                result =  false;
+            } else if (!$(necessaryFieldsId[index]).val()) {
+                result = false;
             }
         }
         return result;
@@ -50,16 +50,16 @@ export class NewPearsonPage extends AbstractPage {
             data: JSON.stringify(NewPearsonPage.createObjectFromNewPersonForm()),
             contentType: "application/json; charset=utf-8"
         }).done((registaredId: string) => {
-                if (registaredId) {
-                    uiManager.getPage({pageName: "profile", user: registaredId});
-                } else {
-                    document.getElementById("#error").style.textAlign = "center";
-                    document.getElementById("error").style.fontSize = "1.5em";
-                    document.getElementById("error").style.color = "#D01D33";
-                    document.getElementById("error").style.marginBottom = "15px";
-                    document.getElementById("error").innerText = "Registration failed!\nTry one more time!";
-                    document.getElementById("registration");
-                }
+            if (registaredId) {
+                uiManager.getPage({pageName: "profile", user: registaredId});
+            } else {
+                document.getElementById("#error").style.textAlign = "center";
+                document.getElementById("error").style.fontSize = "1.5em";
+                document.getElementById("error").style.color = "#D01D33";
+                document.getElementById("error").style.marginBottom = "15px";
+                document.getElementById("error").innerText = "Registration failed!\nTry one more time!";
+                document.getElementById("registration");
+            }
 
         });
 
@@ -71,7 +71,7 @@ export class NewPearsonPage extends AbstractPage {
             first_name: $("#first_name").val().toString(),
             second_name: $("#second_name").val().toString(),
             last_name: $("#last_name").val().toString(),
-        
+
             phone_number: $("#phone_number").val().toString(),
             country: $("#country").val().toString(),
             city: $("#city").val().toString(),
@@ -90,7 +90,7 @@ export class NewPearsonPage extends AbstractPage {
 
     public render(): void {
         let body: HTMLElement = document.getElementById("body");
-        body.innerHTML =`
+        body.innerHTML = `
         <div class="row col-12">
         <div id="new_person_form_block" class="col-12 justify-content-center" style="height: ${$(window).height() - 60}px;">
             <h1 id="new_person_form_info" class="col-12 text-center">

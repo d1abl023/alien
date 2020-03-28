@@ -1,4 +1,4 @@
-import {uiManager} from "../uiManager";
+import {uiManager} from "../UiManager";
 
 export class Header {
 

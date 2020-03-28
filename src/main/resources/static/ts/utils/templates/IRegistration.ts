@@ -5,7 +5,7 @@ export interface IRegistration {
 
     login: string;
     password: string;
-    
+
     phone_number: string;
     country: string;
     city: string;

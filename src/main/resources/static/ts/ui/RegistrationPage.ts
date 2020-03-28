@@ -1,4 +1,4 @@
-import {AbstractPage} from "../utils/abstractPage";
+import {AbstractPage} from "../utils/AbstractPage";
 import {IRegistration} from "../utils/templates/IRegistration";
 import jqXHR = JQuery.jqXHR;
 import * as $ from "jquery";
@@ -10,12 +10,11 @@ export class RegistrationPage extends AbstractPage {
     constructor() {
         super(undefined, undefined);
         this.render();
-        $("#reg_button").on("click",(event) => {
+        $("#reg_button").on("click", (event) => {
             event.preventDefault();
             RegistrationPage.sendRegistrationFormData();
         });
     }
-
 
 
     static sendRegistrationFormData() {
