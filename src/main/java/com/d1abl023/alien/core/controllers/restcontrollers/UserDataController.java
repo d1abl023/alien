@@ -1,19 +1,14 @@
 package com.d1abl023.alien.core.controllers.restcontrollers;
 
 import com.d1abl023.alien.model.JSUser;
-import com.d1abl023.alien.tables.UserGeneralData;
-import com.d1abl023.alien.tables.UserNameData;
+import com.d1abl023.alien.tables.UserGeneralDataTable;
+import com.d1abl023.alien.tables.UserNameDataTable;
 import com.d1abl023.alien.utilactions.HibernateUtils;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -39,10 +34,10 @@ public class UserDataController {
     public JSUser userInfo(Principal principal, @RequestBody String person, HttpServletResponse response) {
         Long userId = person.equals("my") ? new Long(principal.getName()) : new Long(person);
         Session session = HibernateUtils.getSessionFactory().openSession();
-        UserGeneralData userGeneralData = session.get(UserGeneralData.class, userId);
-        UserNameData userNameData = session.get(UserNameData.class, userId);
+        UserGeneralDataTable userGeneralDataTable = session.get(UserGeneralDataTable.class, userId);
+        UserNameDataTable userNameDataTable = session.get(UserNameDataTable.class, userId);
         response.setStatus(200);
-        return new JSUser(userGeneralData, userNameData);
+        return new JSUser(userGeneralDataTable, userNameDataTable);
     }
 
     /**
@@ -65,8 +60,8 @@ public class UserDataController {
     @RequestMapping("/get_username_by_id")
     public String getLoginById(@RequestBody String id) {
         Session session = HibernateUtils.getSessionFactory().openSession();
-        UserNameData userNameData = session.get(UserNameData.class, new Long(id));
-        return userNameData.getFirstName() + ", " + userNameData.getLastName();
+        UserNameDataTable userNameDataTable = session.get(UserNameDataTable.class, new Long(id));
+        return userNameDataTable.getFirstName() + ", " + userNameDataTable.getLastName();
     }
 
     @RequestMapping("/get_id")

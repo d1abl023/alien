@@ -1,7 +1,7 @@
 package com.d1abl023.alien.core.controllers.restcontrollers;
 
-import com.d1abl023.alien.tables.Mentions;
-import com.d1abl023.alien.tables.UserMentionsId;
+import com.d1abl023.alien.tables.MentionsTable;
+import com.d1abl023.alien.tables.UserMentionsIdTable;
 import com.d1abl023.alien.utilactions.HibernateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,12 +24,12 @@ public class MentionsController {
         List<String> resultList = new LinkedList<>();
 
         Session session = HibernateUtils.getSessionFactory().openSession();
-        UserMentionsId userMentionsIdObject = session.get(UserMentionsId.class, new Long(userId));
+        UserMentionsIdTable userMentionsIdTableObject = session.get(UserMentionsIdTable.class, new Long(userId));
 
-        if (userMentionsIdObject != null) {
-            String[] mentionsIdList = userMentionsIdObject.getMentionsIdList().split("");
+        if (userMentionsIdTableObject != null) {
+            String[] mentionsIdList = userMentionsIdTableObject.getMentionsIdList().split("");
             for (String mentionId : mentionsIdList){
-                resultList.add(session.get(Mentions.class, new Long(mentionId)).getMention());
+                resultList.add(session.get(MentionsTable.class, new Long(mentionId)).getMention());
             }
         }
 

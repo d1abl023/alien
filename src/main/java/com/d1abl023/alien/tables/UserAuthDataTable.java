@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "auth_data")
-public class UserAuthData implements IDBTable {
+public class UserAuthDataTable implements IDBTable {
 
     @Id
     private long id;
@@ -28,11 +28,11 @@ public class UserAuthData implements IDBTable {
     private String email;
 
 
-    public UserAuthData() {
+    public UserAuthDataTable() {
     }
 
 
-    public UserAuthData(IUserDataForm userDataForm) {
+    public UserAuthDataTable(IUserDataForm userDataForm) {
         this.login = userDataForm.getLogin();
         this.password = userDataForm.getPassword();
         this.email = userDataForm.getEmail();

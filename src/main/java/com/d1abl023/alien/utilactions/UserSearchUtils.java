@@ -1,6 +1,6 @@
 package com.d1abl023.alien.utilactions;
 
-import com.d1abl023.alien.tables.UserNameData;
+import com.d1abl023.alien.tables.UserNameDataTable;
 import org.hibernate.Session;
 
 import javax.persistence.TypedQuery;
@@ -12,10 +12,10 @@ import java.util.stream.Stream;
 
 public class UserSearchUtils {
 
-    public static Map<Long, UserNameData> searchByFullName(Session session, String firstName, String secondName, String lastName) {
-        TypedQuery<UserNameData> selectUsers = session.createQuery(
-                "from UserNameData user where user.firstName = :firstName " +
-                        "and user.secondName = :secondName and user.lastName = :lastName", UserNameData.class);
+    public static Map<Long, UserNameDataTable> searchByFullName(Session session, String firstName, String secondName, String lastName) {
+        TypedQuery<UserNameDataTable> selectUsers = session.createQuery(
+                "from UserNameDataTable user where user.firstName = :firstName " +
+                        "and user.secondName = :secondName and user.lastName = :lastName", UserNameDataTable.class);
         selectUsers.setParameter("firstName", firstName);
         selectUsers.setParameter("secondName", secondName);
         selectUsers.setParameter("lastName", lastName);
@@ -23,16 +23,16 @@ public class UserSearchUtils {
         return UserSearchUtils.performUserNameDataListToMap(selectUsers.getResultList());
     }
 
-    public static Map<Long, UserNameData> searchByShortName(Session session, String firstName, String lastName) {
-        TypedQuery<UserNameData> selectUsersAsFLName = session.createQuery(
-                "from UserNameData user where user.firstName = :firstName " +
-                        "and user.lastName = :lastName", UserNameData.class);
+    public static Map<Long, UserNameDataTable> searchByShortName(Session session, String firstName, String lastName) {
+        TypedQuery<UserNameDataTable> selectUsersAsFLName = session.createQuery(
+                "from UserNameDataTable user where user.firstName = :firstName " +
+                        "and user.lastName = :lastName", UserNameDataTable.class);
         selectUsersAsFLName.setParameter("firstName", firstName);
         selectUsersAsFLName.setParameter("lastName", lastName);
 
-        TypedQuery<UserNameData> selectUsersAsSLName = session.createQuery(
-                "from UserNameData user where user.secondName = :secondName " +
-                        "and user.lastName = :lastName", UserNameData.class);
+        TypedQuery<UserNameDataTable> selectUsersAsSLName = session.createQuery(
+                "from UserNameDataTable user where user.secondName = :secondName " +
+                        "and user.lastName = :lastName", UserNameDataTable.class);
         selectUsersAsSLName.setParameter("secondName", firstName);
         selectUsersAsSLName.setParameter("lastName", lastName);
 
@@ -43,31 +43,31 @@ public class UserSearchUtils {
         );
     }
 
-    public static Map<Long, UserNameData> searchByFirstName(Session session, String firstName) {
-        TypedQuery<UserNameData> selectUsers = session.createQuery(
-                "from UserNameData user where user.firstName = :firstName", UserNameData.class);
+    public static Map<Long, UserNameDataTable> searchByFirstName(Session session, String firstName) {
+        TypedQuery<UserNameDataTable> selectUsers = session.createQuery(
+                "from UserNameDataTable user where user.firstName = :firstName", UserNameDataTable.class);
         selectUsers.setParameter("firstName", firstName);
         return UserSearchUtils.performUserNameDataListToMap(selectUsers.getResultList());
     }
 
-    public static Map<Long, UserNameData> searchBySecondName(Session session, String secondName) {
-        TypedQuery<UserNameData> selectUsers = session.createQuery(
-                "from UserNameData user where user.secondName = :secondName", UserNameData.class);
+    public static Map<Long, UserNameDataTable> searchBySecondName(Session session, String secondName) {
+        TypedQuery<UserNameDataTable> selectUsers = session.createQuery(
+                "from UserNameDataTable user where user.secondName = :secondName", UserNameDataTable.class);
         selectUsers.setParameter("secondName", secondName);
         return UserSearchUtils.performUserNameDataListToMap(selectUsers.getResultList());
     }
 
-    public static Map<Long, UserNameData> searchByLastName(Session session, String lastName) {
-        TypedQuery<UserNameData> selectUsers = session.createQuery(
-                "from UserNameData user where user.lastName = :lastName", UserNameData.class);
+    public static Map<Long, UserNameDataTable> searchByLastName(Session session, String lastName) {
+        TypedQuery<UserNameDataTable> selectUsers = session.createQuery(
+                "from UserNameDataTable user where user.lastName = :lastName", UserNameDataTable.class);
         selectUsers.setParameter("lastName", lastName);
         return UserSearchUtils.performUserNameDataListToMap(selectUsers.getResultList());
     }
 
-    private static Map<Long, UserNameData> performUserNameDataListToMap(List<UserNameData> userNameDataList) {
-        Map<Long, UserNameData> userNameDataMap = new LinkedHashMap<>();
-        for (UserNameData userNameDataObj : userNameDataList) {
-            userNameDataMap.put(userNameDataObj.getId(), userNameDataObj);
+    private static Map<Long, UserNameDataTable> performUserNameDataListToMap(List<UserNameDataTable> userNameDataTableList) {
+        Map<Long, UserNameDataTable> userNameDataMap = new LinkedHashMap<>();
+        for (UserNameDataTable userNameDataTableObj : userNameDataTableList) {
+            userNameDataMap.put(userNameDataTableObj.getId(), userNameDataTableObj);
         }
         return userNameDataMap;
     }

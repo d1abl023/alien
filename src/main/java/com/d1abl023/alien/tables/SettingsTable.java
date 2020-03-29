@@ -8,22 +8,22 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "mentions")
-public class Mentions implements IDBTable {
+@Table(name = "settings")
+public class SettingsTable implements IDBTable {
 
     @Id
     @Column(name = "id")
     private long id;
 
-    @Column(name = "mentions")
-    private String mention;
+    @Column(name = "settings")
+    private String settings;
 
-    public Mentions() {
+    public SettingsTable() {
     }
 
-    public Mentions(long id, String mention) {
+    public SettingsTable(long id, String settings){
         this.id = id;
-        this.mention = mention;
+        this.settings = settings;
     }
 
     public long getId() {
@@ -34,11 +34,11 @@ public class Mentions implements IDBTable {
         this.id = id;
     }
 
-    public String getMention() {
-        return mention;
+    public String getSettings() {
+        return settings;
     }
 
-    public void setMention(String mention) {
-        this.mention = mention;
+    public void setSettings(String settings) {
+        this.settings = settings;
     }
 }

@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "user_additional_data")
-public class UserAdditionalData implements IDBTable {
+public class UserAdditionalDataTable implements IDBTable {
 
     @Id
     private long id;
@@ -24,10 +24,10 @@ public class UserAdditionalData implements IDBTable {
     @Column(name = "school_list")
     private String scoolList;
 
-    public UserAdditionalData() {
+    public UserAdditionalDataTable() {
     }
 
-    public UserAdditionalData(IPersonDataForm pearsonDataForm){
+    public UserAdditionalDataTable(IPersonDataForm pearsonDataForm){
         this.homecountry = pearsonDataForm.getHomecountry();
         this.hometown = pearsonDataForm.getHometown();
         this.scoolList = pearsonDataForm.getSchoolList();

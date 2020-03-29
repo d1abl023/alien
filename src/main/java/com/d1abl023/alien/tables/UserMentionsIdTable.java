@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "user_mentions_id")
-public class UserMentionsId implements IDBTable {
+public class UserMentionsIdTable implements IDBTable {
 
     @Id
     private long id;
@@ -17,10 +17,10 @@ public class UserMentionsId implements IDBTable {
     @Column(name = "mentions_id_list")
     private String mentionsIdList;
 
-    public UserMentionsId() {
+    public UserMentionsIdTable() {
     }
 
-    public UserMentionsId(long id, String mentionsIdList) {
+    public UserMentionsIdTable(long id, String mentionsIdList) {
         this.id = id;
         this.mentionsIdList = mentionsIdList;
     }
@@ -39,5 +39,9 @@ public class UserMentionsId implements IDBTable {
 
     public void setMentionsIdList(String mentionsIdList) {
         this.mentionsIdList = mentionsIdList;
+    }
+
+    public void addElementToMentionIdList(String string){
+        this.mentionsIdList += " |+| " + string;
     }
 }

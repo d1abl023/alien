@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "user_name_data")
-public class UserNameData implements IDBTable {
+public class UserNameDataTable implements IDBTable {
 
     @Id
     @Column(name = "id")
@@ -22,10 +22,10 @@ public class UserNameData implements IDBTable {
     @Column(name = "last_name")
     private String lastName;
 
-    public UserNameData() {
+    public UserNameDataTable() {
     }
 
-    public UserNameData(IPersonDataForm pearsonDataForm){
+    public UserNameDataTable(IPersonDataForm pearsonDataForm){
         this.firstName = pearsonDataForm.getFirstName();
         this.secondName = pearsonDataForm.getSecondName();
         this.lastName = pearsonDataForm.getLastName();

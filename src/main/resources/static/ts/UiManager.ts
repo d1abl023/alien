@@ -1,4 +1,4 @@
-import {Header} from "./ui/Header";
+import {Header} from "./ui/Header"
 import {MessagesPage} from "./ui/MessagesPage";
 import {PageOfUser} from "./ui/PageOfUser";
 import {SearchPage} from "./ui/SearchPage";

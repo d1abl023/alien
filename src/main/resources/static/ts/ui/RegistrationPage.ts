@@ -24,17 +24,8 @@ export class RegistrationPage extends AbstractPage {
             data: JSON.stringify(RegistrationPage.createObjectFromRegistrationForm()),
             contentType: "application/json; charset=utf-8"
         }).done(() => {
-            // if (data.status === 201) {
-            // window.location.href = 'application.html';
-            // } else {
-            //     document.getElementById("error").style.textAlign = "center";
-            //     document.getElementById("error").style.fontSize = "1.5em";
-            //     document.getElementById("error").style.color = "#D01D33";
-            //     document.getElementById("error").style.marginBottom = "15px";
-            //     document.getElementById("error").innerText = "Registration failed!\nTry one more time!";
-            //     document.getElementById("registration");
-            // }
-        })
+            window.location.href = 'application.html';
+        });
     }
 
 

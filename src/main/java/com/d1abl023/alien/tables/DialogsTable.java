@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "dialogs")
-public class Dialogs implements IDBTable {
+public class DialogsTable implements IDBTable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,28 +24,28 @@ public class Dialogs implements IDBTable {
     @Column(name = "user2Login")
     private String user2Login;
 
-    public Dialogs() {
+    public DialogsTable() {
     }
 
-    public Dialogs(long user1, long user2) {
+    public DialogsTable(long user1, long user2) {
         this.user1 = user1;
         this.user2 = user2;
     }
 
-    public Dialogs(long id, long user1, long user2) {
+    public DialogsTable(long id, long user1, long user2) {
         this.id = id;
         this.user1 = user1;
         this.user2 = user2;
     }
 
-    public Dialogs(long user1, long user2, String user1Login, String user2Login) {
+    public DialogsTable(long user1, long user2, String user1Login, String user2Login) {
         this.user1 = user1;
         this.user2 = user2;
         this.user1Login = user1Login;
         this.user2Login = user2Login;
     }
 
-    public Dialogs(long id, long user1, long user2, String user1Login, String user2Login) {
+    public DialogsTable(long id, long user1, long user2, String user1Login, String user2Login) {
         this.id = id;
         this.user1 = user1;
         this.user2 = user2;

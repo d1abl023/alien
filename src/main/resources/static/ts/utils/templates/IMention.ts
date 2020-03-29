@@ -1,6 +1,7 @@
 export interface IMention {
     id: string;
-    mentionerId: string;
-    mentionerCorpId: string;
+    mentionedPersonId: string;
+    mentionFromId: string;
+    mentionFromCorpId: string;
     mention_text: string;
 }

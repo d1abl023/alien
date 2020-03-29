@@ -30,13 +30,13 @@ public class HibernateUtils {
     public static Configuration getConfiguration(){
         return new Configuration()
                 .setProperties(getProperties())
-                .addAnnotatedClass(UserAuthData.class)
-                .addAnnotatedClass(UserGeneralData.class)
-                .addAnnotatedClass(UserNameData.class)
-                .addAnnotatedClass(UserAdditionalData.class)
-                .addAnnotatedClass(UserMentionsId.class)
-                .addAnnotatedClass(Messages.class)
-                .addAnnotatedClass(Dialogs.class);
+                .addAnnotatedClass(UserAuthDataTable.class)
+                .addAnnotatedClass(UserGeneralDataTable.class)
+                .addAnnotatedClass(UserNameDataTable.class)
+                .addAnnotatedClass(UserAdditionalDataTable.class)
+                .addAnnotatedClass(UserMentionsIdTable.class)
+                .addAnnotatedClass(MessagesTable.class)
+                .addAnnotatedClass(DialogsTable.class);
     }
 
     public static SessionFactory getSessionFactory() {

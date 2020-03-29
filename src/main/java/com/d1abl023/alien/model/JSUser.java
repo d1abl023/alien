@@ -1,7 +1,7 @@
 package com.d1abl023.alien.model;
 
-import com.d1abl023.alien.tables.UserGeneralData;
-import com.d1abl023.alien.tables.UserNameData;
+import com.d1abl023.alien.tables.UserGeneralDataTable;
+import com.d1abl023.alien.tables.UserNameDataTable;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -58,21 +58,21 @@ public class JSUser implements Serializable {
         this.amountOfMentions = amountOfMentions;
     }
 
-    public JSUser(UserGeneralData userGeneralData, UserNameData userNameData) {
-        this.id = Long.toString(userGeneralData.getId());
-        this.email = userGeneralData.getEmail();
-        this.date = userGeneralData.getDate();
-        this.sex = userGeneralData.getSex();
-        this.number = userGeneralData.getPhoneNumber();
-        this.country = userGeneralData.getCountry();
-        this.city = userGeneralData.getCity();
-        this.placeOfWork = userGeneralData.getPlaceOfWork();
-        this.position = userGeneralData.getPosition();
-        this.education = userGeneralData.getEducation();
-        this.firstName = userNameData.getFirstName();
-        this.secondName = userNameData.getSecondName();
-        this.lastName = userNameData.getLastName();
-        this.amountOfMentions = userGeneralData.getAmountOfMentions();
+    public JSUser(UserGeneralDataTable userGeneralDataTable, UserNameDataTable userNameDataTable) {
+        this.id = Long.toString(userGeneralDataTable.getId());
+        this.email = userGeneralDataTable.getEmail();
+        this.date = userGeneralDataTable.getDate();
+        this.sex = userGeneralDataTable.getSex();
+        this.number = userGeneralDataTable.getPhoneNumber();
+        this.country = userGeneralDataTable.getCountry();
+        this.city = userGeneralDataTable.getCity();
+        this.placeOfWork = userGeneralDataTable.getPlaceOfWork();
+        this.position = userGeneralDataTable.getPosition();
+        this.education = userGeneralDataTable.getEducation();
+        this.firstName = userNameDataTable.getFirstName();
+        this.secondName = userNameDataTable.getSecondName();
+        this.lastName = userNameDataTable.getLastName();
+        this.amountOfMentions = userGeneralDataTable.getAmountOfMentions();
     }
 
     public String getId() {

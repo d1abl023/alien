@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "user_general_data")
-public class UserGeneralData implements IDBTable {
+public class UserGeneralDataTable implements IDBTable {
 
     @Id
     @Column(name = "id")
@@ -46,10 +46,10 @@ public class UserGeneralData implements IDBTable {
     @Column(name = "amount_of_mentions")
     private int amountOfMentions;
 
-    public UserGeneralData() {
+    public UserGeneralDataTable() {
     }
 
-    public UserGeneralData(IPersonDataForm pearsonDataForm) {
+    public UserGeneralDataTable(IPersonDataForm pearsonDataForm) {
         this.email = pearsonDataForm.getEmail();
         this.date = pearsonDataForm.getDateOfBirth();
         this.sex = pearsonDataForm.getSex();

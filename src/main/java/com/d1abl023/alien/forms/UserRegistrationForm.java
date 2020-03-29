@@ -2,10 +2,10 @@ package com.d1abl023.alien.forms;
 
 import com.d1abl023.alien.interfaces.IPersonDataForm;
 import com.d1abl023.alien.interfaces.IUserDataForm;
-import com.d1abl023.alien.tables.UserAdditionalData;
-import com.d1abl023.alien.tables.UserAuthData;
-import com.d1abl023.alien.tables.UserGeneralData;
-import com.d1abl023.alien.tables.UserNameData;
+import com.d1abl023.alien.tables.UserAdditionalDataTable;
+import com.d1abl023.alien.tables.UserAuthDataTable;
+import com.d1abl023.alien.tables.UserGeneralDataTable;
+import com.d1abl023.alien.tables.UserNameDataTable;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -219,31 +219,31 @@ public class UserRegistrationForm implements IPersonDataForm, IUserDataForm {
      * Method {@code createUserGeneralDataTableObject()} creates object
      * for mapping data into table {@code user_general_data}
      */
-    public UserGeneralData createUserGeneralDataTableObject() {
-        return new UserGeneralData(this);
+    public UserGeneralDataTable createUserGeneralDataTableObject() {
+        return new UserGeneralDataTable(this);
     }
 
     /**
      * Method {@code createUserNameDataTableObject()} creates object
      * for mapping data into table {@code user_name_data}
      */
-    public UserNameData createUserNameDataTableObject(){
-        return new UserNameData(this);
+    public UserNameDataTable createUserNameDataTableObject(){
+        return new UserNameDataTable(this);
     }
 
     /**
      * Method {@code createUserAdditionalDataTableObject()} creates object
      * for mapping data into table {@code user_additional_data}
      */
-    public UserAdditionalData createUserAdditionalDataTableObject(){
-        return new UserAdditionalData(this);
+    public UserAdditionalDataTable createUserAdditionalDataTableObject(){
+        return new UserAdditionalDataTable(this);
     }
 
     /**
      * Method {@code createUserAuthDataTableObject()} creates object
      * for mapping data into table {@code auth_data}
      */
-    public UserAuthData createUserAuthDataTableObject() {
-        return new UserAuthData(this);
+    public UserAuthDataTable createUserAuthDataTableObject() {
+        return new UserAuthDataTable(this);
     }
 }

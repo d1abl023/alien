@@ -3,10 +3,10 @@ package com.d1abl023.alien.core.controllers.restcontrollers;
 import com.d1abl023.alien.forms.AddPersonForm;
 import com.d1abl023.alien.forms.UserRegistrationForm;
 import com.d1abl023.alien.model.JSUser;
-import com.d1abl023.alien.tables.UserAdditionalData;
-import com.d1abl023.alien.tables.UserAuthData;
-import com.d1abl023.alien.tables.UserGeneralData;
-import com.d1abl023.alien.tables.UserNameData;
+import com.d1abl023.alien.tables.UserAdditionalDataTable;
+import com.d1abl023.alien.tables.UserAuthDataTable;
+import com.d1abl023.alien.tables.UserGeneralDataTable;
+import com.d1abl023.alien.tables.UserNameDataTable;
 import com.d1abl023.alien.utilactions.HibernateUtils;
 import com.d1abl023.alien.utilactions.UserSearchUtils;
 import org.apache.logging.log4j.LogManager;
@@ -31,17 +31,17 @@ public class FormController {
     public Map<String, JSUser> search(@RequestBody String requestBody) {
         Map<String, JSUser> searchResult = new LinkedHashMap<>();
         Session session = HibernateUtils.getSessionFactory().openSession();
-        List<UserNameData> dbUserNameDate = new LinkedList<>();
+        List<UserNameDataTable> dbUserNameDate = new LinkedList<>();
 
         if (requestBody.contains(",")) {
             String firstName = requestBody.split(",")[0].trim();
             String lastName = requestBody.split(",")[1].trim();
 
-            Map<Long, UserNameData> searchByLastName = UserSearchUtils.searchByLastName(session, lastName);
+            Map<Long, UserNameDataTable> searchByLastName = UserSearchUtils.searchByLastName(session, lastName);
 
             if (firstName.contains("-")) {
-                Map<Long, UserNameData> searchByFirstName = UserSearchUtils.searchByFirstName(session, firstName.split("-")[0].trim());
-                Map<Long, UserNameData> searchBySecondName = UserSearchUtils.searchBySecondName(session, firstName.split("-")[1].trim());
+                Map<Long, UserNameDataTable> searchByFirstName = UserSearchUtils.searchByFirstName(session, firstName.split("-")[0].trim());
+                Map<Long, UserNameDataTable> searchBySecondName = UserSearchUtils.searchBySecondName(session, firstName.split("-")[1].trim());
                 for (Long userId : searchByFirstName.keySet()) {
                     if (searchBySecondName.containsKey(userId) && searchByLastName.containsKey(userId)) {
                         dbUserNameDate.add(searchByFirstName.get(userId));
@@ -57,13 +57,13 @@ public class FormController {
                     }
                 }
             } else {
-                Map<Long, UserNameData> searchByFirstName = UserSearchUtils.searchByFirstName(session, firstName.trim());
+                Map<Long, UserNameDataTable> searchByFirstName = UserSearchUtils.searchByFirstName(session, firstName.trim());
                 for (Long userId : searchByFirstName.keySet()) {
                     if (searchByLastName.containsKey(userId)) {
                         dbUserNameDate.add(searchByFirstName.get(userId));
                     }
                 }
-                Map<Long, UserNameData> searchBySecondName = UserSearchUtils.searchBySecondName(session, firstName.trim());
+                Map<Long, UserNameDataTable> searchBySecondName = UserSearchUtils.searchBySecondName(session, firstName.trim());
                 for (Long userId : searchBySecondName.keySet()) {
                     if (searchByLastName.containsKey(userId)) {
                         dbUserNameDate.add(searchBySecondName.get(userId));
@@ -71,8 +71,8 @@ public class FormController {
                 }
             }
         } else if (requestBody.contains("-")) {
-            Map<Long, UserNameData> searchByFirstName = UserSearchUtils.searchByFirstName(session, requestBody.split("-")[0].trim());
-            Map<Long, UserNameData> searchBySecondName = UserSearchUtils.searchBySecondName(session, requestBody.split("-")[1].trim());
+            Map<Long, UserNameDataTable> searchByFirstName = UserSearchUtils.searchByFirstName(session, requestBody.split("-")[0].trim());
+            Map<Long, UserNameDataTable> searchBySecondName = UserSearchUtils.searchBySecondName(session, requestBody.split("-")[1].trim());
             for (Long userId : searchByFirstName.keySet()) {
                 if (searchBySecondName.containsKey(userId)) {
                     dbUserNameDate.add(searchByFirstName.get(userId));
@@ -88,19 +88,19 @@ public class FormController {
                 }
             }
         } else {
-            Map<Long, UserNameData> searchByFirstName = UserSearchUtils.searchByFirstName(session, requestBody.trim());
+            Map<Long, UserNameDataTable> searchByFirstName = UserSearchUtils.searchByFirstName(session, requestBody.trim());
             for (Long userId : searchByFirstName.keySet()) {
                 dbUserNameDate.add(searchByFirstName.get(userId));
 //                searchResult.put(Long.toString(userId),
 //                        new JSUser(session.get(UserGeneralData.class, userId), searchByFirstName.get(userId)));
             }
-            Map<Long, UserNameData> searchBySecondName = UserSearchUtils.searchBySecondName(session, requestBody.trim());
+            Map<Long, UserNameDataTable> searchBySecondName = UserSearchUtils.searchBySecondName(session, requestBody.trim());
             for (Long userId : searchBySecondName.keySet()) {
                 dbUserNameDate.add(searchBySecondName.get(userId));
 //                searchResult.put(Long.toString(userId),
 //                        new JSUser(session.get(UserGeneralData.class, userId), searchBySecondName.get(userId)));
             }
-            Map<Long, UserNameData> searchByLastName = UserSearchUtils.searchByLastName(session, requestBody.trim());
+            Map<Long, UserNameDataTable> searchByLastName = UserSearchUtils.searchByLastName(session, requestBody.trim());
             for (Long userId : searchByLastName.keySet()) {
                 dbUserNameDate.add(searchByLastName.get(userId));
 //                searchResult.put(Long.toString(userId),
@@ -111,9 +111,9 @@ public class FormController {
         }
 
         // TODO: to change logic to remove that
-        for (UserNameData tmpUserNameData : dbUserNameDate) {
-            searchResult.put(Long.toString(tmpUserNameData.getId()),
-                    new JSUser(session.get(UserGeneralData.class, tmpUserNameData.getId()), tmpUserNameData));
+        for (UserNameDataTable tmpUserNameDataTable : dbUserNameDate) {
+            searchResult.put(Long.toString(tmpUserNameDataTable.getId()),
+                    new JSUser(session.get(UserGeneralDataTable.class, tmpUserNameDataTable.getId()), tmpUserNameDataTable));
         }
         session.close();
         return searchResult;
@@ -122,27 +122,27 @@ public class FormController {
     @RequestMapping("/add_new_person")
     public String addNewPerson(@RequestBody AddPersonForm addPearsonForm, HttpServletResponse response) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-            UserGeneralData userGeneralData = addPearsonForm.createUserGeneralDataTableObject();
+            UserGeneralDataTable userGeneralDataTable = addPearsonForm.createUserGeneralDataTableObject();
 
             //Saving used general data into DB table
             Transaction transaction = session.beginTransaction();
-            Long userId = (Long) session.save(userGeneralData);
+            Long userId = (Long) session.save(userGeneralDataTable);
             transaction.commit();
 
-            UserNameData userNameData = addPearsonForm.createUserNameDataTableObject();
-            userNameData.setId(userId);
+            UserNameDataTable userNameDataTable = addPearsonForm.createUserNameDataTableObject();
+            userNameDataTable.setId(userId);
 
             //Saving user name data into DB table
             transaction = session.beginTransaction();
-            session.save(userNameData);
+            session.save(userNameDataTable);
             transaction.commit();
 
-            UserAdditionalData userAdditionalData = addPearsonForm.createUserAdditionalDataTableObject();
-            userAdditionalData.setId(userId);
+            UserAdditionalDataTable userAdditionalDataTable = addPearsonForm.createUserAdditionalDataTableObject();
+            userAdditionalDataTable.setId(userId);
 
             //Saving user additional data into DB table
             transaction = session.beginTransaction();
-            session.save(userAdditionalData);
+            session.save(userAdditionalDataTable);
             transaction.commit();
 
             response.setStatus(201);
@@ -158,35 +158,35 @@ public class FormController {
     @RequestMapping("/registration")
     public void registration(@RequestBody UserRegistrationForm userRegForm, HttpServletResponse response) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-            UserGeneralData userGeneralData = userRegForm.createUserGeneralDataTableObject();
+            UserGeneralDataTable userGeneralDataTable = userRegForm.createUserGeneralDataTableObject();
 
             //Saving used general data into DB table
             Transaction transaction = session.beginTransaction();
-            Long userId = (Long) session.save(userGeneralData);
+            Long userId = (Long) session.save(userGeneralDataTable);
             transaction.commit();
 
-            UserAuthData userAuthData = userRegForm.createUserAuthDataTableObject();
-            userAuthData.setId(userId);
+            UserAuthDataTable userAuthDataTable = userRegForm.createUserAuthDataTableObject();
+            userAuthDataTable.setId(userId);
 
             //Saving user authentication data into DB table
             transaction = session.beginTransaction();
-            session.save(userAuthData);
+            session.save(userAuthDataTable);
             transaction.commit();
 
-            UserNameData userNameData = userRegForm.createUserNameDataTableObject();
-            userNameData.setId(userId);
+            UserNameDataTable userNameDataTable = userRegForm.createUserNameDataTableObject();
+            userNameDataTable.setId(userId);
 
             //Saving user name data into DB table
             transaction = session.beginTransaction();
-            session.save(userNameData);
+            session.save(userNameDataTable);
             transaction.commit();
 
-            UserAdditionalData userAdditionalData = userRegForm.createUserAdditionalDataTableObject();
-            userAdditionalData.setId(userId);
+            UserAdditionalDataTable userAdditionalDataTable = userRegForm.createUserAdditionalDataTableObject();
+            userAdditionalDataTable.setId(userId);
 
             //Saving user additional data into DB table
             transaction = session.beginTransaction();
-            session.save(userAdditionalData);
+            session.save(userAdditionalDataTable);
             transaction.commit();
 
             response.setStatus(201);
