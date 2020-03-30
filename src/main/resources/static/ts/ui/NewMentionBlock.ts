@@ -1,51 +1,35 @@
-import {WebSocketClient} from "../utils/WebSocketClient";
-import {IUser} from "../utils/templates/IUser";
 import * as $ from "jquery";
+import {IMention} from "../utils/templates/IMention";
+import {Logger} from "../utils/Logger";
 
 export class NewMentionBlock {
 
-    private webSocket: WebSocketClient;
-    private user: { receiverShortName: string, receiverId: string };
-    private myData: { myId: string, myUsername: string };
+    private mentionedPersonData: { id: string, shortName: string };
+    private myData: { myId: string, myCorpId: string };
 
-    constructor(webSocket: WebSocketClient, user: { receiverShortName: string, receiverId: string }) {
-        this.webSocket = webSocket;
-        this.myData = webSocket.getMyData();
-        this.user = user;
+    constructor(mentionedPersonData: { id: string, shortName: string }, myData: { myId: string, myCorpId: string }) {
+        this.mentionedPersonData = mentionedPersonData;
+        this.myData = myData;
         this.render();
     }
 
     private render(): void {
-        let sendNewMessageBlock: HTMLDivElement = document.createElement("div");
-        sendNewMessageBlock.id = "send_new_message_block";
-        sendNewMessageBlock.className = "flex-column";
-        sendNewMessageBlock.innerHTML = `
-            <h3 id="receiver_info" class="text-dark justify-content-center">Send message to ${this.user.receiverShortName}</h3>
-            <textarea id="send_new_message_field"></textarea>`;
-
-
-        // sendNewMessageBlock.appendChild(this.createReceiverInfoBlock());
-        // sendNewMessageBlock.appendChild(this.createSendNewMessageField());
-        sendNewMessageBlock.appendChild(this.createSendNewMessageButtonsBlock());
-        $("#body").append(sendNewMessageBlock);
+        let addNewMentionBlock: HTMLDivElement = document.createElement("div");
+        addNewMentionBlock.id = "add_new_mention_block";
+        addNewMentionBlock.className = "flex-column";
+        addNewMentionBlock.innerHTML = `
+            <h3 id="mentioned_person_info" class="text-dark justify-content-center">
+                Add mention about ${this.mentionedPersonData.shortName}
+            </h3>
+            <textarea id="add_new_mention_field"></textarea>`;
+        addNewMentionBlock.appendChild(this.createAddNewMentionButtonsBlock());
+        $("#body").append(addNewMentionBlock);
     }
 
-    private createReceiverInfoBlock(): HTMLDivElement {
-        let receiverInfoBlock: HTMLDivElement = document.createElement("div");
-        receiverInfoBlock.id = "receiver_info";
-        receiverInfoBlock.innerText = `Send message to ${this.user.receiverShortName}`;
-        return receiverInfoBlock;
-    }
 
-    private createSendNewMessageField(): HTMLTextAreaElement {
-        let sendNewMessageField: HTMLTextAreaElement = document.createElement("textarea");
-        sendNewMessageField.id = "send_new_message_field";
-        return sendNewMessageField;
-    }
-
-    private createSendNewMessageButtonsBlock(): HTMLDivElement {
+    private createAddNewMentionButtonsBlock(): HTMLDivElement {
         let sendButton: HTMLButtonElement = document.createElement("button");
-        sendButton.id = "send_new_message_button";
+        sendButton.id = "add_new_mention_button";
         sendButton.className = "btn btn-success send_new_message_block_button";
         sendButton.innerText = "Send";
         sendButton.addEventListener("click", () => this.onClickSend());
@@ -56,29 +40,34 @@ export class NewMentionBlock {
         cancelButton.innerText = "Cancel";
         cancelButton.addEventListener("click", () => this.onClickCancel());
 
-        let sendNewMessageButtonsBlock: HTMLDivElement = document.createElement("div");
-        sendNewMessageButtonsBlock.id = "send_new_message_buttons";
-        sendNewMessageButtonsBlock.className = "col-12 justify-content-center";
-        sendNewMessageButtonsBlock.appendChild(sendButton);
-        sendNewMessageButtonsBlock.appendChild(cancelButton);
-        return sendNewMessageButtonsBlock;
+        let addNewMentionButtonsBlock: HTMLDivElement = document.createElement("div");
+        addNewMentionButtonsBlock.id = "add_new_mention_buttons";
+        addNewMentionButtonsBlock.className = "col-12 justify-content-center";
+        addNewMentionButtonsBlock.appendChild(sendButton);
+        addNewMentionButtonsBlock.appendChild(cancelButton);
+        return addNewMentionButtonsBlock;
     }
 
     private onClickSend = (): void => {
-        let message: IMessage = {
-            dialogId: "0",
-            receiverId: this.user.receiverId,
-            receiverLogin: this.user.receiverShortName,
-            senderId: this.myData.myId,
-            senderLogin: this.myData.myUsername,
-            text: $("#send_new_message_field").val().toString(),
+        let mention: IMention = {
+            mentionedPersonId: "",
+            mentionFromId: "",
+            mentionFromCorpId: "",
+            mention_text: $("#add_new_mention_field").val().toString(),
             timestamp: Date.now().toString()
         };
-        this.webSocket.sendMessage(JSON.stringify(message));
-        $("#send_new_message_block").remove();
+
+        $.ajax({
+            url: "add_new_mention",
+            type: "POST",
+            data: JSON.stringify(mention)
+        }).then((mentionId: string) => {
+
+        });
+        $("#add_new_mention_block").remove();
     };
 
     private onClickCancel = (): void => {
-        $("#send_new_message_block").remove();
+        $("#add_new_mention_block").remove();
     };
 }

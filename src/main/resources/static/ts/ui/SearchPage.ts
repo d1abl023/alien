@@ -14,7 +14,7 @@ export class SearchPage extends AbstractPage {
     constructor(myId: string, myUsername: string) {
         super(myId, myUsername);
         this.render();
-        this.webSocketClient = new WebSocketClient(this.myId, this.myUsername);
+        this.webSocketClient = new WebSocketClient(this.myId, this.myShortName);
     }
 
     public search = (): void => {

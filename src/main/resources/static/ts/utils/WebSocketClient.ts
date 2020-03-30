@@ -6,11 +6,11 @@ export class WebSocketClient {
     private WS_PATH: string = "ws://localhost:8080/websocket";
     private webSocket: WebSocket = new WebSocket(this.WS_PATH);
     private readonly myId: string;
-    private readonly myUsername: string;
+    private readonly myShortName: string;
 
-    constructor(myId: string, myUsername: string) {
+    constructor(myId: string, myShortName: string) {
         this.myId = myId;
-        this.myUsername = myUsername;
+        this.myShortName = myShortName;
         this.webSocket.onmessage = this.onMessage;
         this.webSocket.onclose = this.onClose;
         this.webSocket.onerror = this.onError;
@@ -61,7 +61,7 @@ export class WebSocketClient {
         this.showPopUp(message);
     };
 
-    public getMyData = (): { myId: string, myUsername: string } => {
-        return {myId: this.myId, myUsername: this.myUsername}
+    public getMyData = (): { myId: string, myShortName: string } => {
+        return {myId: this.myId, myShortName: this.myShortName}
     }
 }

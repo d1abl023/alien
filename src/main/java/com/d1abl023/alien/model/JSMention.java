@@ -9,16 +9,18 @@ public class JSMention implements Serializable {
     private String mentionFromId;
     private String mentionFromCorpId;
     private String mention_text;
+    private String timestamp;
 
     public JSMention() {
     }
 
-    public JSMention(String id, String mentionedPersonId, String mentionFromId, String mentionFromCorpId, String mention_text) {
+    public JSMention(String id, String mentionedPersonId, String mentionFromId, String mentionFromCorpId, String mention_text, String timestamp) {
         this.id = id;
         this.mentionedPersonId = mentionedPersonId;
         this.mentionFromId = mentionFromId;
         this.mentionFromCorpId = mentionFromCorpId;
         this.mention_text = mention_text;
+        this.timestamp = timestamp;
     }
 
     public String getId() {
@@ -61,6 +63,14 @@ public class JSMention implements Serializable {
         this.mention_text = mention_text;
     }
 
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Override
     public String toString() {
         return "JSMention{" +
@@ -69,6 +79,7 @@ public class JSMention implements Serializable {
                 ", mentionFromId='" + mentionFromId + '\'' +
                 ", mentionFromCorpId='" + mentionFromCorpId + '\'' +
                 ", mention_text='" + mention_text + '\'' +
+                ", timestamp='" + timestamp + '\'' +
                 '}';
     }
 }

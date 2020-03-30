@@ -15,7 +15,7 @@ export class MessagesPage extends AbstractPage {
     constructor(myId: string, myUsername: string) {
         super(myId, myUsername);
         this.render();
-        this.webSocketClient = new WebSocketClient(this.myId, this.myUsername);
+        this.webSocketClient = new WebSocketClient(this.myId, this.myShortName);
         this.webSocketClient.manageIncomingMessage = this.manageIncomingMessage;
         this.onMessagesPageLoad();
     }
@@ -48,7 +48,7 @@ export class MessagesPage extends AbstractPage {
             url: "get_username",
             type: "GET"
         }).then((data: string): void => {
-            this.myUsername = data;
+            this.myShortName = data;
         });
         document.getElementById("send_message_button").addEventListener('click', this.send, true);
     };
@@ -132,7 +132,7 @@ export class MessagesPage extends AbstractPage {
                 senderId: this.myId,
                 receiverId: this.isOpenedInterlocutorId,
                 text: text,
-                senderLogin: this.myUsername,
+                senderLogin: this.myShortName,
                 receiverLogin: this.isOpenedInterlocutorUsername,
                 timestamp: Date.now().toString()
             };

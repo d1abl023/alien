@@ -42,6 +42,6 @@ public class UserMentionsIdTable implements IDBTable {
     }
 
     public void addElementToMentionIdList(String string){
-        this.mentionsIdList += " |+| " + string;
+        this.mentionsIdList += ", " + string;
     }
 }

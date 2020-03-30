@@ -6,7 +6,7 @@ export class NewMessageBlock {
 
     private webSocket: WebSocketClient;
     private user: { receiverShortName: string, receiverId: string };
-    private myData: { myId: string, myUsername: string };
+    private myData: { myId: string, myShortName: string };
 
     constructor(webSocket: WebSocketClient, user: { receiverShortName: string, receiverId: string }) {
         this.webSocket = webSocket;
@@ -70,7 +70,7 @@ export class NewMessageBlock {
             receiverId: this.user.receiverId,
             receiverLogin: this.user.receiverShortName,
             senderId: this.myData.myId,
-            senderLogin: this.myData.myUsername,
+            senderLogin: this.myData.myShortName,
             text: $("#send_new_message_field").val().toString(),
             timestamp: Date.now().toString()
         };

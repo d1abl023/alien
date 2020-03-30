@@ -32,7 +32,7 @@ public class UserDataController {
      */
     @RequestMapping("/user_info")
     public JSUser userInfo(Principal principal, @RequestBody String person, HttpServletResponse response) {
-        Long userId = person.equals("my") ? new Long(principal.getName()) : new Long(person);
+        Long userId = new Long(person.equals("id=my") ? principal.getName() : person.split("=")[1].trim());
         Session session = HibernateUtils.getSessionFactory().openSession();
         UserGeneralDataTable userGeneralDataTable = session.get(UserGeneralDataTable.class, userId);
         UserNameDataTable userNameDataTable = session.get(UserNameDataTable.class, userId);

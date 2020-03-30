@@ -6,31 +6,34 @@ import {IUser} from "../utils/templates/IUser";
 import {IMention} from "../utils/templates/IMention";
 import {NewMessageBlock} from "./NewMessageBlock";
 import {uiManager} from "../UiManager";
+import {NewMentionBlock} from "./NewMentionBlock";
 
 export class PageOfUser extends AbstractPage {
 
     private webSocketClient: WebSocketClient;
+    private myUserDataObj: IUser;
     private openedUserObj: IUser;
     private shortName: string;
     private fullName: string;
     private userId: string;
     private fullInfoShown: boolean = false;
 
-    constructor(myId: string, myUsername: string) {
-        super(myId, myUsername);
-        this.render();
-        this.webSocketClient = new WebSocketClient(this.myId, this.myUsername);
-        this.showUserInfo();
+    constructor(myId: string, myShortName: string) {
+        super(myId, myShortName);
+        $.post("user_info", "id=my").then((myUserDataObj: IUser): void => {
+            this.myUserDataObj = myUserDataObj
+            this.render();
+            this.webSocketClient = new WebSocketClient(this.myId, this.myShortName);
+            this.showUserInfo();
+        }).catch(() => {
+            alert("Please refresh the page.")
+        });
     }
 
     public showUserInfo = () => {
         let uri = new Uri(window.location.href);
-        $.ajax({
-            url: "user_info",
-            type: "POST",
-            data: uri.getQueryParamValue("pageOfUser"),
-            contentType: "application/json; charset=utf-8"
-        }).then((data: IUser) => {
+        let id: string = uri.getQueryParamValue("pageOfUser");
+        $.post("user_info", `id=${id}`).then((data: IUser): void => {
             this.openedUserObj = data;
             this.userId = data.id;
             this.shortName = `${data.firstName}, ${data.lastName}`;
@@ -43,8 +46,10 @@ export class PageOfUser extends AbstractPage {
             this.addUserInfoField("company", "Works at", data.placeOfWork);
             this.addUserInfoField("position", "Works as", data.position);
             this.addUserInfoField("education", "Studied at", data.education);
-            $('#mentions_title_lable').text(`Mentions about ${data.firstName}: `)
+            $('#mentions_title_lable').text(`Mentions about ${data.firstName}: `);
             $('#amount_of_mentions').text(data.amountOfMentions);
+        }).catch(() => {
+            throw new Error("Error receiving user info!");
         });
         this.renderButtons();
         if (uri.getQueryParamValue("pageOfUser") === "my") {
@@ -100,7 +105,7 @@ export class PageOfUser extends AbstractPage {
             $("#email").remove();
             $("#number").remove();
         }
-    }
+    };
 
     /**
      * Methiod addUserInfoField creates HTML element that represents user info field
@@ -133,7 +138,7 @@ export class PageOfUser extends AbstractPage {
         $.ajax({
             url: "user_info",
             type: "POST",
-            data: mention.mentionerId,
+            data: mention.mentionFromId,
             contentType: "application/json; charset=utf-8"
         }).then((data: IUser) => {
             let mentionElement: HTMLDivElement = document.createElement("div");
@@ -158,14 +163,22 @@ export class PageOfUser extends AbstractPage {
         <button id="edit_info_btn" type="button" class="btn btn-danger user_info_functional_btn">Edit info</button>
     `);
 
-        $("#write_msg_btn").click(this.showNewMessageBlock);
-        $("#add_prsn_btn").click(() => uiManager.getPage({pageName: "addNewPearson"}));
-        $("#show_full_info_btn").click(this.showFullInfo);
-    }
+        $("#write_msg_btn").on("click", this.showNewMessageBlock);
+        $("#add_prsn_btn").on("click", () => uiManager.getPage({pageName: "addNewPerson"}));
+        $("#add_mntn_btn").on("click", this.showNewMentionBlock);
+        $("#show_full_info_btn").on("click", this.showFullInfo);
+    };
 
     private showNewMessageBlock = (): void => {
         new NewMessageBlock(this.webSocketClient, {receiverId: this.userId, receiverShortName: this.shortName});
-    }
+    };
+
+    private showNewMentionBlock = (): void => {
+        new NewMentionBlock(
+            {id: this.userId, shortName: this.shortName},
+            {myId: this.myUserDataObj.id, myCorpId: this.myUserDataObj.placeOfWork}
+        );
+    };
 
     public render = () => {
         $("#body").html(`<div class="col-12 px-0"><div id='user_page' class='col-12 flex-column overflow-auto justify-content-center'></div></div>`);

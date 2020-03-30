@@ -15,7 +15,7 @@ class UiManager {
     private page: AbstractPage;
 
     private myId: string;
-    private myUsername: string;
+    private myShortName: string;
 
     constructor() {
         $.ajax({
@@ -25,10 +25,10 @@ class UiManager {
             this.myId = data;
         });
         $.ajax({
-            url: "get_username",
+            url: "get_short_name",
             type: "GET"
         }).then((data: string): void => {
-            this.myUsername = data;
+            this.myShortName = data;
         });
 
         window.onresize = this.onWindowResize;
@@ -62,19 +62,19 @@ class UiManager {
             case "messages": {
                 this.renderHeader();
                 history.pushState("", "", `application.html?messages`);
-                this.page = new MessagesPage(this.myId, this.myUsername);
+                this.page = new MessagesPage(this.myId, this.myShortName);
                 break;
             }
             case "profile": {
                 this.renderHeader();
                 history.pushState("", "", `application.html?pageOfUser=${pageObject.user}`);
-                this.page = new PageOfUser(this.myId, this.myUsername);
+                this.page = new PageOfUser(this.myId, this.myShortName);
                 break;
             }
             case "search": {
                 this.renderHeader();
                 history.pushState("", "", `application.html?search`);
-                this.page = new SearchPage(this.myId, this.myUsername);
+                this.page = new SearchPage(this.myId, this.myShortName);
                 break;
             }
             case "login": {
