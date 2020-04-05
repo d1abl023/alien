@@ -83,9 +83,9 @@ class UiManager {
                 this.page = new IndexPage();
                 break;
             }
-            case "addNewPearson": {
+            case "addNewPerson": {
                 history.pushState("", "", `application.html?addNewPearson`);
-                this.page = new NewPearsonPage();
+                this.page = new NewPearsonPage(pageObject.editUser);
                 break;
             }
             case "registration": {

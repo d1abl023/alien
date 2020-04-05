@@ -1,9 +1,9 @@
 import * as $ from "jquery";
 import {IMention} from "../utils/templates/IMention";
 import {Logger} from "../utils/Logger";
+import { PageOfUser } from "./PageOfUser";
 
 export class NewMentionBlock {
-
     private mentionedPersonData: { id: string, shortName: string };
     private myData: { myId: string, myCorpId: string };
 
@@ -50,19 +50,20 @@ export class NewMentionBlock {
 
     private onClickSend = (): void => {
         let mention: IMention = {
-            mentionedPersonId: "",
-            mentionFromId: "",
-            mentionFromCorpId: "",
+            id: null,
+            mentionedPersonId: this.mentionedPersonData.id,
+            mentionFromId: this.myData.myId,
+            mentionFromCorpId: this.myData.myCorpId,
             mention_text: $("#add_new_mention_field").val().toString(),
             timestamp: Date.now().toString()
         };
 
-        $.ajax({
-            url: "add_new_mention",
-            type: "POST",
-            data: JSON.stringify(mention)
-        }).then((mentionId: string) => {
-
+        $.post("add_new_mention", JSON.stringify(mention)).then((mentionId: string) => {
+            Logger.info(`Mention was success sent, Mention id: ${mentionId}`);
+            mention.id = mentionId;
+            PageOfUser.addMentionBlock(mention);
+        }).catch(() => {
+            Logger.error("Mention sending failed. Please, try again.")
         });
         $("#add_new_mention_block").remove();
     };

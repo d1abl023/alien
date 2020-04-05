@@ -1,5 +1,5 @@
 export interface IMention {
-    id?: string;
+    id: string;
     mentionedPersonId: string;
     mentionFromId: string;
     mentionFromCorpId: string;

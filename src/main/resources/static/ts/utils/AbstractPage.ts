@@ -3,9 +3,9 @@ export abstract class AbstractPage {
     protected myId: string;
     protected myShortName: string;
 
-    protected constructor(myId: string, myUsername: string) {
+    protected constructor(myId: string, myShortName: string) {
         this.myId = myId;
-        this.myShortName = myUsername;
+        this.myShortName = myShortName;
     }
 
     public abstract render(): void;

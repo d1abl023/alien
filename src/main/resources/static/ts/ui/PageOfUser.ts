@@ -7,6 +7,7 @@ import {IMention} from "../utils/templates/IMention";
 import {NewMessageBlock} from "./NewMessageBlock";
 import {uiManager} from "../UiManager";
 import {NewMentionBlock} from "./NewMentionBlock";
+import { IAdditionalData } from "../utils/templates/IAdditionalData";
 
 export class PageOfUser extends AbstractPage {
 
@@ -87,7 +88,7 @@ export class PageOfUser extends AbstractPage {
                 contentType: "application/json; charset=utf-8"
             }).then((mentions: IMention[]) => {
                 for (let mentionNumber in mentions) {
-                    this.addMentionBlock(mentions[mentionNumber]);
+                    PageOfUser.addMentionBlock(mentions[mentionNumber]);
                 }
             })
         }
@@ -95,15 +96,28 @@ export class PageOfUser extends AbstractPage {
 
     private showFullInfo = (): void => {
         if (!this.fullInfoShown) {
-            this.fullInfoShown = true;
-            $("#show_full_info_btn").text("Hide full info");
-            this.addUserInfoField("email", "Email", this.openedUserObj.email);
-            this.addUserInfoField("number", "Phone number", this.openedUserObj.number.toString());
+            $.post({
+                url: "get_additional_user_info", 
+                type: "POST",
+                data: this.openedUserObj.id,
+                contentType: "application/json; charset=utf-8"
+            }).then((additionalUserData: IAdditionalData): void => {
+                this.fullInfoShown = true;
+                $("#show_full_info_btn").text("Hide full info");
+                this.addUserInfoField("email", "Email", this.openedUserObj.email);
+                this.addUserInfoField("number", "Phone number", this.openedUserObj.number.toString());
+                this.addUserInfoField("homecountry", "Home country:", additionalUserData.homecountry);
+                this.addUserInfoField("hometown", "Hometown", additionalUserData.hometown);
+                this.addUserInfoField("schoolList", "Schools", additionalUserData.schoolList);
+            });
         } else {
             this.fullInfoShown = false;
             $("#show_full_info_btn").text("Show full info");
             $("#email").remove();
             $("#number").remove();
+            $("#homecountry").remove();
+            $("#hometown").remove();
+            $("#schoolList").remove();   
         }
     };
 
@@ -134,7 +148,11 @@ export class PageOfUser extends AbstractPage {
         $("div#user_info_fields").append(element);
     }
 
-    public addMentionBlock(mention: IMention): void {
+    public performUserInfoBlockToForm(){
+        
+    }
+
+    public static addMentionBlock(mention: IMention): void {
         $.ajax({
             url: "user_info",
             type: "POST",
@@ -167,6 +185,7 @@ export class PageOfUser extends AbstractPage {
         $("#add_prsn_btn").on("click", () => uiManager.getPage({pageName: "addNewPerson"}));
         $("#add_mntn_btn").on("click", this.showNewMentionBlock);
         $("#show_full_info_btn").on("click", this.showFullInfo);
+        $("#edit_info_btn").on("click", () => uiManager.getPage({pageName: "addNewPerson", editUser: this.openedUserObj}));
     };
 
     private showNewMessageBlock = (): void => {

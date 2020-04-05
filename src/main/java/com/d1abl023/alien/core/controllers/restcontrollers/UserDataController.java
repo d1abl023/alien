@@ -1,6 +1,8 @@
 package com.d1abl023.alien.core.controllers.restcontrollers;
 
+import com.d1abl023.alien.model.JSAdditionalUserData;
 import com.d1abl023.alien.model.JSUser;
+import com.d1abl023.alien.tables.UserAdditionalDataTable;
 import com.d1abl023.alien.tables.UserGeneralDataTable;
 import com.d1abl023.alien.tables.UserNameDataTable;
 import com.d1abl023.alien.utilactions.HibernateUtils;
@@ -64,8 +66,16 @@ public class UserDataController {
         return userNameDataTable.getFirstName() + ", " + userNameDataTable.getLastName();
     }
 
+    @RequestMapping("/get_additional_user_info")
+    public JSAdditionalUserData getAdditionalUserInfo(@RequestBody String userId) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        return new JSAdditionalUserData(session.get(UserAdditionalDataTable.class, new Long(userId)));
+    }
+
     @RequestMapping("/get_id")
     public String getMyId(Principal principal) {
         return principal.getName();
     }
+
+    // TODO: Implement user update info method ("/update_user_info")
 }
