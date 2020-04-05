@@ -2,6 +2,8 @@ package com.d1abl023.alien.tables;
 
 import com.d1abl023.alien.interfaces.IDBTable;
 import com.d1abl023.alien.interfaces.IPersonDataForm;
+import com.d1abl023.alien.model.JSAdditionalUserData;
+import com.d1abl023.alien.model.JSUserGeneralAndAdditionalData;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,6 +33,13 @@ public class UserAdditionalDataTable implements IDBTable {
         this.homecountry = pearsonDataForm.getHomecountry();
         this.hometown = pearsonDataForm.getHometown();
         this.scoolList = pearsonDataForm.getSchoolList();
+    }
+    
+    public UserAdditionalDataTable(JSAdditionalUserData additionalUserData){
+        this.id = new Long(additionalUserData.getId());
+        this.homecountry = additionalUserData.getHomecountry();
+        this.hometown = additionalUserData.getHometown();
+        this.scoolList = additionalUserData.getSchoolList();
     }
 
     public long getId() {

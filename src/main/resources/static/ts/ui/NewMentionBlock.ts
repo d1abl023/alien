@@ -58,7 +58,12 @@ export class NewMentionBlock {
             timestamp: Date.now().toString()
         };
 
-        $.post("add_new_mention", JSON.stringify(mention)).then((mentionId: string) => {
+        $.ajax({
+            url: "add_new_mention",
+            type: "POST",
+            data:JSON.stringify(mention),
+            contentType: "application/json; charset=utf-8"
+        }).then((mentionId: string) => {
             Logger.info(`Mention was success sent, Mention id: ${mentionId}`);
             mention.id = mentionId;
             PageOfUser.addMentionBlock(mention);

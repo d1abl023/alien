@@ -24,7 +24,7 @@ public class JSMention implements Serializable {
     }
 
     public String getId() {
-        return id;
+        return id == null ? "null" : id;
     }
 
     public void setId(String id) {

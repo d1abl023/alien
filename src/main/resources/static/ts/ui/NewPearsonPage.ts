@@ -99,22 +99,16 @@ export class NewPearsonPage extends AbstractPage {
             type: "POST",
             data: JSON.stringify((this.createObjectForUpdate())),
             contentType: "application/json; charset=utf-8"
-        }).done((registaredId: string) => {
-            if (registaredId) {
-                uiManager.getPage({pageName: "profile", user: registaredId});
+        }).done((updatedUserId: string) => {
+            if (updatedUserId) {
+                uiManager.getPage({pageName: "profile", user: updatedUserId});
             } else {
-                document.getElementById("#error").style.textAlign = "center";
-                document.getElementById("error").style.fontSize = "1.5em";
-                document.getElementById("error").style.color = "#D01D33";
-                document.getElementById("error").style.marginBottom = "15px";
-                document.getElementById("error").innerText = "Registration failed!\nTry one more time!";
-                document.getElementById("registration");
+                Logger.error("Was sent user with id 'null'");
             }
 
         }).catch(() => {
-            Logger.error("Failed to send update data.")
+            Logger.error("Failed to send update data.");
         });
-
         return false;
     }
 

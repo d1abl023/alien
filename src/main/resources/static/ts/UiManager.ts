@@ -78,29 +78,38 @@ class UiManager {
                 break;
             }
             case "login": {
-                this.header = null;
+                if(this.header){
+                    this.header = undefined;
+                }
+                Header.renderEmptyHeader();
                 history.pushState("", "", `application.html?login`);
                 this.page = new IndexPage();
                 break;
             }
             case "addNewPerson": {
+                this.renderHeader();
                 history.pushState("", "", `application.html?addNewPearson`);
                 this.page = new NewPearsonPage(pageObject.editUser);
                 break;
             }
             case "registration": {
-                this.header = null;
+                if(this.header){
+                    this.header = undefined;
+                }
+                Header.renderEmptyHeader();
                 history.pushState("", "", `application.html?registration`);
                 this.page = new RegistrationPage();
                 break;
             }
             default: {
-                this.header = null;
+                if(this.header){
+                    this.header = undefined;
+                }
+                Header.renderEmptyHeader();
                 console.error("InternalError. Page cannot be loaded!");
                 return;
             }
         }
-        this.renderHeader();
     };
 
     private renderHeader() {

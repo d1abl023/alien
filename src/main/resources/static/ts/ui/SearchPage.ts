@@ -112,7 +112,7 @@ export class SearchPage extends AbstractPage {
                                     <div class="md-form active-dark-2 align-self-center">
                                         <input id='search_field' name='search_field' class="form-control align-self-center" type="text" placeholder="Search" aria-label="Search">
                                     </div>
-                                    <button id='search_data_button' type='button' class='btn btn-dark align-self-center mx-0 text-center'>Search</button>
+                                    <button id='search_data_button' type='submit' class='btn btn-dark align-self-center mx-0 text-center' form="search_form">Search</button>
                                 </form>
                             </div>
                             <div id='search_results' class='row mx-auto col-12'></div>
@@ -120,7 +120,10 @@ export class SearchPage extends AbstractPage {
                         <div class='col-2'></div>
                     </div>`;
         body.appendChild(this.createNewMessagePopupElement());
-        document.getElementById("search_data_button").addEventListener("click", () => this.search());
+        $("#search_form").on("submit", (event) => {
+            event.preventDefault();
+            this.search();
+        });
 
     }
 }

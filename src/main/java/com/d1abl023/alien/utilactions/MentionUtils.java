@@ -53,7 +53,7 @@ public class MentionUtils {
             MentionsTable mentionsTable = new MentionsTable();
             mentionsTable.setMention(MentionUtils.mapper.writeValueAsString(mention));
 
-            Long mentionId = this.saveNewMentionInDB(session, mentionsTable);
+            Long mentionId = this.saveMentionInDB(session, mentionsTable);
             mention.setId(Long.toString(mentionId));
             Long mentionedPearsonId = new Long(mention.getMentionedPersonId());
 
@@ -70,7 +70,7 @@ public class MentionUtils {
         }
     }
 
-    private Long saveNewMentionInDB(@NotNull Session session, MentionsTable mentionsTable) {
+    private Long saveMentionInDB(@NotNull Session session, MentionsTable mentionsTable) {
         Transaction transaction = session.beginTransaction();
         Long mentionId = (Long) session.save(mentionsTable);
         transaction.commit();

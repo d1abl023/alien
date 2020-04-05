@@ -2,6 +2,7 @@ package com.d1abl023.alien.tables;
 
 import com.d1abl023.alien.interfaces.IDBTable;
 import com.d1abl023.alien.interfaces.IPersonDataForm;
+import com.d1abl023.alien.model.JSUser;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -60,6 +61,20 @@ public class UserGeneralDataTable implements IDBTable {
         this.education = pearsonDataForm.getEducation();
         this.position = pearsonDataForm.getPosition();
         this.amountOfMentions = 0;
+    }
+
+    public UserGeneralDataTable(JSUser userGeneralData) {
+        this.id = new Long(userGeneralData.getId());
+        this.email = userGeneralData.getEmail();
+        this.date = userGeneralData.getDate();
+        this.sex = userGeneralData.getSex();
+        this.phoneNumber = userGeneralData.getNumber();
+        this.country = userGeneralData.getCountry();
+        this.city = userGeneralData.getCity();
+        this.placeOfWork = userGeneralData.getPlaceOfWork();
+        this.education = userGeneralData.getEducation();
+        this.position = userGeneralData.getPosition();
+        this.amountOfMentions = getAmountOfMentions();
     }
 
     public long getId() {

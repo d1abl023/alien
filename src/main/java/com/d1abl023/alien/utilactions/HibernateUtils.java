@@ -36,7 +36,9 @@ public class HibernateUtils {
                 .addAnnotatedClass(UserAdditionalDataTable.class)
                 .addAnnotatedClass(UserMentionsIdTable.class)
                 .addAnnotatedClass(MessagesTable.class)
-                .addAnnotatedClass(DialogsTable.class);
+                .addAnnotatedClass(DialogsTable.class)
+                .addAnnotatedClass(MentionsTable.class)
+                .addAnnotatedClass(UserMentionsIdTable.class);
     }
 
     public static SessionFactory getSessionFactory() {

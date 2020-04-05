@@ -156,7 +156,7 @@ export class PageOfUser extends AbstractPage {
         $.ajax({
             url: "user_info",
             type: "POST",
-            data: mention.mentionFromId,
+            data: `id=${mention.mentionFromId}`,
             contentType: "application/json; charset=utf-8"
         }).then((data: IUser) => {
             let mentionElement: HTMLDivElement = document.createElement("div");
@@ -180,9 +180,9 @@ export class PageOfUser extends AbstractPage {
         <button id="show_full_info_btn" type="button" class="btn btn-info user_info_functional_btn">Show full info</button>
         <button id="edit_info_btn" type="button" class="btn btn-danger user_info_functional_btn">Edit info</button>
     `);
-
         $("#write_msg_btn").on("click", this.showNewMessageBlock);
         $("#add_prsn_btn").on("click", () => uiManager.getPage({pageName: "addNewPerson"}));
+        $("#print_info_btn").on("click", () => window.print());
         $("#add_mntn_btn").on("click", this.showNewMentionBlock);
         $("#show_full_info_btn").on("click", this.showFullInfo);
         $("#edit_info_btn").on("click", () => uiManager.getPage({pageName: "addNewPerson", editUser: this.openedUserObj}));
