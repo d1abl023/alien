@@ -1,24 +1,20 @@
 package com.d1abl023.alien.core.controllers.restcontrollers;
 
-import com.d1abl023.alien.tables.User;
-import com.d1abl023.alien.utilactions.Base64Actions;
+import com.d1abl023.alien.model.JSAdditionalUserData;
+import com.d1abl023.alien.model.JSUser;
+import com.d1abl023.alien.model.JSUserGeneralAndAdditionalData;
+import com.d1abl023.alien.tables.UserAdditionalDataTable;
+import com.d1abl023.alien.tables.UserGeneralDataTable;
+import com.d1abl023.alien.tables.UserNameDataTable;
 import com.d1abl023.alien.utilactions.HibernateUtils;
-import com.d1abl023.alien.utilactions.TokenUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotNull;
 import java.security.Principal;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -27,8 +23,10 @@ import java.util.Map;
 @RestController
 public class UserDataController {
 
+    private Logger logger = LogManager.getLogger();
+
     @RequestMapping("/authentication")
-    public String authentication(){
+    public String authentication() {
         return "authenticated";
     }
 
@@ -38,34 +36,16 @@ public class UserDataController {
      * @param principal contains id of principal who requested data
      * @param person    contains string whose data is requested
      * @param response  contains response data
-     * @return map that contains user data in key=value format
+     * @return object that contains user data in key=value format
      */
     @RequestMapping("/user_info")
-    public Map<String, String> userInfo(Principal principal, @RequestBody String person, HttpServletResponse response) {
-
-        Long userId = person.equals("my") ? new Long(principal.getName()) : new Long(person);
-
-        Map<String, String> responseMap = new LinkedHashMap<>();
-
-        //Requesting DB for user data
+    public JSUser userInfo(Principal principal, @RequestBody String person, HttpServletResponse response) {
+        Long userId = new Long(person.equals("id=my") ? principal.getName() : person.split("=")[1].trim());
         Session session = HibernateUtils.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
-        List list = session.createQuery("from User user where user.id = '" + userId + "'").list();
-        transaction.commit();
-
-        //If request was successful putting data into resulting map
-        if (list.size() > 0) {
-            User user = (User) list.get(0);
-            responseMap.put("login", user.getLogin());
-            responseMap.put("sex", user.getSex());
-            responseMap.put("country", user.getCountry());
-            responseMap.put("city", user.getCity());
-            responseMap.put("work", user.getPlaceOfWork());
-            responseMap.put("education", user.getEducation());
-            response.setStatus(200);
-        }
-
-        return responseMap;
+        UserGeneralDataTable userGeneralDataTable = session.get(UserGeneralDataTable.class, userId);
+        UserNameDataTable userNameDataTable = session.get(UserNameDataTable.class, userId);
+        response.setStatus(200);
+        return new JSUser(userGeneralDataTable, userNameDataTable);
     }
 
     /**
@@ -74,9 +54,22 @@ public class UserDataController {
      * @param principal contains principal id
      * @return username of the principal
      */
-    @RequestMapping("/get_username")
+    @RequestMapping("/get_short_name")
     public String getUsename(Principal principal) {
-        return getLoginById(principal.getName());
+        return getShortNameById(principal.getName());
+    }
+
+    /**
+     * Method getShortNameById() requests user login from DB
+     *
+     * @param id contains id of user whose username should be requested from DB
+     * @return string that contains short name of person
+     */
+    @RequestMapping("/get_short_name_by_id")
+    public String getShortNameById(@RequestBody String id) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        UserNameDataTable userNameDataTable = session.get(UserNameDataTable.class, new Long(id));
+        return userNameDataTable.getFirstName() + ", " + userNameDataTable.getLastName();
     }
 
     /**
@@ -88,17 +81,40 @@ public class UserDataController {
     @RequestMapping("/get_username_by_id")
     public String getLoginById(@RequestBody String id) {
         Session session = HibernateUtils.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
+        UserNameDataTable userNameDataTable = session.get(UserNameDataTable.class, new Long(id));
+        return userNameDataTable.getFirstName() + ", " + userNameDataTable.getLastName();
+    }
 
-        Query query = session.createQuery("select user.login from User user where user.id = :id");
-        query.setParameter("id", new Long(id));
-        String username = (String) query.getSingleResult();
-        transaction.commit();
-        return username;
+    @RequestMapping("/get_additional_user_info")
+    public JSAdditionalUserData getAdditionalUserInfo(@RequestBody String userId) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        return new JSAdditionalUserData(session.get(UserAdditionalDataTable.class, new Long(userId)));
     }
 
     @RequestMapping("/get_id")
     public String getMyId(Principal principal) {
         return principal.getName();
+    }
+
+    @RequestMapping("/update_user_info")
+    public String updateUserInfo(@RequestBody JSUserGeneralAndAdditionalData userData, HttpServletResponse response) {
+        UserAdditionalDataTable userAdditionalDataTable = new UserAdditionalDataTable(userData.getAdditionalUserData());
+        UserGeneralDataTable userGeneralDataTable = new UserGeneralDataTable(userData.getGeneralUserData());
+
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.update(userGeneralDataTable);
+            transaction.commit();
+
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(userAdditionalDataTable);
+            transaction.commit();
+            return userData.getGeneralUserData().getId();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("Failed to update user data." + e.getMessage() + " " + userData.toString());
+            response.setStatus(500);
+        }
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-#send_new_message_block {
+#add_new_mention_block {
     display: block;
     position: fixed;
     align-self: center;
@@ -14,7 +14,7 @@
 
 }
 
-#receiver_info {
+#mentioned_person_info {
     display: flex;
     height: 50px;
     font-size: 1.5em;
@@ -24,7 +24,7 @@
     font-family: cursive;
 }
 
-#send_new_message_field {
+#add_new_mention_field {
     display: flex;
     position: relative;
     width: 90%;
@@ -35,7 +35,7 @@
     resize: none;
 }
 
-#send_new_message_buttons {
+#add_new_mention_buttons {
     display: flex;
     position: relative;
     margin-top: 7px;
@@ -43,7 +43,7 @@
 }
 
 
-.send_new_message_block_button{
-    width: 150px;
-    margin: 5px 70px 5px 70px;
-}
+/*.send_new_message_block_button{*/
+/*    width: 150px;*/
+/*    margin: 5px 70px 5px 70px;*/
+/*}*/

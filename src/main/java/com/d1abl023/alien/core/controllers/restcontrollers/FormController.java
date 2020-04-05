@@ -1,20 +1,24 @@
 package com.d1abl023.alien.core.controllers.restcontrollers;
 
-import com.d1abl023.alien.forms.UserRegForm;
+import com.d1abl023.alien.forms.AddPersonForm;
+import com.d1abl023.alien.forms.UserRegistrationForm;
 import com.d1abl023.alien.model.JSUser;
-import com.d1abl023.alien.tables.AuthUserData;
-import com.d1abl023.alien.tables.User;
+import com.d1abl023.alien.tables.UserAdditionalDataTable;
+import com.d1abl023.alien.tables.UserAuthDataTable;
+import com.d1abl023.alien.tables.UserGeneralDataTable;
+import com.d1abl023.alien.tables.UserNameDataTable;
 import com.d1abl023.alien.utilactions.HibernateUtils;
+import com.d1abl023.alien.utilactions.UserSearchUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,70 +31,169 @@ public class FormController {
     public Map<String, JSUser> search(@RequestBody String requestBody) {
         Map<String, JSUser> searchResult = new LinkedHashMap<>();
         Session session = HibernateUtils.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
-        TypedQuery<User> selectUsers = session.createQuery(
-                "from User user where user.login = :userLogin", User.class);
-        selectUsers.setParameter("userLogin", requestBody);
-        List<User> dbUsers = selectUsers.getResultList();
-        for (User tmpUser : dbUsers) {
-            searchResult.put(Long.toString(tmpUser.getId()), (new JSUser(tmpUser)));
+        List<UserNameDataTable> dbUserNameDate = new LinkedList<>();
+
+        if (requestBody.contains(",")) {
+            String firstName = requestBody.split(",")[0].trim();
+            String lastName = requestBody.split(",")[1].trim();
+
+            Map<Long, UserNameDataTable> searchByLastName = UserSearchUtils.searchByLastName(session, lastName);
+
+            if (firstName.contains("-")) {
+                Map<Long, UserNameDataTable> searchByFirstName = UserSearchUtils.searchByFirstName(session, firstName.split("-")[0].trim());
+                Map<Long, UserNameDataTable> searchBySecondName = UserSearchUtils.searchBySecondName(session, firstName.split("-")[1].trim());
+                for (Long userId : searchByFirstName.keySet()) {
+                    if (searchBySecondName.containsKey(userId) && searchByLastName.containsKey(userId)) {
+                        dbUserNameDate.add(searchByFirstName.get(userId));
+                    }
+                }
+
+                // In case if user find reverse: secondName-firstName
+                searchByFirstName = UserSearchUtils.searchByFirstName(session, firstName.split("-")[1].trim());
+                searchBySecondName = UserSearchUtils.searchBySecondName(session, firstName.split("-")[0].trim());
+                for (Long userId : searchByFirstName.keySet()) {
+                    if (searchBySecondName.containsKey(userId) && searchByLastName.containsKey(userId)) {
+                        dbUserNameDate.add(searchByFirstName.get(userId));
+                    }
+                }
+            } else {
+                Map<Long, UserNameDataTable> searchByFirstName = UserSearchUtils.searchByFirstName(session, firstName.trim());
+                for (Long userId : searchByFirstName.keySet()) {
+                    if (searchByLastName.containsKey(userId)) {
+                        dbUserNameDate.add(searchByFirstName.get(userId));
+                    }
+                }
+                Map<Long, UserNameDataTable> searchBySecondName = UserSearchUtils.searchBySecondName(session, firstName.trim());
+                for (Long userId : searchBySecondName.keySet()) {
+                    if (searchByLastName.containsKey(userId)) {
+                        dbUserNameDate.add(searchBySecondName.get(userId));
+                    }
+                }
+            }
+        } else if (requestBody.contains("-")) {
+            Map<Long, UserNameDataTable> searchByFirstName = UserSearchUtils.searchByFirstName(session, requestBody.split("-")[0].trim());
+            Map<Long, UserNameDataTable> searchBySecondName = UserSearchUtils.searchBySecondName(session, requestBody.split("-")[1].trim());
+            for (Long userId : searchByFirstName.keySet()) {
+                if (searchBySecondName.containsKey(userId)) {
+                    dbUserNameDate.add(searchByFirstName.get(userId));
+                }
+            }
+
+            // In case if user find reverse: secondName-firstName
+            searchByFirstName = UserSearchUtils.searchByFirstName(session, requestBody.split("-")[1].trim());
+            searchBySecondName = UserSearchUtils.searchBySecondName(session, requestBody.split("-")[0].trim());
+            for (Long userId : searchByFirstName.keySet()) {
+                if (searchBySecondName.containsKey(userId)) {
+                    dbUserNameDate.add(searchByFirstName.get(userId));
+                }
+            }
+        } else {
+            Map<Long, UserNameDataTable> searchByFirstName = UserSearchUtils.searchByFirstName(session, requestBody.trim());
+            for (Long userId : searchByFirstName.keySet()) {
+                dbUserNameDate.add(searchByFirstName.get(userId));
+//                searchResult.put(Long.toString(userId),
+//                        new JSUser(session.get(UserGeneralData.class, userId), searchByFirstName.get(userId)));
+            }
+            Map<Long, UserNameDataTable> searchBySecondName = UserSearchUtils.searchBySecondName(session, requestBody.trim());
+            for (Long userId : searchBySecondName.keySet()) {
+                dbUserNameDate.add(searchBySecondName.get(userId));
+//                searchResult.put(Long.toString(userId),
+//                        new JSUser(session.get(UserGeneralData.class, userId), searchBySecondName.get(userId)));
+            }
+            Map<Long, UserNameDataTable> searchByLastName = UserSearchUtils.searchByLastName(session, requestBody.trim());
+            for (Long userId : searchByLastName.keySet()) {
+                dbUserNameDate.add(searchByLastName.get(userId));
+//                searchResult.put(Long.toString(userId),
+//                        new JSUser(session.get(UserGeneralData.class, userId), searchByLastName.get(userId)));
+            }
+
+
         }
-        transaction.commit();
+
+        // TODO: to change logic to remove that
+        for (UserNameDataTable tmpUserNameDataTable : dbUserNameDate) {
+            searchResult.put(Long.toString(tmpUserNameDataTable.getId()),
+                    new JSUser(session.get(UserGeneralDataTable.class, tmpUserNameDataTable.getId()), tmpUserNameDataTable));
+        }
         session.close();
         return searchResult;
     }
 
-    @RequestMapping("/registration")
-    public void registration(@RequestBody UserRegForm userRegForm, HttpServletResponse response) {
+    @RequestMapping("/add_new_person")
+    public String addNewPerson(@RequestBody AddPersonForm addPearsonForm, HttpServletResponse response) {
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            UserGeneralDataTable userGeneralDataTable = addPearsonForm.createUserGeneralDataTableObject();
 
-        try {
-            //Creating DB session
-            Session session = HibernateUtils.getSessionFactory().openSession();
-
-            User user = userRegForm.createUserTableObject();
-
-            //Saving used data(id, login, email, date of birth, sex, phone number,
-            // country, city, status, user type) into DB table
+            //Saving used general data into DB table
             Transaction transaction = session.beginTransaction();
-            session.save(user);
+            Long userId = (Long) session.save(userGeneralDataTable);
             transaction.commit();
 
-            //Verifying if user data has been successfully added into DB table
-            //If success - adding user auth data, else - throwing InternalError
+            UserNameDataTable userNameDataTable = addPearsonForm.createUserNameDataTableObject();
+            userNameDataTable.setId(userId);
+
+            //Saving user name data into DB table
             transaction = session.beginTransaction();
-            if (session.createQuery("from User user where user.id = " + user.getId()).list().size() > 0) {
+            session.save(userNameDataTable);
+            transaction.commit();
 
-                transaction.commit();
+            UserAdditionalDataTable userAdditionalDataTable = addPearsonForm.createUserAdditionalDataTableObject();
+            userAdditionalDataTable.setId(userId);
 
-                AuthUserData authUserData = userRegForm.createUserAuthTableObject();
-                authUserData.setId(user.getId());
+            //Saving user additional data into DB table
+            transaction = session.beginTransaction();
+            session.save(userAdditionalDataTable);
+            transaction.commit();
 
-                //Saving user authentication data (id, login, password) into DB table
-                transaction = session.beginTransaction();
-                session.save(authUserData);
-                transaction.commit();
-
-                //Verifying if user authentication data has been successfully added onto DB table
-                //If success - setting response status 201 and adding response cookies, else - throwing InternalError
-                transaction = session.beginTransaction();
-                if (session.createQuery("from AuthUserData authData where authData.id = "
-                        + authUserData.getId()).list().size() > 0) {
-
-                    transaction.commit();
-
-                    response.setStatus(201);
-
-                } else {
-                    transaction.commit();
-                    throw new InternalError("Error adding into \"auth_data\" DB table!");
-                }
-            } else {
-                transaction.commit();
-                throw new InternalError("Error adding into \"users\" DB table!");
-            }
-        } catch (InternalError e) {
+            response.setStatus(201);
+            return Long.toString(userId);
+        } catch (InternalError | HibernateException e) {
             LOGGER.error(e.getMessage());
             response.setStatus(500);
+            return null;
+            // TODO: to implement logic in case of failure
+        }
+    }
+
+    @RequestMapping("/registration")
+    public void registration(@RequestBody UserRegistrationForm userRegForm, HttpServletResponse response) {
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            UserGeneralDataTable userGeneralDataTable = userRegForm.createUserGeneralDataTableObject();
+
+            //Saving used general data into DB table
+            Transaction transaction = session.beginTransaction();
+            Long userId = (Long) session.save(userGeneralDataTable);
+            transaction.commit();
+
+            UserAuthDataTable userAuthDataTable = userRegForm.createUserAuthDataTableObject();
+            userAuthDataTable.setId(userId);
+
+            //Saving user authentication data into DB table
+            transaction = session.beginTransaction();
+            session.save(userAuthDataTable);
+            transaction.commit();
+
+            UserNameDataTable userNameDataTable = userRegForm.createUserNameDataTableObject();
+            userNameDataTable.setId(userId);
+
+            //Saving user name data into DB table
+            transaction = session.beginTransaction();
+            session.save(userNameDataTable);
+            transaction.commit();
+
+            UserAdditionalDataTable userAdditionalDataTable = userRegForm.createUserAdditionalDataTableObject();
+            userAdditionalDataTable.setId(userId);
+
+            //Saving user additional data into DB table
+            transaction = session.beginTransaction();
+            session.save(userAdditionalDataTable);
+            transaction.commit();
+
+            response.setStatus(201);
+        } catch (InternalError | HibernateException e) {
+            LOGGER.error(e.getMessage());
+            response.setStatus(500);
+            // TODO: to implement logic in case of failure
         }
     }
 

@@ -15,7 +15,7 @@
     </div>
     <div id="body_container" class="container-sm position-fixed col-12">
         <div class="row h-100">
-            <div id="body" class="col-md-12"></div>
+            <div id="body" class="col-md-12 flex-column"></div>
         </div>
     </div>
 </div>
@@ -38,7 +38,7 @@
             pageName: url.query().split("&")[0].substring(1)
         };
     }
-    require("src/main/resources/static/js/uiManager.js").uiManager.getPage(page);
+    require("src/main/resources/static/js/UiManager.js").uiManager.getPage(page);
 </script>
 </body>
 </html>

@@ -21,8 +21,6 @@ public class HibernateUtils {
             properties.put(Environment.USER, "postgres");
             properties.put(Environment.PASS, "postgres");
             properties.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQL95Dialect");
-
-//            properties.put(Environment.HBM2DDL_AUTO, "true");
             properties.put(Environment.SHOW_SQL, "true");
         }
         return properties;
@@ -32,11 +30,15 @@ public class HibernateUtils {
     public static Configuration getConfiguration(){
         return new Configuration()
                 .setProperties(getProperties())
-                .addAnnotatedClass(AuthUserData.class)
-                .addAnnotatedClass(User.class)
-                .addAnnotatedClass(UserMessage.class)
-                .addAnnotatedClass(ChatRoom1Msg.class)
-                .addAnnotatedClass(Dialogs.class);
+                .addAnnotatedClass(UserAuthDataTable.class)
+                .addAnnotatedClass(UserGeneralDataTable.class)
+                .addAnnotatedClass(UserNameDataTable.class)
+                .addAnnotatedClass(UserAdditionalDataTable.class)
+                .addAnnotatedClass(UserMentionsIdTable.class)
+                .addAnnotatedClass(MessagesTable.class)
+                .addAnnotatedClass(DialogsTable.class)
+                .addAnnotatedClass(MentionsTable.class)
+                .addAnnotatedClass(UserMentionsIdTable.class);
     }
 
     public static SessionFactory getSessionFactory() {

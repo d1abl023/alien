@@ -1,16 +1,20 @@
 package com.d1abl023.alien.model;
 
-import com.d1abl023.alien.tables.User;
+import com.d1abl023.alien.tables.UserGeneralDataTable;
+import com.d1abl023.alien.tables.UserNameDataTable;
 
 import java.io.Serializable;
 import java.util.Date;
 
 public class JSUser implements Serializable {
 
-
     private String id;
 
-    private String login;
+    private String firstName;
+
+    private String secondName;
+
+    private String lastName;
 
     private String email;
 
@@ -26,18 +30,19 @@ public class JSUser implements Serializable {
 
     private String placeOfWork;
 
+    private String position;
+
     private String education;
 
-    private String status;
-
-    private String type;
+    private int amountOfMentions;
 
     public JSUser() {
     }
 
-    public JSUser(String id, String login, String email, Date date, String sex, long number, String country, String city, String placeOfWork, String education, String status, String type) {
+    public JSUser(String id, String firstName, String secondName, String lastName, String email, Date date,
+                  String sex, long number, String country, String city, String placeOfWork, String position,
+                  String education, int amountOfMentions) {
         this.id = id;
-        this.login = login;
         this.email = email;
         this.date = date;
         this.sex = sex;
@@ -45,24 +50,29 @@ public class JSUser implements Serializable {
         this.country = country;
         this.city = city;
         this.placeOfWork = placeOfWork;
+        this.position = position;
         this.education = education;
-        this.status = status;
-        this.type = type;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.lastName = lastName;
+        this.amountOfMentions = amountOfMentions;
     }
 
-    public JSUser(User user){
-        this.id = Long.toString(user.getId());
-        this.login = user.getLogin();
-        this.email = user.getEmail();
-        this.date = user.getDate();
-        this.sex = user.getSex();
-        this.number = user.getNumber();
-        this.country = user.getCountry();
-        this.city = user.getCity();
-        this.placeOfWork = user.getPlaceOfWork();
-        this.education = user.getEducation();
-        this.status = user.getStatus();
-        this.type = user.getType();
+    public JSUser(UserGeneralDataTable userGeneralDataTable, UserNameDataTable userNameDataTable) {
+        this.id = Long.toString(userGeneralDataTable.getId());
+        this.email = userGeneralDataTable.getEmail();
+        this.date = userGeneralDataTable.getDate();
+        this.sex = userGeneralDataTable.getSex();
+        this.number = userGeneralDataTable.getPhoneNumber();
+        this.country = userGeneralDataTable.getCountry();
+        this.city = userGeneralDataTable.getCity();
+        this.placeOfWork = userGeneralDataTable.getPlaceOfWork();
+        this.position = userGeneralDataTable.getPosition();
+        this.education = userGeneralDataTable.getEducation();
+        this.firstName = userNameDataTable.getFirstName();
+        this.secondName = userNameDataTable.getSecondName();
+        this.lastName = userNameDataTable.getLastName();
+        this.amountOfMentions = userGeneralDataTable.getAmountOfMentions();
     }
 
     public String getId() {
@@ -73,12 +83,28 @@ public class JSUser implements Serializable {
         this.id = id;
     }
 
-    public String getLogin() {
-        return login;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -137,6 +163,14 @@ public class JSUser implements Serializable {
         this.placeOfWork = placeOfWork;
     }
 
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
     public String getEducation() {
         return education;
     }
@@ -145,19 +179,11 @@ public class JSUser implements Serializable {
         this.education = education;
     }
 
-    public String getStatus() {
-        return status;
+    public int getAmountOfMentions() {
+        return amountOfMentions;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setAmountOfMentions(int amountOfMentions) {
+        this.amountOfMentions = amountOfMentions;
     }
 }

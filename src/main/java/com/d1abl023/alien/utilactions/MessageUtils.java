@@ -1,8 +1,8 @@
 package com.d1abl023.alien.utilactions;
 
 import com.d1abl023.alien.model.Message;
-import com.d1abl023.alien.tables.Dialogs;
-import com.d1abl023.alien.tables.UserMessage;
+import com.d1abl023.alien.tables.DialogsTable;
+import com.d1abl023.alien.tables.MessagesTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.NonUniqueResultException;
@@ -48,7 +48,7 @@ public class MessageUtils {
             logger.debug("Dialog id = " + dialogId);
             try {
                 if (dialogId != null && dialogId != 0) {
-                    UserMessage message = new UserMessage(
+                    MessagesTable message = new MessagesTable(
                             dialogId,
                             new Long(msg.getSenderId()),
                             new Long(msg.getReceiverId()),
@@ -78,7 +78,7 @@ public class MessageUtils {
         Session createNewDialogSession = HibernateUtils.getSessionFactory().openSession();
         Transaction createNewDialogTransaction = createNewDialogSession.beginTransaction();
         long dialogId = (Long) createNewDialogSession.save(
-                new Dialogs(new Long(msg.getSenderId()), new Long(msg.getReceiverId()),
+                new DialogsTable(new Long(msg.getSenderId()), new Long(msg.getReceiverId()),
                         msg.getSenderLogin(), msg.getReceiverLogin()));
         createNewDialogTransaction.commit();
         createNewDialogSession.close();
@@ -91,7 +91,7 @@ public class MessageUtils {
      * @param message object of class {@code Message}
      * @return id of inserted message
      */
-    public static long insertUserMessageIntoDB(UserMessage message) {
+    public static long insertUserMessageIntoDB(MessagesTable message) {
         Session insertMessageSession = HibernateUtils.getSessionFactory().openSession();
         Transaction insertMessageTransaction = insertMessageSession.beginTransaction();
         Long messageId = (Long) insertMessageSession.save(message);
@@ -110,9 +110,9 @@ public class MessageUtils {
         Session dialogsTableSession = HibernateUtils.getSessionFactory().openSession();
         Transaction dialogsTableTransaction = dialogsTableSession.beginTransaction();
         // TODO: To write query that will fetch data faster
-        TypedQuery<Dialogs> fetchDialogFromDB = dialogsTableSession.createQuery(
-                "from Dialogs dialog where (dialog.user1=:sender and dialog.user2=:receiver)" +
-                        "or (dialog.user1=:receiver and dialog.user2=:sender)", Dialogs.class);
+        TypedQuery<DialogsTable> fetchDialogFromDB = dialogsTableSession.createQuery(
+                "from DialogsTable dialog where (dialog.user1=:sender and dialog.user2=:receiver)" +
+                        "or (dialog.user1=:receiver and dialog.user2=:sender)", DialogsTable.class);
         fetchDialogFromDB.setParameter("sender", new Long(msg.getSenderId()));
         fetchDialogFromDB.setParameter("receiver", new Long(msg.getReceiverId()));
 
@@ -129,14 +129,14 @@ public class MessageUtils {
      * @param principal is {@code Principal} object chat contains user id.
      * @return list with dialogs fetched from database
      */
-    public static List<Dialogs> getUserDialogsList(Principal principal) {
+    public static List<DialogsTable> getUserDialogsList(Principal principal) {
         Session dialogsTableSession = HibernateUtils.getSessionFactory().openSession();
         Transaction dialogsTableTransactions = dialogsTableSession.beginTransaction();
         //Select all from table "dialogs" where
-        TypedQuery<Dialogs> dialogsTableSessionQuery = dialogsTableSession
-                .createQuery("from Dialogs dialogs where dialogs.user1 = :id or user2 = :id", Dialogs.class);
+        TypedQuery<DialogsTable> dialogsTableSessionQuery = dialogsTableSession
+                .createQuery("from DialogsTable dialogs where dialogs.user1 = :id or user2 = :id", DialogsTable.class);
         dialogsTableSessionQuery.setParameter("id", new Long(principal.getName()));
-        List<Dialogs> dialogs = dialogsTableSessionQuery.getResultList();
+        List<DialogsTable> dialogs = dialogsTableSessionQuery.getResultList();
         dialogsTableTransactions.commit();
         return dialogs;
     }
@@ -149,12 +149,12 @@ public class MessageUtils {
      * @param dialog the dialog to which the message relates by dialogId
      * @return {@code UserMessage} object that contains the last message of the dialog.
      */
-    public static UserMessage selectLastMessageOfDialog(Dialogs dialog) {
+    public static MessagesTable selectLastMessageOfDialog(DialogsTable dialog) {
         Session messagesTableSession = HibernateUtils.getSessionFactory().openSession();
         Transaction messagesTableTransaction = messagesTableSession.beginTransaction();
-        TypedQuery<UserMessage> messageTableQuery = messagesTableSession
-                .createQuery("from UserMessage msg1 where msg1.timestamp = (select max(msg2.timestamp) "
-                        + "from UserMessage msg2 where msg2.dialogId = :id) and msg1.dialogId = :id", UserMessage.class);
+        TypedQuery<MessagesTable> messageTableQuery = messagesTableSession
+                .createQuery("from MessagesTable msg1 where msg1.timestamp = (select max(msg2.timestamp) "
+                        + "from MessagesTable msg2 where msg2.dialogId = :id) and msg1.dialogId = :id", MessagesTable.class);
         messageTableQuery.setParameter("id", dialog.getId());
         messagesTableTransaction.commit();
         return messageTableQuery.getSingleResult();
@@ -166,33 +166,33 @@ public class MessageUtils {
      * @param dialogs is a list of dialogs which are selected last messages from
      * @return list with {@code Message} objects that are last messages of dialog
      */
-    public static List<Message> getSortedLastMessages(List<Dialogs> dialogs) {
+    public static List<Message> getSortedLastMessages(List<DialogsTable> dialogs) {
         List<Message> messagesList = new ArrayList<>(dialogs.size());
-        for (Dialogs dialog : dialogs) {
-            UserMessage userMessage = selectLastMessageOfDialog(dialog);
+        for (DialogsTable dialog : dialogs) {
+            MessagesTable messagesTable = selectLastMessageOfDialog(dialog);
             String senderLogin, receiverLogin;
 
             // Defines sender login and receiver login
-            if (userMessage.getSenderId() == dialog.getUser1() && userMessage.getReceiverId() == dialog.getUser2()) {
+            if (messagesTable.getSenderId() == dialog.getUser1() && messagesTable.getReceiverId() == dialog.getUser2()) {
                 senderLogin = dialog.getUser1Login();
                 receiverLogin = dialog.getUser2Login();
-            } else if (userMessage.getSenderId() == dialog.getUser2() && userMessage.getReceiverId() == dialog.getUser1()) {
+            } else if (messagesTable.getSenderId() == dialog.getUser2() && messagesTable.getReceiverId() == dialog.getUser1()) {
                 senderLogin = dialog.getUser2Login();
                 receiverLogin = dialog.getUser1Login();
             } else {
                 throw new InternalError("Error while checking sender and receiver login. " +
                         "Probably this message is not applicable to that dialog. " +
                         "Dialog: " + dialog.toString() + "\t" +
-                        "Message: " + userMessage.toString());
+                        "Message: " + messagesTable.toString());
             }
 
             messagesList.add(new Message(
-                    Long.toString(userMessage.getId()),
-                    Long.toString(userMessage.getTimestamp()),
-                    Long.toString(userMessage.getDialogId()),
-                    Long.toString(userMessage.getSenderId()),
-                    Long.toString(userMessage.getReceiverId()),
-                    userMessage.getText(),
+                    Long.toString(messagesTable.getId()),
+                    Long.toString(messagesTable.getTimestamp()),
+                    Long.toString(messagesTable.getDialogId()),
+                    Long.toString(messagesTable.getSenderId()),
+                    Long.toString(messagesTable.getReceiverId()),
+                    messagesTable.getText(),
                     senderLogin,
                     receiverLogin));
         }

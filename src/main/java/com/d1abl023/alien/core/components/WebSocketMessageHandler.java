@@ -61,4 +61,16 @@ public class WebSocketMessageHandler extends AbstractWebSocketHandler {
         }
     }
 
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        try {
+            super.afterConnectionClosed(session, status);
+            String principalName = Objects.requireNonNull(session.getPrincipal()).getName();
+            if (sessionPool.containsKey(principalName)) {
+                sessionPool.replace(principalName, session);
+            }
+        } catch (Exception e){
+            logger.error("Error when connection has been closing: " + e.getMessage());
+        }
+    }
 }
