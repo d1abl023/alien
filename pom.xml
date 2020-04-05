@@ -24,7 +24,7 @@
 					<archive>
 						<index>true</index>
 						<manifest>
-							<mainClass>com.d1abl023.alien.AlienApplication</mainClass>
+							<mainClass>com.d1abl023.hrhelper.HRHApplication</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

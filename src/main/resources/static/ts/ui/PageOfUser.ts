@@ -22,7 +22,7 @@ export class PageOfUser extends AbstractPage {
     constructor(myId: string, myShortName: string) {
         super(myId, myShortName);
         $.post("user_info", "id=my").then((myUserDataObj: IUser): void => {
-            this.myUserDataObj = myUserDataObj
+            this.myUserDataObj = myUserDataObj;
             this.render();
             this.webSocketClient = new WebSocketClient(this.myId, this.myShortName);
             this.showUserInfo();

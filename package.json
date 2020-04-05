@@ -1,17 +1,17 @@
 {
-  "name": "alien",
+  "name": "hrhelper",
   "version": "0.0.1",
   "author": "d1abl023",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/d1abl023/alien.git"
+    "url": "git+https://github.com/d1abl023/hrhelper.git"
   },
   "description": "CREATE TABLE user_info(id bigint, login text, date_of_birth date, sex text, phone_number bigint, country text, city text, status text, type text,PRIMARY KEY(id)); CREATE TABLE auth_data(id bigint, login text, password text, phone_number bigint, email text,PRIMARY KEY(id)); CREATE TABLE chat_room_1_messages(id bigint, type text, content text, sender text, timestamp text, PRIMARY KEY(id)); CREATE TABLE users(id bigint, login text, email text, date_of_birth date, sex text, phone_number bigint, country text, city text, place_of_work text, education text, status text, type text,PRIMARY KEY(id)); CREATE TABLE dialogs (id SERIAL NOT NULL, user1 bigint, user2 bigint, user1Login text, user2Login text, PRIMARY KEY(id)); CREATE TABLE messages (id SERIAL NOT NULL, dialogId bigint, sender text, msg text, receiver text, timestamp bigint, PRIMARY KEY(id));",
   "bugs": {
-    "url": "https://github.com/d1abl023/alien/issues"
+    "url": "https://github.com/d1abl023/hrhelper/issues"
   },
-  "homepage": "https://github.com/d1abl023/alien#readme",
+  "homepage": "https://github.com/d1abl023/hrhelper#readme",
   "browser": "uiManager.js",
   "dependencies": {
     "@stomp/stompjs": "^5.4.2",
@@ -39,8 +39,8 @@
   },
   "scripts": {
     "clean": "rimraf ./src/main/resources/static/out",
-    "build-module": "tsc --project src/main/resources/static",
-    "prebuild": "npm run clean && npm run build-module",
+    "transpile": "tsc --project src/main/resources/static",
+    "prebuild": "npm run clean && npm run transpile",
     "build": "node_modules\\.bin\\brunch build"
   },
   "devDependencies": {
