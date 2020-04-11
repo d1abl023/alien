@@ -32,8 +32,7 @@ export class PageOfUser extends AbstractPage {
     }
 
     public showUserInfo = () => {
-        let uri = new Uri(window.location.href);
-        let id: string = uri.getQueryParamValue("pageOfUser");
+        let id: string = window.location.hash.split("=")[1];
         $.post("user_info", `id=${id}`).then((data: IUser): void => {
             this.openedUserObj = data;
             this.userId = data.id;
@@ -53,7 +52,7 @@ export class PageOfUser extends AbstractPage {
             throw new Error("Error receiving user info!");
         });
         this.renderButtons();
-        if (uri.getQueryParamValue("pageOfUser") === "my") {
+        if (id === "my") {
             $("#mentions").html(`
           <div class="row col-12 mx-0">
               <div id="mentions_title_text" class="card-body">
@@ -84,7 +83,7 @@ export class PageOfUser extends AbstractPage {
             $.ajax({
                 url: "get_mentions",
                 type: "POST",
-                data: uri.getQueryParamValue("pageOfUser"),
+                data: id,
                 contentType: "application/json; charset=utf-8"
             }).then((mentions: IMention[]) => {
                 for (let mentionNumber in mentions) {

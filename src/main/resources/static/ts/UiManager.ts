@@ -31,49 +31,77 @@ class UiManager {
             this.myShortName = data;
         });
 
+        window.onhashchange = this.onHashChangeHandler;
         window.onresize = this.onWindowResize;
+    }
+
+    private onHashChangeHandler = (): void => {
+        let path = location.hash.startsWith("#")? location.hash.substring(1) : location.hash;
+        let page;
+        console.log(path)
+        if (path === "login" || path === "") {
+            page = {
+                pageName: "login"
+            };
+        } else if (path.indexOf("pageOfUser") > -1) {
+            page = {
+                pageName: "profile",
+                user: path.split("=")[1]
+            };
+        } else {
+            page = {
+                pageName: path
+            };
+        }
+
+        this.getPage(page);
     }
 
     public getPage(pageObject): void {
         if (pageObject.pageName !== "registration" && pageObject.pageName !== "login") {
-            $.ajax(
-                {
-                    url: "/authentication",
-                    type: "GET",
-                }
-            ).then((data) => {
-                pageObject.pageName = data === "authenticated" ? pageObject.pageName : "login";
-                this.loadPage(pageObject);
-            }).catch((e: jqXHR) => {
-                console.log(e);
-                if (e.status >= 400) {
-                    pageObject.pageName = "login";
+            $.ajax({
+                url: "/authentication",
+                type: "GET",
+            }).then(
+                (data) => {
+                    pageObject.pageName = data === "authenticated" ? pageObject.pageName : "login";
                     this.loadPage(pageObject);
+                }, 
+                (e: jqXHR) => {
+                    console.error(e);
+                    if (e.status >= 400) {
+                        pageObject.pageName = "login";
+                        this.loadPage(pageObject);
+                    }
                 }
-            });
+            );
         } else {
             this.loadPage(pageObject);
         }
     }
 
+    private changeHash = (pageObject): void => {
+        if(pageObject.pageName === `profile`) {
+            window.location.hash = `pageOfUser=${pageObject.user}`;
+        } else {
+            window.location.hash = pageObject.pageName;
+        }
+    }
 
     private loadPage = (pageObject): void => {
         switch (pageObject.pageName) {
             case "messages": {
                 this.renderHeader();
-                history.pushState("", "", `application.html?messages`);
                 this.page = new MessagesPage(this.myId, this.myShortName);
                 break;
             }
             case "profile": {
                 this.renderHeader();
-                history.pushState("", "", `application.html?pageOfUser=${pageObject.user}`);
                 this.page = new PageOfUser(this.myId, this.myShortName);
                 break;
             }
             case "search": {
                 this.renderHeader();
-                history.pushState("", "", `application.html?search`);
                 this.page = new SearchPage(this.myId, this.myShortName);
                 break;
             }
@@ -82,13 +110,11 @@ class UiManager {
                     this.header = undefined;
                 }
                 Header.renderEmptyHeader();
-                history.pushState("", "", `application.html?login`);
                 this.page = new IndexPage();
                 break;
             }
             case "addNewPerson": {
                 this.renderHeader();
-                history.pushState("", "", `application.html?addNewPearson`);
                 this.page = new NewPearsonPage(pageObject.editUser);
                 break;
             }
@@ -97,7 +123,6 @@ class UiManager {
                     this.header = undefined;
                 }
                 Header.renderEmptyHeader();
-                history.pushState("", "", `application.html?registration`);
                 this.page = new RegistrationPage();
                 break;
             }

@@ -21,21 +21,21 @@
 </div>
 <script src="out/app.js" type="text/javascript"></script>
 <script>
-    let Uri = require("jsuri");
-    let url = new Uri(window.location.href);
+    let path = location.hash.startsWith("#")? location.hash.substring(1) : location.hash;
     let page;
-    if (url.hasQueryParam("login") || url.query() === "") {
+    console.log(path)
+    if (path === "login" || path === "") {
         page = {
             pageName: "login"
         };
-    } else if (url.hasQueryParam("pageOfUser")) {
+    } else if (path.indexOf("pageOfUser") > -1) {
         page = {
             pageName: "profile",
-            user: url.getQueryParamValue("pageOfUser")
+            user: path.split("=")[1]
         };
     } else {
         page = {
-            pageName: url.query().split("&")[0].substring(1)
+            pageName: path
         };
     }
     require("src/main/resources/static/js/UiManager.js").uiManager.getPage(page);
