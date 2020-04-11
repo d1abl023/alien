@@ -16,15 +16,15 @@ export class Header {
     }
 
     public goToMessages() {
-        uiManager.getPage({pageName: "messages"});
+        uiManager.changeHash({pageName: "messages"});
     }
 
     public goToProfile() {
-        uiManager.getPage({pageName: "profile", user: "my"});
+        uiManager.changeHash({pageName: "profile", user: "my"});
     }
 
     public goToSearch() {
-        uiManager.getPage({pageName: "search"});
+        uiManager.changeHash({pageName: "search"});
     }
 
     private static renderHeader(): void {

@@ -61,7 +61,7 @@ class UiManager {
         if (pageObject.pageName !== "registration" && pageObject.pageName !== "login") {
             $.ajax({
                 url: "/authentication",
-                type: "GET",
+                type: "GET"
             }).then(
                 (data) => {
                     pageObject.pageName = data === "authenticated" ? pageObject.pageName : "login";
@@ -80,7 +80,7 @@ class UiManager {
         }
     }
 
-    private changeHash = (pageObject): void => {
+    public changeHash = (pageObject): void => {
         if(pageObject.pageName === `profile`) {
             window.location.hash = `pageOfUser=${pageObject.user}`;
         } else {

@@ -94,7 +94,7 @@ export class SearchPage extends AbstractPage {
     }
 
     public openProfile = function (id: string): void {
-        uiManager.getPage({pageName: "profile", user: id});
+        uiManager.changeHash({pageName: "profile", user: id});
     };
 
     public openMessageSendingPopup(receiverId: string): void {

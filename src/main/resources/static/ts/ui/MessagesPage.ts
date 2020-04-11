@@ -50,7 +50,7 @@ export class MessagesPage extends AbstractPage {
         }).then((data: string): void => {
             this.myShortName = data;
         });
-        document.getElementById("send_message_button").addEventListener('click', this.send, true);
+        $("send_message_button").on('click', this.send);
     };
 
     private requestDialogList(): void {
