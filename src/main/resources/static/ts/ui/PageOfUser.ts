@@ -7,7 +7,7 @@ import {IMention} from "../utils/templates/IMention";
 import {NewMessageBlock} from "./NewMessageBlock";
 import {uiManager} from "../UiManager";
 import {NewMentionBlock} from "./NewMentionBlock";
-import { IAdditionalData } from "../utils/templates/IAdditionalData";
+import {IAdditionalData} from "../utils/templates/IAdditionalData";
 
 export class PageOfUser extends AbstractPage {
 
@@ -61,25 +61,12 @@ export class PageOfUser extends AbstractPage {
           </div>`);
         } else {
             $("#mentions").html(`
-          <div class="row col-12 mx-0">
-            <div id="mentions_title_text" class="card-body">
-              <split id="mentions_title_lable"></split><split id="amount_of_mentions"></split>
-            </div>
-          </div>
-          
-          <div class="row col-12 mention flex-column">
-              <div class="card-body info_about_mentioned_user col-12">
-                  <split class="mentioner_name">Mentioner: Julia, Roberts</split><split class="mentioner_company">From: Microsoft</split>
-              </div>
-              <div class="mention_text col-12">This text is test text for mentionings</div>
-          </div>
-
-          <div class="row col-12 mention flex-column">
-              <div class="card-body info_about_mentioned_user col-12">
-                  <split class="mentioner_name">Mentioner: Alex, Fergusson</split><split class="mentioner_company">From: Apple</split>
-              </div>
-              <div class="mention_text col-12">This text is test text for mentionings</div>
-          </div>`);
+                <div class="row col-12 mx-0">
+                    <div id="mentions_title_text" class="card-body">
+                        <split id="mentions_title_lable"></split><split id="amount_of_mentions"></split>
+                    </div>
+                </div>
+            `);
             $.ajax({
                 url: "get_mentions",
                 type: "POST",
@@ -96,7 +83,7 @@ export class PageOfUser extends AbstractPage {
     private showFullInfo = (): void => {
         if (!this.fullInfoShown) {
             $.post({
-                url: "get_additional_user_info", 
+                url: "get_additional_user_info",
                 type: "POST",
                 data: this.openedUserObj.id,
                 contentType: "application/json; charset=utf-8"
@@ -116,7 +103,7 @@ export class PageOfUser extends AbstractPage {
             $("#number").remove();
             $("#homecountry").remove();
             $("#hometown").remove();
-            $("#schoolList").remove();   
+            $("#schoolList").remove();
         }
     };
 
@@ -147,8 +134,8 @@ export class PageOfUser extends AbstractPage {
         $("div#user_info_fields").append(element);
     }
 
-    public performUserInfoBlockToForm(){
-        
+    public performUserInfoBlockToForm() {
+
     }
 
     public static addMentionBlock(mention: IMention): void {
@@ -184,7 +171,10 @@ export class PageOfUser extends AbstractPage {
         $("#print_info_btn").on("click", () => window.print());
         $("#add_mntn_btn").on("click", this.showNewMentionBlock);
         $("#show_full_info_btn").on("click", this.showFullInfo);
-        $("#edit_info_btn").on("click", () => uiManager.getPage({pageName: "addNewPerson", editUser: this.openedUserObj}));
+        $("#edit_info_btn").on("click", () => uiManager.getPage({
+            pageName: "addNewPerson",
+            editUser: this.openedUserObj
+        }));
     };
 
     private showNewMessageBlock = (): void => {
@@ -203,19 +193,19 @@ export class PageOfUser extends AbstractPage {
         let userPageBlock: JQuery<HTMLElement> = $("#user_page");
 
         userPageBlock.html(`
-      <div id='short_user_data' class='card mx-auto user_data_element'>
-        <div class="row">
-          <div class="col-md-4"><img src="pictures/photo/no_avatar.jpg" class="card-img"></div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 id="username" class="card-title"></h5>
-              <p class="card-text"><small class="text-muted">Was online 3 mins ago</small></p>
-              <div id="user_info_fields" class="card-text"></div>
+        <div id='short_user_data' class='card mx-auto user_data_element'>
+            <div class="row">
+            <div class="col-md-4"><img src="pictures/photo/no_avatar.jpg" class="card-img"></div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 id="username" class="card-title"></h5>
+                    <p class="card-text"><small class="text-muted">Was online 3 mins ago</small></p>
+                    <div id="user_info_fields" class="card-text"></div>
+                </div>
             </div>
-          </div>
+            </div>
         </div>
-      </div>
-    `);
+        `);
 
         userPageBlock.append(`<div id="button_field" class="mx-auto text-center"></div>`);
         userPageBlock.append(`<div id='mentions' class='card mx-auto user_data_element'></div>`);
