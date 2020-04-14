@@ -1,5 +1,6 @@
 import {uiManager} from "../UiManager";
 import {AbstractPage} from "../utils/AbstractPage";
+import * as $ from "jquery";
 
 export class IndexPage extends AbstractPage {
 

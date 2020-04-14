@@ -101,7 +101,7 @@ export class SearchPage extends AbstractPage {
     };
 
     public render(): void {
-        let body: JQuery = $("body");
+        let body: JQuery = $("#body");
         body.html(`
             <div class='row col-12'>
                 <div class='col-2'></div>
