@@ -11,19 +11,20 @@ export class Header {
     public logout() {
         document.cookie = "authToken= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
         document.cookie = "refreshToken= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
-        window.location.href = "application.html";
+        // window.location.href = "application.html";
+        $.get("/perform_logout").then(() => window.location.hash = "login");
     }
 
     public goToMessages() {
-        uiManager.getPage({pageName: "messages"});
+        uiManager.changeHash({pageName: "messages"});
     }
 
     public goToProfile() {
-        uiManager.getPage({pageName: "profile", user: "my"});
+        uiManager.changeHash({pageName: "profile", user: "my"});
     }
 
     public goToSearch() {
-        uiManager.getPage({pageName: "search"});
+        uiManager.changeHash({pageName: "search"});
     }
 
     private static renderHeader(): void {

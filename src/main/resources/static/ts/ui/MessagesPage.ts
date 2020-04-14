@@ -50,7 +50,7 @@ export class MessagesPage extends AbstractPage {
         }).then((data: string): void => {
             this.myShortName = data;
         });
-        document.getElementById("send_message_button").addEventListener('click', this.send, true);
+        $("send_message_button").on('click', this.send);
     };
 
     private requestDialogList(): void {
@@ -61,8 +61,7 @@ export class MessagesPage extends AbstractPage {
             this.dialogs = data;
             for (let dialogId in this.dialogs) {
                 if (this.dialogs.hasOwnProperty(dialogId)) {
-                    document.getElementById("people_list")
-                        .appendChild(this.createDialogHtmlElement(this.dialogs[dialogId]));
+                    $("#people_list").append(this.createDialogHtmlElement(this.dialogs[dialogId]));
                 }
             }
             let keys = Object.keys(this.dialogs);
@@ -95,7 +94,7 @@ export class MessagesPage extends AbstractPage {
                 this.isOpenedInterlocutorId = lastMessage.senderId;
             }
 
-            document.getElementById("dialog_history").innerText = "";
+            $("#dialog_history").html("");
 
             // Requesting message history for dialog that was clicked on
             $.ajax({
@@ -113,8 +112,7 @@ export class MessagesPage extends AbstractPage {
                         this.addMessageToMessageList(response[msg]);
                     }
                 }
-                document.getElementById("dialog_history").scrollTop =
-                    document.getElementById("dialog_history").scrollHeight;
+                document.getElementById("#dialog_history").scrollTop =  document.getElementById("#dialog_history").scrollHeight;
             });
         } else {
             console.error("Missing dialog with id: " + dialogId);
@@ -168,14 +166,14 @@ export class MessagesPage extends AbstractPage {
       </div>`;
         }
 
-        let messageList: HTMLElement = document.getElementById("dialog_history");
-        messageList.appendChild(message);
-        messageList.scrollTop = messageList.scrollHeight;
+        let messageList: JQuery = $("#dialog_history");
+        messageList.append(message);
+        document.getElementById("#dialog_history").scrollTop = document.getElementById("#dialog_history").scrollHeight;
     }
 
     public render(): void {
-        let body: HTMLElement = document.getElementById("body");
-        body.innerHTML = `
+        let body: JQuery = $("#body");
+        body.html(`
         <div class="col-md-12">
         <div class="inbox_msg mx-auto" style="width:900px; height: ${$(window).height() - 60}px;">
         <div class="inbox_people h-100 col-4">
@@ -203,16 +201,17 @@ export class MessagesPage extends AbstractPage {
           </div>
         </div>
         </div>
-        </div>`;
+        </div>`
+        );
 
-        body.appendChild(this.createNewMessagePopupElement());
+        body.append(this.createNewMessagePopupElement());
         document.querySelector("button.msg_send_btn.bg-dark").addEventListener("click", this.send);
     }
 
     private updateDialogHtmlElement(message: IMessage): void {
         let msgDate = new Date(Number(message.timestamp));
-        document.getElementById(`${message.dialogId}_last_message_date`).innerHTML = `${msgDate.getMonth()} / ${msgDate.getDate()}`;
-        document.getElementById(`${message.dialogId}_last_message`).innerText = message.text;
+        $(`${message.dialogId}_last_message_date`).html(`${msgDate.getMonth()} / ${msgDate.getDate()}`);
+        $(`${message.dialogId}_last_message`).html(message.text);
         let dialog: HTMLDivElement = (document.getElementById(`${message.dialogId}_dialog`).cloneNode(true) as HTMLDivElement);
         dialog.onclick = () => this.openMessageHistory(message.dialogId);
         document.getElementById(`${message.dialogId}_dialog`).remove();

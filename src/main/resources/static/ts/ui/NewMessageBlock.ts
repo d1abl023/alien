@@ -23,24 +23,8 @@ export class NewMessageBlock {
             <h3 id="receiver_info" class="text-dark justify-content-center">Send message to ${this.user.receiverShortName}</h3>
             <textarea id="send_new_message_field"></textarea>`;
 
-
-        // sendNewMessageBlock.appendChild(this.createReceiverInfoBlock());
-        // sendNewMessageBlock.appendChild(this.createSendNewMessageField());
         sendNewMessageBlock.appendChild(this.createSendNewMessageButtonsBlock());
         $("#body").append(sendNewMessageBlock);
-    }
-
-    private createReceiverInfoBlock(): HTMLDivElement {
-        let receiverInfoBlock: HTMLDivElement = document.createElement("div");
-        receiverInfoBlock.id = "receiver_info";
-        receiverInfoBlock.innerText = `Send message to ${this.user.receiverShortName}`;
-        return receiverInfoBlock;
-    }
-
-    private createSendNewMessageField(): HTMLTextAreaElement {
-        let sendNewMessageField: HTMLTextAreaElement = document.createElement("textarea");
-        sendNewMessageField.id = "send_new_message_field";
-        return sendNewMessageField;
     }
 
     private createSendNewMessageButtonsBlock(): HTMLDivElement {

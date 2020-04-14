@@ -45,16 +45,17 @@ export class WebSocketClient {
 
     public showPopUp = (message: IMessage): void => {
         if (message.senderId === this.myId) {
-            document.getElementById("sender_username").innerText = "Message has been send.";
+            $("#sender_username").html(`Message has been send.`);
         } else {
-            document.getElementById("sender_username").innerText = "New message from " + message.senderLogin;
+            $("#sender_username").html(`New message from ${message.senderLogin}`);
         }
-        document.getElementById("part_of_message_text").innerText = message.text;
-        document.getElementById("newMessagePopUp").style.visibility = "visible";
+        $("#part_of_message_text").html(message.text);
+        $("#newMessagePopUp").css("visibility","visible");
 
         setTimeout(function () {
-            document.getElementById("newMessagePopUp").style.visibility = "hidden";
+            $("#newMessagePopUp").css("visibility","hidden");
         }, 5000);
+
     };
 
     public manageIncomingMessage = (message): void => {

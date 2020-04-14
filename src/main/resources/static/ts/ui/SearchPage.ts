@@ -18,8 +18,8 @@ export class SearchPage extends AbstractPage {
     }
 
     public search = (): void => {
-        document.getElementById("search_results").innerText = "";
-        let searchVal: string = (<HTMLInputElement>document.getElementById("search_field")).value;
+        $("search_results").html("");
+        let searchVal: string = $("#search_field").val().toString();
 
         $.ajax({
             url: "search",
@@ -94,32 +94,33 @@ export class SearchPage extends AbstractPage {
     }
 
     public openProfile = function (id: string): void {
-        uiManager.getPage({pageName: "profile", user: id});
+        uiManager.changeHash({pageName: "profile", user: id});
     };
 
     public openMessageSendingPopup(receiverId: string): void {
     };
 
     public render(): void {
-        let body: HTMLElement = document.getElementById("body");
-        body.innerHTML = `
+        let body: JQuery = $("body");
+        body.html(`
+            <div class='row col-12'>
+                <div class='col-2'></div>
+                <div class='col-8'>
                     <div class='row col-12'>
-                        <div class='col-2'></div>
-                        <div class='col-8'>
-                            <div class='row col-12'>
-                                <form id='search_form' class='justify-content-center'>
-                                    <label id='search_label' for='search_field' class='align-self-center text-dark'>Search: </label>
-                                    <div class="md-form active-dark-2 align-self-center">
-                                        <input id='search_field' name='search_field' class="form-control align-self-center" type="text" placeholder="Search" aria-label="Search">
-                                    </div>
-                                    <button id='search_data_button' type='submit' class='btn btn-dark align-self-center mx-0 text-center' form="search_form">Search</button>
-                                </form>
+                        <form id='search_form' class='justify-content-center'>
+                            <label id='search_label' for='search_field' class='align-self-center text-dark'>Search: </label>
+                            <div class="md-form active-dark-2 align-self-center">
+                                <input id='search_field' name='search_field' class="form-control align-self-center" type="text" placeholder="Search" aria-label="Search">
                             </div>
-                            <div id='search_results' class='row mx-auto col-12'></div>
-                        </div>
-                        <div class='col-2'></div>
-                    </div>`;
-        body.appendChild(this.createNewMessagePopupElement());
+                            <button id='search_data_button' type='submit' class='btn btn-dark align-self-center mx-0 text-center' form="search_form">Search</button>
+                        </form>
+                    </div>
+                    <div id='search_results' class='row mx-auto col-12'></div>
+                </div>
+                <div class='col-2'></div>
+            </div>
+        `);
+        body.append(this.createNewMessagePopupElement());
         $("#search_form").on("submit", (event) => {
             event.preventDefault();
             this.search();
