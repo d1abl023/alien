@@ -1,5 +1,4 @@
 import * as $ from "jquery";
-import Uri = require("jsuri");
 import {AbstractPage} from "../utils/AbstractPage";
 import {WebSocketClient} from "../utils/WebSocketClient";
 import {IUser} from "../utils/templates/IUser";
