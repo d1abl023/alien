@@ -7,7 +7,7 @@ export interface IUser {
 
     login: string;
     email: string;
-    date: any;
+    date: string;
     sex: string;
     number: number;
 

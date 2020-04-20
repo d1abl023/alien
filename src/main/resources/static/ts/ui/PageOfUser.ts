@@ -39,7 +39,8 @@ export class PageOfUser extends AbstractPage {
             this.fullName = `${data.firstName}${data.secondName ? `-${data.secondName}` : ""}, ${data.lastName}`;
             document.title = this.shortName;
             document.querySelector("h5#username").innerHTML = this.fullName;
-            this.addUserInfoField("dateOfBirth", "Date of birth", data.date);
+            let date: Date = new Date(data.date);
+            this.addUserInfoField("dateOfBirth", "Date of birth", `${date.toDateString().substring(4)}`);
             this.addUserInfoField("sex", "Sex", data.sex);
             this.addUserInfoField("location", "Lives at", `${data.country}, ${data.city}`);
             this.addUserInfoField("company", "Works at", data.placeOfWork);
